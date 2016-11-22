@@ -64,6 +64,7 @@ public class Process {
             steps.add(newLocation, step);
 
             //TODO: modify the database
+            return true;
         }
         else{
             return false;
