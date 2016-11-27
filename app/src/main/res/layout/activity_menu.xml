@@ -5,29 +5,36 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
+    <!-- The ActionBar displayed at the top -->
     <include
-        layout="@layout/app_bar_menu"
+        layout="@layout/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- The main content view where fragments are loaded -->
+    <FrameLayout
+        android:id="@+id/flContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+</LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_menu"
-        app:menu="@menu/activity_menu_drawer">
-        <ExpandableListView
-            android:id="@+id/lvExp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="160dp">
-        </ExpandableListView>
-
-
+        app:menu="@menu/drawer_view">
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
+    <!--<ExpandableListView-->
+    <!--android:id="@+id/lvExp"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginTop="160dp">-->
+    <!--</ExpandableListView>-->

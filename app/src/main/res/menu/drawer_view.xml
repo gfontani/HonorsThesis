@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:title="Lists"
+            android:id="@+id/nav_list_menu">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_list_fragment"
+                        android:title="All Tasks" />
+                </group>
+            </menu>
+        </item>
+        <item android:title="Processes">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_process_fragment"
+                        android:title="All Processes" />
+                </group>
+            </menu>
+        </item>
+    </group>
+</menu>
