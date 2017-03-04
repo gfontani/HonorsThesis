@@ -1,4 +1,4 @@
-package honorsthesis.gabriella.taskapplication;
+package honorsthesis.gabriella.honorsthesis;
 
 import org.junit.Test;
 

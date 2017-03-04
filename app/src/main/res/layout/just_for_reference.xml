@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/listView"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/justForReference"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -38,6 +39,20 @@
         android:layout_marginTop="43dp"
         android:textSize="30dp"
         android:textColor="#000000"
+        android:visibility="gone"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="There are no\ndefined processes\nin this List"
+        android:id="@+id/noProcessesText"
+        android:layout_below="@+id/listTitleText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp"
+        android:textSize="30dp"
+        android:textColor="#000000"
         android:visibility="gone"/>
 
     <TextView
@@ -51,5 +66,21 @@
         android:layout_below="@+id/listTitleText"
         android:layout_centerHorizontal="true"
         android:visibility="gone"/>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:src="@android:drawable/ic_dialog_email" />-->
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom|end"-->
+        <!--android:layout_margin="@dimen/fab_margin"-->
+        <!--android:src="@android:drawable/ic_dialog_email" />-->
 
 </RelativeLayout>

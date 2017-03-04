@@ -1,4 +1,4 @@
-package honorsthesis.gabriella.taskapplication;
+package honorsthesis.gabriella.honorsthesis;
 
 /**
  * Created by Gabriella on 11/3/2016.

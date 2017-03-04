@@ -1,4 +1,4 @@
-package honorsthesis.gabriella.taskapplication;
+package honorsthesis.gabriella.honorsthesis;
 
 import android.content.Context;
 import android.graphics.Typeface;

@@ -1,4 +1,4 @@
-package honorsthesis.gabriella.taskapplication;
+package honorsthesis.gabriella.honorsthesis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ public class Process {
     private String notes;
     private List<Step> steps;
 
-    public Process(String name, String notes){
+    public Process(String name){
         this.name = name;
-        this.notes = notes;
+        this.notes = "";
         this.steps = new ArrayList<Step>();
         //Add process to the database
     }

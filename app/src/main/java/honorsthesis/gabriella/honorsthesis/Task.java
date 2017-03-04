@@ -1,4 +1,4 @@
-package honorsthesis.gabriella.taskapplication;
+package honorsthesis.gabriella.honorsthesis;
 
 import java.util.ArrayList;
 import java.util.Date;
