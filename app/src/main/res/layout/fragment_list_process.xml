@@ -1,21 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="honorsthesis.gabriella.honorsthesis.ListProcessView">
+    android:id="@+id/list_view"
+    tools:context=".notInUse.OLD_ListTaskView"
+    android:visibility="visible"
+    android:layout_marginTop="55dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Process"
-        android:id="@+id/processText"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"/>
-
-
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/list"
+        android:name="honorsthesis.gabriella.honorsthesis.ItemFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context=".Views.ListProcessFragment"
+        tools:listitem="@layout/fragment_item" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,10 +41,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:src="@android:drawable/ic_dialog_email"
+        android:src="@drawable/ic_add_white_48px"
         android:clickable="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="false"
-        android:layout_margin="@dimen/fab_margin" />
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="#66bb6a" />
+
 </RelativeLayout>

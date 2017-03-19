@@ -1,5 +1,6 @@
-package honorsthesis.gabriella.honorsthesis;
+package honorsthesis.gabriella.honorsthesis.BackEnd;
 
+import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  */
 public class ThesisList {
     private String name;
-    private List<Task> tasks;
+    public List<Task> tasks;
     private List<Process> processes;
 
     public ThesisList(String name){

@@ -1,4 +1,4 @@
-package honorsthesis.gabriella.honorsthesis;
+package honorsthesis.gabriella.honorsthesis.BackEnd;
 
 /**
  * Created by Gabriella on 11/2/2016.

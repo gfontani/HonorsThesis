@@ -1,10 +1,10 @@
-package honorsthesis.gabriella.honorsthesis;
+package honorsthesis.gabriella.honorsthesis.Views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,25 +12,29 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
+import android.widget.EditText;
+
+import java.util.Collections;
+import java.util.List;
+
+import honorsthesis.gabriella.honorsthesis.BackEnd.*;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
+import honorsthesis.gabriella.honorsthesis.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ListTaskView.OnListSelectedListener, ListProcessView.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ListTaskFragment.OnListFragmentTaskInteractionListener, ListProcessFragment.OnListFragmentProcessInteractionListener {
 
+    DataRepo mDataRepo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDataRepo = new DataRepo(this);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_task);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -39,9 +43,27 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        setUpNavDrawer(navigationView);
+        //navigationView.inflateMenu(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void setUpNavDrawer(NavigationView navigationView){
+        List<String> lists = mDataRepo.getLists();
+        Collections.sort(lists);
+        Menu menu = navigationView.getMenu();
+        SubMenu listMenu = menu.findItem(R.id.nav_list_group).getSubMenu();
+        SubMenu processMenu = menu.findItem(R.id.nav_process_group).getSubMenu();
+        listMenu.clear();
+        processMenu.clear();
+        listMenu.add(R.id.nav_list_group, R.id.nav_all_lists, 0, "All Lists");
+        processMenu.add(R.id.nav_process_group, R.id.nav_all_processes, 0, "All Processes");
+        for (String list:lists) {
+            listMenu.add(R.id.nav_list_group, R.id.nav_list, 1, list);
+            processMenu.add(R.id.nav_process_group, R.id.nav_process, 1, list);
+        }
+        listMenu.add(R.id.nav_list_group, R.id.nav_create_list, 2, "Create List");
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -86,14 +108,18 @@ public class MainActivity extends AppCompatActivity
         switch(menuItem.getItemId()) {
             case R.id.nav_all_lists:
             case R.id.nav_list:
-                fragment = ListTaskView.newInstance(menuItem.getTitle().toString());
+                fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
+                break;
+            case R.id.nav_create_list:
+                //TODO: make his go to new activity: create list
+                fragment = ListTaskFragment.newInstance(1, "Creating list");
                 break;
             case R.id.nav_all_processes:
             case R.id.nav_process:
-                fragment = ListProcessView.newInstance(menuItem.getTitle().toString());
+                fragment = ListProcessFragment.newInstance(1, menuItem.getTitle().toString());
                 break;
             default:
-                fragment = ListTaskView.newInstance(menuItem.getTitle().toString());
+                fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
         }
 
         } catch (Exception e) {
@@ -115,38 +141,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListSelected(String ListName) {
-// The user selected the headline of an article from the HeadlinesFragment
-        // Do something here to display that article
-
-        ListTaskView articleFrag = (ListTaskView)
-                getSupportFragmentManager().findFragmentById(R.id.list_view);
-
-//        if (articleFrag != null) {
-//            // If article frag is available, we're in two-pane layout...
-//
-//            // Call a method in the ArticleFragment to update its content
-//            articleFrag.updateArticleView(position);
-//        } else {
-            // Otherwise, we're in the one-pane layout and must swap frags...
-
-            // Create fragment and give it an argument for the selected article
-            ListTaskView newFragment = new ListTaskView();
-
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
-            transaction.replace(R.id.content_frame, newFragment);
-            transaction.addToBackStack(null);
-
-            // Commit the transaction
-            transaction.commit();
-
+    public void onListFragmentTaskInteraction(Task item, String listName) {
+        Intent intent = new Intent(this, ViewTaskActivity.class);
+        intent.putExtra("task", item);
+        intent.putExtra("list", listName);
+        startActivity(intent);
     }
 
     @Override
-    public void onFragmentInteraction(String name) {
-        //TODO: do something!!
+    public void onListFragmentProcessInteraction(Process item) {
+
     }
 }

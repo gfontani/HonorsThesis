@@ -8,4 +8,14 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_view_task">ViewTaskActivity</string>
+    <string name="list_underline"><u>List:</u></string>
+    <string name="parent_task_underline"><u>Parent Task:</u></string>
+    <string name="subTask_underline"><u>SubTasks:</u></string>
+    <string name="due_date_underline"><u>Due:</u></string>
+    <string name="priority_underline"><u>Priority:</u></string>
+    <string name="notes_underline"><u>Notes:</u></string>
+
+
+
 </resources>
