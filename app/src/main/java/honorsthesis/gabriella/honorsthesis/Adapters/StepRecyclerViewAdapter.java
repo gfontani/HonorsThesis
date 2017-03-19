@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.Views.ListProcessFragment.OnListFragmentProcessInteractionListener;
 import honorsthesis.gabriella.honorsthesis.R;
 
@@ -20,12 +21,12 @@ import java.util.List;
 public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerViewAdapter.ViewHolder> {
 
     private final List<Step> mValues;
-    private final String mParentName;
+    private final Process mParent;
     private final OnListFragmentProcessInteractionListener mListener;
 
-    public StepRecyclerViewAdapter(List<Step> items, String parentProcess, OnListFragmentProcessInteractionListener listener) {
+    public StepRecyclerViewAdapter(List<Step> items, Process parentProcess, OnListFragmentProcessInteractionListener listener) {
         mValues = items;
-        mParentName = parentProcess;
+        mParent = parentProcess;
         mListener = listener;
     }
 
@@ -47,7 +48,7 @@ public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerVi
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentStepInteraction(holder.mItem, mParentName);
+                    mListener.onListFragmentStepInteraction(holder.mItem, mParent);
                 }
             }
         });

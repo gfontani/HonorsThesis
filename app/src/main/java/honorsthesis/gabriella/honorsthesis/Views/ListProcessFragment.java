@@ -109,7 +109,7 @@ public class ListProcessFragment extends Fragment {
     public interface OnListFragmentProcessInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentProcessInteraction(Process item, String listName);
-        void onListFragmentStepInteraction(Step item, String listName);
+        void onListFragmentStepInteraction(Step item, Process parent);
 
     }
 }

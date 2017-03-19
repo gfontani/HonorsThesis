@@ -2,6 +2,8 @@ package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,59 +14,37 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
+import honorsthesis.gabriella.honorsthesis.BackEnd.*;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.R;
 
-public class ViewProcessActivity extends AppCompatActivity {
+public class ViewStepActivity extends AppCompatActivity {
 
-    private int mColumnCount = 1;
-    private String parentList = "list name";
-    private Process process;
+    private honorsthesis.gabriella.honorsthesis.BackEnd.Process parent;
+    private Step step;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent i = getIntent();
-        process = (Process) i.getParcelableExtra("process");
-        parentList = i.getStringExtra("list");
+        parent = (Process) i.getParcelableExtra("parent");
+        step = i.getParcelableExtra("step");
 
-        setContentView(R.layout.activity_view_process);
+        setContentView(R.layout.activity_view_step);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(process.getName());
+        getSupportActionBar().setTitle(step.getName());
 
         setUpContent();
     }
 
     private void setUpContent(){
-        //set up step list
-        if(process.getSteps().size() > 0) {
-            View recView = findViewById(R.id.subTask_list);
-            // Set the adapter
-            if (recView instanceof RecyclerView) {
-                RecyclerView recyclerView = (RecyclerView) recView;
-                if (mColumnCount <= 1) {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                } else {
-                    recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
-                }
-                recyclerView.setAdapter(new StepRecyclerViewAdapter(process.getSteps(), process, (ListProcessFragment.OnListFragmentProcessInteractionListener) this));
-            }
-        }else{
-            (findViewById(R.id.steps_list)).setVisibility(View.GONE);
-            (findViewById(R.id.steps_title)).setVisibility(View.GONE);
-
-        }
-
-        ((TextView)findViewById(R.id.process_parent_list_text)).setText(parentList);
-        ((TextView)findViewById(R.id.process_notes)).setText(process.getNotes());
-
-        //TODO: make button to make an instance of the process
+        ((TextView)findViewById(R.id.step_parent_process_text)).setText(parent.getName());
+        ((TextView)findViewById(R.id.step_notes)).setText(step.getNotes());
     }
 
     @Override
@@ -88,5 +68,4 @@ public class ViewProcessActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

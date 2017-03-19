@@ -25,6 +25,10 @@
         <activity
             android:name=".Views.ViewProcessActivity"
             android:label="@string/title_activity_view_process"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Views.ViewStepActivity"
+            android:label="@string/title_activity_view_step"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

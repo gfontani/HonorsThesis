@@ -44,6 +44,14 @@ public class Step implements Parcelable{
         this.parent = parent;
     }
 
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
     @Override
     public int describeContents() {
         return 0;

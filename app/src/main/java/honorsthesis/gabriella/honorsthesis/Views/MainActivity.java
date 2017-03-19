@@ -157,11 +157,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentStepInteraction(Step item, String listName) {
+    public void onListFragmentStepInteraction(Step item, Process parent) {
         //TODO: create step view and replace ViewProcessAtivity with ViewStepActivity
-        Intent intent = new Intent(this, ViewProcessActivity.class);
+        Intent intent = new Intent(this, ViewStepActivity.class);
         intent.putExtra("step", item);
-        intent.putExtra("list", listName);
+        intent.putExtra("parent", parent);
         startActivity(intent);
     }
 
