@@ -26,14 +26,14 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/list_underline"
-        android:id="@+id/parent_list" />
+        android:id="@+id/task_parent_list" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="List Name"
-        android:id="@+id/parent_list_text"
+        android:id="@+id/task_parent_list_text"
         android:layout_marginLeft="5dp"/>
 </LinearLayout>
 

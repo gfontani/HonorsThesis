@@ -21,6 +21,10 @@
         <activity
             android:name=".Views.ViewTaskActivity"
             android:label="@string/title_activity_view_task"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Views.ViewProcessActivity"
+            android:label="@string/title_activity_view_process"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

@@ -12,37 +12,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
-import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
+import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
+import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.R;
 
-public class ViewTaskActivity extends AppCompatActivity {
+public class ViewProcessActivity extends AppCompatActivity {
 
     private int mColumnCount = 1;
     private String parentList = "list name";
-    private Task task;
+    private Process process;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent i = getIntent();
-        task = (Task) i.getParcelableExtra("task");
+        process = (Process) i.getParcelableExtra("process");
         parentList = i.getStringExtra("list");
 
-        setContentView(R.layout.activity_view_task);
+        setContentView(R.layout.activity_view_process);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(task.getName());
+        getSupportActionBar().setTitle(process.getName());
 
         setUpContent();
     }
 
     private void setUpContent(){
-        //set up subtask list
-        if(task.getChildren().size() > 0) {
+        //set up step list
+        if(process.getSteps().size() > 0) {
             View recView = findViewById(R.id.subTask_list);
             // Set the adapter
             if (recView instanceof RecyclerView) {
@@ -52,25 +53,16 @@ public class ViewTaskActivity extends AppCompatActivity {
                 } else {
                     recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
                 }
-                recyclerView.setAdapter(new TaskRecyclerViewAdapter(task.getChildren(), parentList, (ListTaskFragment.OnListFragmentTaskInteractionListener) this));
+                recyclerView.setAdapter(new StepRecyclerViewAdapter(process.getSteps(), parentList, (ListProcessFragment.OnListFragmentProcessInteractionListener) this));
             }
         }else{
-            (findViewById(R.id.subTask_list)).setVisibility(View.GONE);
-            (findViewById(R.id.subTask_title)).setVisibility(View.GONE);
+            (findViewById(R.id.steps_list)).setVisibility(View.GONE);
+            (findViewById(R.id.steps_title)).setVisibility(View.GONE);
 
         }
 
-        ((TextView)findViewById(R.id.task_parent_list_text)).setText(parentList);
-        if(null == task.getParent()){
-            findViewById(R.id.parent_task_text).setVisibility(View.GONE);
-            findViewById(R.id.parent_task).setVisibility(View.GONE);
-        }
-        else{
-            ((TextView)findViewById(R.id.parent_task_text)).setText(task.getParent().getName());
-        }
-        ((TextView)findViewById(R.id.due_date_text)).setText(task.getDate().toString());
-        ((TextView)findViewById(R.id.priority_text)).setText(task.getPriority().toString());
-        ((TextView)findViewById(R.id.task_notes)).setText(task.getNotes());
+        ((TextView)findViewById(R.id.process_parent_list_text)).setText(parentList);
+        ((TextView)findViewById(R.id.process_notes)).setText(process.getNotes());
     }
 
     @Override

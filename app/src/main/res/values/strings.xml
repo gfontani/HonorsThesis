@@ -15,6 +15,8 @@
     <string name="due_date_underline"><u>Due:</u></string>
     <string name="priority_underline"><u>Priority:</u></string>
     <string name="notes_underline"><u>Notes:</u></string>
+    <string name="title_activity_view_process">ViewProcessActivity</string>
+    <string name="steps_underline"><u>Steps:</u></string>
 
 
 

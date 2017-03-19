@@ -1,4 +1,4 @@
-package honorsthesis.gabriella.honorsthesis.Views;
+package honorsthesis.gabriella.honorsthesis.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,10 +20,12 @@ import java.util.List;
 public class ProcessRecyclerViewAdapter extends RecyclerView.Adapter<ProcessRecyclerViewAdapter.ViewHolder> {
 
     private final List<Process> mValues;
+    private final String mParentListName;
     private final OnListFragmentProcessInteractionListener mListener;
 
-    public ProcessRecyclerViewAdapter(List<Process> items, OnListFragmentProcessInteractionListener listener) {
+    public ProcessRecyclerViewAdapter(List<Process> items, String listName, OnListFragmentProcessInteractionListener listener) {
         mValues = items;
+        mParentListName = listName;
         mListener = listener;
     }
 
@@ -45,7 +47,7 @@ public class ProcessRecyclerViewAdapter extends RecyclerView.Adapter<ProcessRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentProcessInteraction(holder.mItem);
+                    mListener.onListFragmentProcessInteraction(holder.mItem, mParentListName);
                 }
             }
         });

@@ -1,12 +1,16 @@
 package honorsthesis.gabriella.honorsthesis.BackEnd;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Gabriella on 11/3/2016.
  */
-public class Process {
+public class Process implements Parcelable{
     private String name;
     private String notes;
     private List<Step> steps;
@@ -69,5 +73,36 @@ public class Process {
         else{
             return false;
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(notes);
+        dest.writeList(steps);
+    }
+
+    // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+    public static final Parcelable.Creator<Process> CREATOR = new Parcelable.Creator<Process>() {
+        public Process createFromParcel(Parcel in) {
+            return new Process(in);
+        }
+
+        public Process[] newArray(int size) {
+            return new Process[size];
+        }
+    };
+
+    // example constructor that takes a Parcel and gives you an object populated with it's values
+    private Process(Parcel in) {
+        name = in.readString();
+        notes = in.readString();
+        steps = new ArrayList<Step>();
+        in.readList(steps, Step.class.getClassLoader());
     }
 }

@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.R;
@@ -71,7 +73,7 @@ public class ListProcessFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new ProcessRecyclerViewAdapter(list.getProcesses(), mListener));
+            recyclerView.setAdapter(new ProcessRecyclerViewAdapter(list.getProcesses(), list.getName(), mListener));
         }
         return view;
     }
@@ -106,6 +108,8 @@ public class ListProcessFragment extends Fragment {
      */
     public interface OnListFragmentProcessInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentProcessInteraction(Process item);
+        void onListFragmentProcessInteraction(Process item, String listName);
+        void onListFragmentStepInteraction(Step item, String listName);
+
     }
 }
