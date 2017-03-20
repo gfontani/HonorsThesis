@@ -113,4 +113,12 @@ public class DataRepo {
         return tasks;
     }
 
+    public void removeList(String listName){
+        //TODO: implement this
+    }
+
+    public void removeTask(String task, String listName){
+        //TODO: implement this
+    }
+
 }

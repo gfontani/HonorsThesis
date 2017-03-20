@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.R;
@@ -82,7 +81,7 @@ public class ViewProcessActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             //noinspection SimplifiableIfStatement
-            case R.id.action_settings:
+            case R.id.action_delete:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

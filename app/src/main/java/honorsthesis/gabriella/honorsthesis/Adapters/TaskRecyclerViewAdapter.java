@@ -1,9 +1,13 @@
 package honorsthesis.gabriella.honorsthesis.Adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
@@ -31,7 +35,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+                .inflate(R.layout.fragment_item_with_checkbox, parent, false);
         return new ViewHolder(view);
     }
 
@@ -41,16 +45,42 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         //holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).getName());
 
+        //handle checkbox
+        holder.mCheckBox.setOnCheckedChangeListener(null);
+
+        //holder.mCheckBox.setChecked(holder.mItem.isSelected());
+
+        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //delete task
+                if(null != mListener){
+                    mListener.onListFragmentTaskDrag(holder.mItem.getName(), mParentListName);
+                }
+            }
+        });
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentTaskInteraction(holder.mItem, mParentListName);
+                    mListener.onListFragmentTaskClick(holder.mItem, mParentListName);
                 }
             }
         });
+        holder.mView.setOnDragListener(new View.OnDragListener() {
+           @Override
+           public boolean onDrag(View v, DragEvent dragEvent) {
+               if (null != mListener) {
+                   // Notify the active callbacks interface (the activity, if the
+                   // fragment is attached to one) that an item has been selected.
+                   mListener.onListFragmentTaskDrag(holder.mItem.getName(), mParentListName);
+               }
+               return true;
+           }
+       });
     }
 
     @Override
@@ -61,12 +91,14 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mContentView;
+        public final CheckBox mCheckBox;
         public Task mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.content);
+            mCheckBox = (CheckBox) view.findViewById(R.id.task_check_box);
         }
 
         @Override

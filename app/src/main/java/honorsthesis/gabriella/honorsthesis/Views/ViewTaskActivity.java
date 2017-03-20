@@ -88,7 +88,7 @@ public class ViewTaskActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             //noinspection SimplifiableIfStatement
-            case R.id.action_settings:
+            case R.id.action_delete:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

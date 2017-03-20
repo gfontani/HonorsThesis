@@ -13,7 +13,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.widget.EditText;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +61,9 @@ public class MainActivity extends AppCompatActivity
             listMenu.add(R.id.nav_list_group, R.id.nav_list, 1, list);
             processMenu.add(R.id.nav_process_group, R.id.nav_process, 1, list);
         }
-        listMenu.add(R.id.nav_list_group, R.id.nav_create_list, 2, "Create List");
+
+        MenuItem item = listMenu.add(R.id.nav_list_group, R.id.nav_create_list, 2, "Create List");
+        item.setIcon(R.drawable.ic_add_circle_outline_24dp);
     }
     @Override
     public void onBackPressed() {
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_delete) {
             return true;
         }
 
@@ -141,11 +142,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentTaskInteraction(Task item, String listName) {
+    public void onListFragmentTaskClick(Task item, String listName) {
         Intent intent = new Intent(this, ViewTaskActivity.class);
         intent.putExtra("task", item);
         intent.putExtra("list", listName);
         startActivity(intent);
+    }
+
+    @Override
+    public void onListFragmentTaskDrag(String taskName, String listName) {
+        mDataRepo.removeTask(taskName, listName);
+        Fragment fragment = ListTaskFragment.newInstance(1, listName);
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+
     }
 
     @Override

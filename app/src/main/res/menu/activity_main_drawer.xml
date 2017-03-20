@@ -14,7 +14,8 @@
                 android:visible="false"/>
             <item
                 android:id="@+id/nav_create_list"
-                android:title="Create List"/>
+                android:icon="@drawable/ic_add_circle_outline_24dp"
+                android:title="Create List" />
         </menu>
     </item>
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/list_view"
+    android:id="@+id/list_process_view"
     tools:context=".notInUse.OLD_ListTaskView"
     android:visibility="visible"
     android:layout_marginTop="55dp">

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/list_view"
+    android:id="@+id/list_task_view"
     tools:context=".notInUse.OLD_ListTaskView"
     android:visibility="visible"
     android:layout_marginTop="55dp">
@@ -20,7 +20,7 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".Views.ListTaskFragment"
-    tools:listitem="@layout/fragment_item" >
+    tools:listitem="@layout/fragment_item_with_checkbox" >
 
     </android.support.v7.widget.RecyclerView>
 
