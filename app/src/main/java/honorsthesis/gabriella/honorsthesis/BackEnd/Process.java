@@ -1,11 +1,14 @@
 package honorsthesis.gabriella.honorsthesis.BackEnd;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 
 /**
  * Created by Gabriella on 11/3/2016.
@@ -14,12 +17,12 @@ public class Process implements Parcelable{
     private String name;
     private String notes;
     private List<Step> steps;
+    private DataRepo dataRepo;
 
     public Process(String name){
         this.name = name;
         this.notes = "";
         this.steps = new ArrayList<Step>();
-        //Add process to the database
     }
 
     public String getName() {
@@ -48,26 +51,24 @@ public class Process implements Parcelable{
 
     public void addStep(Step step){
         steps.add(step);
-        //TODO: add steps to database under process
     }
 
     public boolean removeStep(Step step) {
         if (steps.contains(step)) {
             steps.remove(step);
             return true;
-            //TODO: modify the database
         }else{
             return false;
         }
     }
 
-    public boolean reorderStep(Step step, int newLocation){
+    public boolean reorderStep(Step step, int newLocation, DataRepo dataRepo, String listName){
         //TODO: check if this actually does what I want it to do
         if(steps.contains(step)){
             steps.remove(step);
             steps.add(newLocation, step);
-
-            //TODO: modify the database
+            dataRepo.removeProcess(name, listName);
+            dataRepo.addProcess(this, listName);
             return true;
         }
         else{

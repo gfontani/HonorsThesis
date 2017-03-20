@@ -77,14 +77,12 @@ public class Task implements Parcelable{
 
     public void addChild(Task child){
         children.add(child);
-        //TODO: add steps to database under process
     }
 
     public boolean removeChild(Task child) {
         if (children.contains(child)) {
             children.remove(child);
             return true;
-            //TODO: modify the db
         }else{
             return false;
         }

@@ -8,7 +8,6 @@
     <string name="action_delete">Delete</string>
     <string name="action_sort">Sort</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_view_task">ViewTaskActivity</string>
     <string name="list_underline"><u>List:</u></string>

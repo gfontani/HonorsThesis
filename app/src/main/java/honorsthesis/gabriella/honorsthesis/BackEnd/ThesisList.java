@@ -10,7 +10,7 @@ import java.util.List;
 public class ThesisList {
     private String name;
     public List<Task> tasks;
-    private List<Process> processes;
+    public List<Process> processes;
 
     public ThesisList(String name){
         this.name = name;

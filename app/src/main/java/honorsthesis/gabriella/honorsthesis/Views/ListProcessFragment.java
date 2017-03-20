@@ -14,6 +14,7 @@ import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 /**
@@ -28,6 +29,7 @@ public class ListProcessFragment extends Fragment {
     private int mColumnCount = 1;
     private static final String LIST_NAME = "All Lists";
     private ThesisList list;
+    private DataRepo mDataRepo;
     private OnListFragmentProcessInteractionListener mListener;
 
     /**
@@ -51,10 +53,11 @@ public class ListProcessFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mDataRepo = new DataRepo(this.getContext());
 
         if (getArguments() != null) {
-            //TODO: get processes from database
             list = new ThesisList(getArguments().getString(LIST_NAME));
+            list.processes = mDataRepo.getProcesses(list.getName());
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
@@ -107,7 +110,6 @@ public class ListProcessFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentProcessInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentProcessInteraction(Process item, String listName);
         void onListFragmentStepInteraction(Step item, Process parent);
 
