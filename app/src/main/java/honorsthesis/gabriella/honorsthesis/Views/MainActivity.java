@@ -30,6 +30,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDataRepo = new DataRepo(this);
+        //TODO take this out!
+        ThesisList testList = new ThesisList("TestList2");
+        mDataRepo.addList(testList);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -150,8 +153,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentTaskDrag(String taskName, String listName) {
-        mDataRepo.removeTask(taskName, listName);
+    public void onListFragmentTaskCheck(Task task, String listName) {
+        mDataRepo.removeTask(task, listName);
         Fragment fragment = ListTaskFragment.newInstance(1, listName);
 
         // Insert the fragment by replacing any existing fragment

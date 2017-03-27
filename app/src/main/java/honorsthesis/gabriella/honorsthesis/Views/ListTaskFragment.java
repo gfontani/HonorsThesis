@@ -121,7 +121,7 @@ public class ListTaskFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete_list) {
-            mDataRepo.removeList(list.getName());
+            mDataRepo.removeList(list);
             FragmentManager fragManager = getFragmentManager();
             FragmentTransaction fragmentTransaction = fragManager.beginTransaction();
             ListTaskFragment nextFrag= new ListTaskFragment();
@@ -167,6 +167,6 @@ public class ListTaskFragment extends Fragment {
      */
     public interface OnListFragmentTaskInteractionListener {
         void onListFragmentTaskClick(Task item, String listName);
-        void onListFragmentTaskDrag(String taskName, String listName);
+        void onListFragmentTaskCheck(Task task, String listName);
     }
 }

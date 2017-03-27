@@ -1,13 +1,11 @@
 package honorsthesis.gabriella.honorsthesis.Adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
@@ -55,7 +53,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //delete task
                 if(null != mListener){
-                    mListener.onListFragmentTaskDrag(holder.mItem.getName(), mParentListName);
+                    mListener.onListFragmentTaskCheck(holder.mItem, mParentListName);
                 }
             }
         });
@@ -70,17 +68,17 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
                 }
             }
         });
-        holder.mView.setOnDragListener(new View.OnDragListener() {
-           @Override
-           public boolean onDrag(View v, DragEvent dragEvent) {
-               if (null != mListener) {
-                   // Notify the active callbacks interface (the activity, if the
-                   // fragment is attached to one) that an item has been selected.
-                   mListener.onListFragmentTaskDrag(holder.mItem.getName(), mParentListName);
-               }
-               return true;
-           }
-       });
+//        holder.mView.setOnDragListener(new View.OnDragListener() {
+//           @Override
+//           public boolean onDrag(View v, DragEvent dragEvent) {
+//               if (null != mListener) {
+//                   // Notify the active callbacks interface (the activity, if the
+//                   // fragment is attached to one) that an item has been selected.
+//                   mListener.onListFragmentTaskCheck(holder.mItem, mParentListName);
+//               }
+//               return true;
+//           }
+//       });
     }
 
     @Override

@@ -1,22 +1,22 @@
 package honorsthesis.gabriella.honorsthesis.DataRepo;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.Priority;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 
 
 /**
@@ -26,170 +26,418 @@ public class DataRepo {
 
     String filename;
     private Context mContext;
+    DatabaseHelper mDbHelper;
 
     public DataRepo(Context context){
         mContext = context;
         filename = "data.txt";
+        mDbHelper = new DatabaseHelper(context);
     }
 
     public List<String> getLists(){
         List<String> lists = new ArrayList<String>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = {
+                DatabaseContract.List.COLUMN_NAME
+        };
 
-        Scanner scan = null;
-        try {
-            scan = new Scanner(mContext.getAssets().open(filename));
-            String line = "";
-            while(scan.hasNext()){
-                line = scan.nextLine();
-                if(line.equals("Start List")){
-                    lists.add(scan.nextLine());
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
+        String sortOrder = DatabaseContract.List.COLUMN_NAME + " DESC";
+        Cursor cursor = db.query(
+                DatabaseContract.List.TABLE_NAME,                     // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        while(cursor.moveToNext()){
+            String listName = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseContract.List.COLUMN_NAME));
+            lists.add(listName);
         }
         return lists;
     }
 
-    public void removeList(String listName){
-        //TODO: implement this
+    public void removeList(ThesisList list){
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        //remove all the tasks in the list
+        // Define 'where' part of task query.
+        String taskSelection = DatabaseContract.Task.COLUMN_PARENT_LIST + "=?";
+        // Specify arguments in placeholder order.
+        String[] selectionArgs = { list.getName() };
+        db.delete(DatabaseContract.Task.TABLE_NAME, taskSelection, selectionArgs);
+
+        if(null != list.getProcesses()){
+            for(Process process : list.getProcesses()){
+                removeProcess(process, list.getName());
+            }
+        }
+
+        // Define 'where' part of query.
+        String listSelection = DatabaseContract.List.COLUMN_NAME + "=?";
+        // Issue SQL statement.
+        db.delete(DatabaseContract.List.TABLE_NAME, listSelection, selectionArgs);
     }
 
-    public void addList(List list){
-        //TODO: implement this
+    public void addList(ThesisList list){
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.List.COLUMN_NAME, list.getName());
+        //add tasks to database
+        List<Task> tasks = list.getTasks();
+        if(null != tasks && 0 != tasks.size()){
+            for(Task task : tasks){
+                addTask(task, list.getName());
+            }
+        }
+
+        //add processes to database
+        List<Process> processes = list.getProcesses();
+        if(null != processes && 0 != processes.size()){
+            for(Process process : processes){
+                addProcess(process, list.getName());
+            }
+        }
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(DatabaseContract.List.TABLE_NAME, null, values);
     }
 
     public List<Task> getTasks(String listName){
-        Scanner scan = null;
-        List<Task> tasks = new ArrayList<Task>();
-        try {
-            scan = new Scanner(mContext.getAssets().open(filename));
-            if(listName.equalsIgnoreCase("All Lists")){
-                tasks = getAllTasks(scan);
-            }
-            else {
-                String line = "";
-                while (scan.hasNext()) {
-                    line = scan.nextLine();
-                    if (line.equals("Start List")) {
-                        line = scan.nextLine();
-                        if (line.equals(listName)) {
-                            tasks = getTasksForList(scan);
-                            break;
-                        }
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tasks;
-    }
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-    private Task getTask(String taskName, Scanner scan){
+// Define a projection that specifies which columns from the database
+// you will actually use after this query.
+        String[] projection = {
+                DatabaseContract.Task.COLUMN_NAME,
+                DatabaseContract.Task.COLUMN_NOTES,
+                DatabaseContract.Task.COLUMN_PRIORITY,
+                DatabaseContract.Task.COLUMN_DATE,
+                DatabaseContract.Task.COLUMN_PARENT_TASK
+        };
+
+// Filter results WHERE "title" = 'My Title'
+        String selection = DatabaseContract.Task.COLUMN_PARENT_LIST + " = ?";
+        String[] selectionArgs = { listName };
+
+// How you want the results sorted in the resulting Cursor
+        //String sortOrder = DatabaseContract.Task.COLUMN_PRIORITY + " DESC";
+
+        Cursor cursor = db.query(
+                DatabaseContract.Task.TABLE_NAME,         // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+
+        List<Task> tasks = new ArrayList<Task>();
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
         String name;
         Date date = new Date();
         Priority priority;
         String notes;
-        String line = "";
-        //get task name
-        name = taskName.substring(11);
-        line = scan.nextLine();
-        //get task date
+
         try {
-            date = (Date) formatter.parse(line);
+            while(cursor.moveToNext()) {
+                name = cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_NAME));
+                notes = cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_NOTES));
+                date = formatter.parse(cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_DATE)));
+                priority = Priority.valueOf(cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_PRIORITY)));
+                tasks.add(new Task(name, notes, priority, date));
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        line = scan.nextLine();
-        //get task priority
-        priority = Priority.valueOf(line);
-        line = scan.nextLine();
-        //get task notes
-        notes = line;
-        //add new task to list
 
-        //TODO: get subtasks
+        //go through tasks and assign correct subtasks and parent tasks
+        cursor.moveToFirst();
+        String parentTaskName = "";
+        while(cursor.moveToNext()) {
+            name = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_NAME));
+            parentTaskName = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_PARENT_TASK));
+            if(null != parentTaskName){
+                Task tempParentTask = new Task(parentTaskName, "", Priority.NONE, new Date());
+                Task tempTask = new Task(name, "", Priority.NONE, new Date());
 
-        //TODO: get parent
-        Task task = new Task(name,notes, priority, date);
-        //task.setChildren();
-        //task.setParent();
+                //get the task
+                Task task = tasks.get(tasks.indexOf(tempTask));
+                Task parentTask = tasks.get(tasks.indexOf(tempParentTask));
+
+                //add the parent task to the task
+                //TODO: check if this adds a reference or if it adds a copy
+                task.setParent(parentTask);
+                //add the task to the parent task's children
+                parentTask.addChild(task);
+            }
+        }
+        cursor.close();
+        return tasks;
+    }
+
+    /*
+    private Task getTask(String taskName, String listName){
+
+        //TODO: do I need this?
+        Task task = new Task("", "", Priority.HIGH, new Date());
+
         return task;
     }
+    */
 
-    private List<Task> getAllTasks(Scanner scan){
-        List<Task> tasks = new ArrayList<Task>();
-        String line = "";
-
-        while(scan.hasNext()){
-            line = scan.nextLine();
-            if(line.startsWith("Task Name: ")){
-                getTask(line, scan);
-            }
-        }
-        return tasks;
-    }
-
-    private List<Task> getTasksForList(Scanner scan){
-        List<Task> tasks = new ArrayList<Task>();
-
-        String line = "";
-        while(scan.hasNext()){
-            line = scan.nextLine();
-            if(line.startsWith("Task Name: ")){
-                getTask(line, scan);
-            }else if(line.equals("End Tasks")){
-                return tasks;
-            }
-        }
-        return tasks;
-    }
-
-    public void removeTask(String task, String listName){
-        //TODO: implement this
+    public void removeTask(Task task, String listName){
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        // Define 'where' part of task child query.
+        String childSelection = DatabaseContract.Task.COLUMN_PARENT_TASK + "=? AND " + DatabaseContract.Task.COLUMN_PARENT_LIST + "=?";
+        // Specify arguments in placeholder order.
+        String[] selectionArgs = { task.getName(), listName};
+        // Issue SQL statement.
+        db.delete(DatabaseContract.Task.TABLE_NAME, childSelection, selectionArgs);
+        // Define 'where' part of task parent query.
+        String parentSelection = DatabaseContract.Task.COLUMN_NAME + "=? AND " + DatabaseContract.Task.COLUMN_PARENT_LIST + "=?";
+        // Specify arguments in placeholder order.
+        // Issue SQL statement.
+        db.delete(DatabaseContract.Task.TABLE_NAME, parentSelection, selectionArgs);
     }
 
     public void addTask(Task task, String listName){
-        //TODO: implement this
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Task.COLUMN_NAME, task.getName());
+        values.put(DatabaseContract.Task.COLUMN_NOTES, task.getNotes());
+        values.put(DatabaseContract.Task.COLUMN_PRIORITY, task.getPriority().toString());
+        values.put(DatabaseContract.Task.COLUMN_DATE, task.getDate().toString());
+        values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
+        values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, listName);
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(DatabaseContract.Task.TABLE_NAME, null, values);
+    }
+
+    public void updateTask(Task task, String listName){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        // New value for one column
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Task.COLUMN_NOTES, task.getNotes());
+        values.put(DatabaseContract.Task.COLUMN_PRIORITY, task.getPriority().toString());
+        values.put(DatabaseContract.Task.COLUMN_DATE, task.getDate().toString());
+        values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
+        values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, listName);
+
+        // Which row to update, based on the title
+        String selection = DatabaseContract.Task.COLUMN_NAME + "=? AND " + DatabaseContract.Task.COLUMN_PARENT_LIST + "=?";
+        String[] selectionArgs = { task.getName(), listName };
+
+        int count = db.update(
+                DatabaseContract.Task.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
     }
 
     public List<Process> getProcesses(String listName){
         List<Process> processes = new ArrayList<Process>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
+// Define a projection that specifies which columns from the database
+// you will actually use after this query.
+        String[] projection = {
+                DatabaseContract.Process.COLUMN_NAME,
+                DatabaseContract.Process.COLUMN_NOTES,
+        };
+
+// Filter results WHERE "title" = 'My Title'
+        String selection = DatabaseContract.Process.COLUMN_PARENT_LIST + " = ?";
+        String[] selectionArgs = { listName };
+
+// How you want the results sorted in the resulting Cursor
+        //String sortOrder = DatabaseContract.Task.COLUMN_PRIORITY + " DESC";
+
+        Cursor cursor = db.query(
+                DatabaseContract.Process.TABLE_NAME,      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+
+        String name;
+        String notes;
+        while(cursor.moveToNext()) {
+            name = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Process.COLUMN_NAME));
+            notes = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Process.COLUMN_NOTES));
+            List<Step> steps = getSteps(name);
+            Process process = new Process(name);
+            process.setNotes(notes);
+            process.setSteps(steps);
+            processes.add(process);
+        }
         return processes;
     }
 
-    public Process getProcess(String processName, Scanner scan){
-        Process process = new Process("");
+    public void removeProcess(Process process, String listName) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        //Delete all of the steps of the process
+        // Define 'where' part of step query.
+        String stepSelection = DatabaseContract.Step.COLUMN_PARENT_PROCESS + "=?";
+        // Specify arguments in placeholder order.
+        String[] stepSelectionArgs = { process.getName()};
+        // Issue SQL statement.
+        db.delete(DatabaseContract.Step.TABLE_NAME, stepSelection, stepSelectionArgs);
 
-        return process;
-    }
-
-    public void removeProcess(String processName, String listName){
-
+        //Delete the process
+        // Define 'where' part of process query.
+        String processSelection = DatabaseContract.Process.COLUMN_NAME + "=? AND " + DatabaseContract.Process.COLUMN_PARENT_LIST + "=?";
+        // Specify arguments in placeholder order.
+        String[] processSelectionArgs = { process.getName(), listName };
+        // Issue SQL statement.
+        db.delete(DatabaseContract.Process.TABLE_NAME, processSelection, processSelectionArgs);
     }
 
     public void addProcess(Process process, String listName){
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Process.COLUMN_NAME, process.getName());
+        values.put(DatabaseContract.Process.COLUMN_NOTES, process.getNotes());
+        values.put(DatabaseContract.Process.COLUMN_PARENT_LIST, listName);
+
+        List<Step> steps = process.getSteps();
+        if(null != steps){
+            for(Step step : steps){
+                addStep(step);
+            }
+        }
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(DatabaseContract.Process.TABLE_NAME, null, values);
     }
 
-    public Step getStep(Scanner scan){
-        Step step = new Step("", Priority.HIGH);
+    public void updateProcess(Process process, String listName){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
-        return step;
+// New value for one column
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Process.COLUMN_NOTES, process.getNotes());
+
+// Which row to update, based on the title
+        String selection = DatabaseContract.Process.COLUMN_NAME + "=? AND " + DatabaseContract.Process.COLUMN_PARENT_LIST + "=?";
+        String[] selectionArgs = { process.getName(), listName };
+
+        int count = db.update(
+                DatabaseContract.Process.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
     }
 
-    public void removeStep(String listName, String processName){
+    public List<Step> getSteps(String processName){
+        List<Step> steps = new ArrayList<Step>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
+// Define a projection that specifies which columns from the database
+// you will actually use after this query.
+        String[] projection = {
+                DatabaseContract.Step.COLUMN_NAME,
+                DatabaseContract.Step.COLUMN_NOTES,
+                DatabaseContract.Step.COLUMN_PRIORITY,
+        };
+
+// Filter results WHERE "title" = 'My Title'
+        String selection = DatabaseContract.Step.COLUMN_PARENT_PROCESS + " = ?";
+        String[] selectionArgs = { processName };
+
+// How you want the results sorted in the resulting Cursor
+        //String sortOrder = DatabaseContract.Task.COLUMN_PRIORITY + " DESC";
+
+        Cursor cursor = db.query(
+                DatabaseContract.Step.TABLE_NAME,      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+
+        String name;
+        String notes;
+        Priority priority;
+        while(cursor.moveToNext()) {
+            name = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Step.COLUMN_NAME));
+            notes = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Step.COLUMN_NOTES));
+            priority = Priority.valueOf(cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Step.COLUMN_PRIORITY)));
+            Step step = new Step(name, priority);
+            step.setNotes(notes);
+            steps.add(step);
+        }
+        return steps;
     }
 
-    public void addStep(String listName, String processName){
+    public void removeStep(Step step, String processName){
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        // Define 'where' part of query.
+        String stepSelection = DatabaseContract.Step.COLUMN_NAME + "=? AND " + DatabaseContract.Step.COLUMN_PARENT_PROCESS + "=?";
+        // Specify arguments in placeholder order.
+        String[] stepSelectionArgs = { step.getName(), step.getParent().getName()};
+        // Issue SQL statement.
+        db.delete(DatabaseContract.Step.TABLE_NAME, stepSelection, stepSelectionArgs);
+    }
 
+    public void addStep(Step step){
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Step.COLUMN_NAME, step.getName());
+        values.put(DatabaseContract.Step.COLUMN_NOTES, step.getNotes());
+        values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
+        values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParent().getName());
+
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(DatabaseContract.Step.TABLE_NAME, null, values);
+    }
+
+    public void updateStep (Step step){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        // New value for one column
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Step.COLUMN_NOTES, step.getNotes());
+        values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
+
+// Which row to update, based on the title
+        String selection = DatabaseContract.Step.COLUMN_NAME + "=? AND " + DatabaseContract.Step.COLUMN_PARENT_PROCESS + "=?";
+        String[] selectionArgs = { step.getName(), step.getParent().getName() };
+
+        int count = db.update(
+                DatabaseContract.Step.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
     }
 }

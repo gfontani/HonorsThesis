@@ -136,4 +136,15 @@ public class Task implements Parcelable{
         children = new ArrayList<Task>();
         in.readList(children, Task.class.getClassLoader());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Task){
+            Task object = (Task) o;
+            if(object.getName().equalsIgnoreCase(this.getName())){
+                return true;
+            }
+        }
+        return false;
+    }
 }

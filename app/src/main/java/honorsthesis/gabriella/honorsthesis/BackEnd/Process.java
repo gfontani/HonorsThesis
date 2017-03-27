@@ -17,7 +17,6 @@ public class Process implements Parcelable{
     private String name;
     private String notes;
     private List<Step> steps;
-    private DataRepo dataRepo;
 
     public Process(String name){
         this.name = name;
@@ -67,8 +66,6 @@ public class Process implements Parcelable{
         if(steps.contains(step)){
             steps.remove(step);
             steps.add(newLocation, step);
-            dataRepo.removeProcess(name, listName);
-            dataRepo.addProcess(this, listName);
             return true;
         }
         else{
