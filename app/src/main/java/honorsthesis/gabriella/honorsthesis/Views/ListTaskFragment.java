@@ -3,6 +3,7 @@ package honorsthesis.gabriella.honorsthesis.Views;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -132,6 +133,14 @@ public class ListTaskFragment extends Fragment {
             fragmentTransaction.hide(ListTaskFragment.this);
             fragmentTransaction.replace(R.id.content_frame, nextFrag);
             fragmentTransaction.commit();
+
+            //reset the nav drawer menu to reflect deleted item
+            MainActivity ma = ((MainActivity)getActivity());
+            NavigationView navigationView = (NavigationView) ma.findViewById(R.id.nav_view);
+            ma.setUpNavDrawer(navigationView);
+            //navigationView.inflateMenu(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(ma);
+
             return true;
         }
 

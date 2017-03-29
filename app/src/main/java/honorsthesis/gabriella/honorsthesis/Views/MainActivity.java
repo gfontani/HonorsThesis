@@ -30,9 +30,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDataRepo = new DataRepo(this);
-        //TODO take this out!
-        ThesisList testList = new ThesisList("TestList2");
-        mDataRepo.addList(testList);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -48,9 +45,19 @@ public class MainActivity extends AppCompatActivity
         setUpNavDrawer(navigationView);
         //navigationView.inflateMenu(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Intent i = getIntent();
+        String listName = i.getStringExtra("listName");
+        if(null != listName){
+            Fragment fragment = ListTaskFragment.newInstance(1, listName);
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        }
     }
 
-    private void setUpNavDrawer(NavigationView navigationView){
+    public void setUpNavDrawer(NavigationView navigationView){
         List<String> lists = mDataRepo.getLists();
         Collections.sort(lists);
         Menu menu = navigationView.getMenu();
@@ -115,9 +122,9 @@ public class MainActivity extends AppCompatActivity
                 fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
                 break;
             case R.id.nav_create_list:
-                //TODO: make his go to new activity: create list
-                fragment = ListTaskFragment.newInstance(1, "Creating list");
-                break;
+                Intent intent = new Intent(this, CreateListActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.nav_all_processes:
             case R.id.nav_process:
                 fragment = ListProcessFragment.newInstance(1, menuItem.getTitle().toString());
