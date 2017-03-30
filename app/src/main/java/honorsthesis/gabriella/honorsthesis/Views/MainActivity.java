@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
         //navigationView.inflateMenu(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //TODO: differentiate if process or task was made
         Intent i = getIntent();
         String listName = i.getStringExtra("listName");
         if(null != listName){
@@ -122,6 +123,10 @@ public class MainActivity extends AppCompatActivity
                 fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
                 break;
             case R.id.nav_create_list:
+                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                if (drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                }
                 Intent intent = new Intent(this, CreateListActivity.class);
                 startActivity(intent);
                 return true;

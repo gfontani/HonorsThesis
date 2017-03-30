@@ -40,7 +40,7 @@ public final class DatabaseContract {
         public static final String TABLE_NAME = "process";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_NOTES = "notes";
-        public static final String COLUMN_PARENT_LIST = "parent list";
+        public static final String COLUMN_PARENT_LIST = "parent_list";
 
     }
 }

@@ -16,11 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/process_list_info"
-        android:layout_below="@+id/view"
-        android:layout_toRightOf="@+id/include"
-        android:layout_marginLeft="42dp"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="60dp">
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

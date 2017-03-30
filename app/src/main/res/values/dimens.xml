@@ -5,8 +5,11 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="create_align_label_margin">5dp</dimen>
+    <dimen name="align_label_with_text_margin">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="design_navigation_icon_padding" tools:override="true">5dp</dimen>
     <dimen name="nav_drawer_item_indent">20dp</dimen>
+    <dimen name="create_label">20dp</dimen>
 </resources>

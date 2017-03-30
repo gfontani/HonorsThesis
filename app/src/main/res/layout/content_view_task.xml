@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/fragment_item"
+        tools:listitem="@layout/fragment_item_with_checkbox"
         android:layout_toRightOf="@+id/task_list_info"
         android:layout_toEndOf="@+id/task_list_info"
         android:layout_below="@+id/subTask_title"

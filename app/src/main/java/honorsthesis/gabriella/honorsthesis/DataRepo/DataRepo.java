@@ -215,13 +215,17 @@ public class DataRepo {
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
+
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Task.COLUMN_NAME, task.getName());
         values.put(DatabaseContract.Task.COLUMN_NOTES, task.getNotes());
         values.put(DatabaseContract.Task.COLUMN_PRIORITY, task.getPriority().toString());
-        values.put(DatabaseContract.Task.COLUMN_DATE, task.getDate().toString());
-        values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
+        values.put(DatabaseContract.Task.COLUMN_DATE, formatter.format(task.getDate()));
+        if(null != task.getParent()){
+            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
+        }
         values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, listName);
 
         // Insert the new row, returning the primary key value of the new row

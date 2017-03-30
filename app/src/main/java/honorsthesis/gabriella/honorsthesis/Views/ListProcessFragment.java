@@ -1,7 +1,9 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
+import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
@@ -44,7 +48,6 @@ public class ListProcessFragment extends Fragment {
         ListProcessFragment fragment = new ListProcessFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
-        ThesisList list = new ThesisList(listName);
         args.putString(LIST_NAME, listName);
         fragment.setArguments(args);
         return fragment;
@@ -53,6 +56,7 @@ public class ListProcessFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mDataRepo = new DataRepo(this.getContext());
 
         if (getArguments() != null) {
@@ -67,17 +71,39 @@ public class ListProcessFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_process, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        getActivity().setTitle(list.getName());
+        if(list.getProcesses().size() > 0) {
+            ((TextView)view.findViewById(R.id.noProcessesText)).setVisibility(View.GONE);
+            ((RecyclerView)view.findViewById(R.id.list)).setVisibility(View.VISIBLE);
+            View recView = view.findViewById(R.id.list);
+            // Set the adapter
+            if (recView instanceof RecyclerView) {
+                Context context = view.getContext();
+                RecyclerView recyclerView = (RecyclerView) recView;
+                if (mColumnCount <= 1) {
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                } else {
+                    recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                }
+                recyclerView.setAdapter(new ProcessRecyclerViewAdapter(list.getProcesses(), list.getName(), mListener));
             }
-            recyclerView.setAdapter(new ProcessRecyclerViewAdapter(list.getProcesses(), list.getName(), mListener));
+        }else{
+            ((RecyclerView)view.findViewById(R.id.list)).setVisibility(View.GONE);
+            ((TextView)view.findViewById(R.id.noProcessesText)).setVisibility(View.VISIBLE);
         }
+
+
+        FloatingActionButton addTask = (FloatingActionButton) view.findViewById(R.id.add_process);
+        addTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //go to the create task activity
+                MainActivity ma = ((MainActivity)getActivity());
+                Intent intent = new Intent(ma, CreateProcessActivity.class);
+                intent.putExtra("listName", list.getName());
+                startActivity(intent);
+            }
+        });
         return view;
     }
 

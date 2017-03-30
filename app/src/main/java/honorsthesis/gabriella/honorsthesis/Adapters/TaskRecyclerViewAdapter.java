@@ -68,17 +68,6 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
                 }
             }
         });
-//        holder.mView.setOnDragListener(new View.OnDragListener() {
-//           @Override
-//           public boolean onDrag(View v, DragEvent dragEvent) {
-//               if (null != mListener) {
-//                   // Notify the active callbacks interface (the activity, if the
-//                   // fragment is attached to one) that an item has been selected.
-//                   mListener.onListFragmentTaskCheck(holder.mItem, mParentListName);
-//               }
-//               return true;
-//           }
-//       });
     }
 
     @Override
