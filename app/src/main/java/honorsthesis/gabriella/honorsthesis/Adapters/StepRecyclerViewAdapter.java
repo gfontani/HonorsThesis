@@ -1,5 +1,6 @@
 package honorsthesis.gabriella.honorsthesis.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.Views.ListProcessFragment.OnListFragmentProcessInteractionListener;
 import honorsthesis.gabriella.honorsthesis.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +21,13 @@ import java.util.List;
  */
 public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Step> mValues;
+    private List<Step> mValues;
     private final Process mParent;
     private final OnListFragmentProcessInteractionListener mListener;
+    private Context mContext;
 
-    public StepRecyclerViewAdapter(List<Step> items, Process parentProcess, OnListFragmentProcessInteractionListener listener) {
+    public StepRecyclerViewAdapter(Context context, List<Step> items, Process parentProcess, OnListFragmentProcessInteractionListener listener) {
+        mContext = context;
         mValues = items;
         mParent = parentProcess;
         mListener = listener;
@@ -47,6 +51,7 @@ public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerVi
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
+                    //TODO: implement this in the process view and create activities
                     mListener.onListFragmentStepInteraction(holder.mItem, mParent);
                 }
             }
@@ -56,6 +61,17 @@ public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerVi
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public void refresh(List<Step> steps){
+        if(null != mValues){
+            mValues.clear();
+            mValues.addAll(steps);
+        }else{
+            mValues = steps;
+
+        }
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

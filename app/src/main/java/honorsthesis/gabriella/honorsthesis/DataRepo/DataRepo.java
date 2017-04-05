@@ -220,9 +220,15 @@ public class DataRepo {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Task.COLUMN_NAME, task.getName());
-        values.put(DatabaseContract.Task.COLUMN_NOTES, task.getNotes());
-        values.put(DatabaseContract.Task.COLUMN_PRIORITY, task.getPriority().toString());
-        values.put(DatabaseContract.Task.COLUMN_DATE, formatter.format(task.getDate()));
+        if(null != task.getNotes()){
+            values.put(DatabaseContract.Task.COLUMN_NOTES, task.getNotes());
+        }
+        if(null != task.getPriority()){
+            values.put(DatabaseContract.Task.COLUMN_PRIORITY, task.getPriority().toString());
+        }
+        if(null != task.getDate()){
+            values.put(DatabaseContract.Task.COLUMN_DATE, formatter.format(task.getDate()));
+        }
         if(null != task.getParent()){
             values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
         }
@@ -234,13 +240,22 @@ public class DataRepo {
 
     public void updateTask(Task task, String listName){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
 
         // New value for one column
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Task.COLUMN_NOTES, task.getNotes());
-        values.put(DatabaseContract.Task.COLUMN_PRIORITY, task.getPriority().toString());
-        values.put(DatabaseContract.Task.COLUMN_DATE, task.getDate().toString());
-        values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
+        if(null != task.getNotes()){
+            values.put(DatabaseContract.Task.COLUMN_NOTES, task.getNotes());
+        }
+        if(null != task.getPriority()){
+            values.put(DatabaseContract.Task.COLUMN_PRIORITY, task.getPriority().toString());
+        }
+        if(null != task.getDate()){
+            values.put(DatabaseContract.Task.COLUMN_DATE, formatter.format(task.getDate()));
+        }
+        if(null != task.getParent()){
+            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
+        }
         values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, listName);
 
         // Which row to update, based on the title
@@ -324,7 +339,9 @@ public class DataRepo {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Process.COLUMN_NAME, process.getName());
-        values.put(DatabaseContract.Process.COLUMN_NOTES, process.getNotes());
+        if(null != process.getNotes()){
+            values.put(DatabaseContract.Process.COLUMN_NOTES, process.getNotes());
+        }
         values.put(DatabaseContract.Process.COLUMN_PARENT_LIST, listName);
 
         List<Step> steps = process.getSteps();
@@ -386,15 +403,18 @@ public class DataRepo {
 
         String name;
         String notes;
-        Priority priority;
+        String priorityString;
         while(cursor.moveToNext()) {
             name = cursor.getString(
                     cursor.getColumnIndexOrThrow(DatabaseContract.Step.COLUMN_NAME));
             notes = cursor.getString(
                     cursor.getColumnIndexOrThrow(DatabaseContract.Step.COLUMN_NOTES));
-            priority = Priority.valueOf(cursor.getString(
-                    cursor.getColumnIndexOrThrow(DatabaseContract.Step.COLUMN_PRIORITY)));
-            Step step = new Step(name, priority);
+            priorityString = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Step.COLUMN_PRIORITY));
+            Step step = new Step(name);
+            if(null != priorityString && !priorityString.isEmpty()){
+                step.setPriority(Priority.valueOf(priorityString));
+            }
             step.setNotes(notes);
             steps.add(step);
         }
@@ -418,8 +438,12 @@ public class DataRepo {
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Step.COLUMN_NAME, step.getName());
-        values.put(DatabaseContract.Step.COLUMN_NOTES, step.getNotes());
-        values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
+        if(null != step.getNotes()){
+            values.put(DatabaseContract.Step.COLUMN_NOTES, step.getNotes());
+        }
+        if(null != step.getPriority()){
+            values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
+        }
         values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParent().getName());
 
         // Insert the new row, returning the primary key value of the new row
@@ -431,8 +455,12 @@ public class DataRepo {
 
         // New value for one column
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Step.COLUMN_NOTES, step.getNotes());
-        values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
+        if(null != step.getNotes()){
+            values.put(DatabaseContract.Step.COLUMN_NOTES, step.getNotes());
+        }
+        if(null != step.getPriority()){
+            values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
+        }
 
 // Which row to update, based on the title
         String selection = DatabaseContract.Step.COLUMN_NAME + "=? AND " + DatabaseContract.Step.COLUMN_PARENT_PROCESS + "=?";

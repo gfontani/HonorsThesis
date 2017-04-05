@@ -18,6 +18,11 @@ import honorsthesis.gabriella.honorsthesis.R;
 
 public class ViewProcessActivity extends AppCompatActivity {
 
+    public StepRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ListProcessFragment.OnListFragmentProcessInteractionListener mListener;
+
     private int mColumnCount = 1;
     private String parentList = "list name";
     private Process process;
@@ -43,16 +48,14 @@ public class ViewProcessActivity extends AppCompatActivity {
     private void setUpContent(){
         //set up step list
         if(process.getSteps().size() > 0) {
-            View recView = findViewById(R.id.subTask_list);
+            View recView = findViewById(R.id.steps_list);
             // Set the adapter
             if (recView instanceof RecyclerView) {
-                RecyclerView recyclerView = (RecyclerView) recView;
-                if (mColumnCount <= 1) {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                } else {
-                    recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
-                }
-                recyclerView.setAdapter(new StepRecyclerViewAdapter(process.getSteps(), process, (ListProcessFragment.OnListFragmentProcessInteractionListener) this));
+                mRecyclerView = (RecyclerView) recView;
+                mLayoutManager = new LinearLayoutManager(this);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mAdapter = new StepRecyclerViewAdapter(this, process.getSteps(), process, mListener);
+                mRecyclerView.setAdapter(mAdapter);
             }
         }else{
             (findViewById(R.id.steps_list)).setVisibility(View.GONE);

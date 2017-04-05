@@ -15,9 +15,8 @@ public class Step implements Parcelable{
     private Process parent;
     private String notes;
 
-    public Step(String name, Priority priority){
+    public Step(String name){
         this.name = name;
-        this.priority = priority;
     }
 
     public String getName() {
@@ -61,7 +60,12 @@ public class Step implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(notes);
-        dest.writeString(priority.toString());
+        if(null != priority){
+            dest.writeString(priority.toString());
+        }
+        else{
+            dest.writeString("");
+        }
         dest.writeParcelable(parent, flags);
     }
 
@@ -80,7 +84,12 @@ public class Step implements Parcelable{
     private Step(Parcel in) {
         name = in.readString();
         notes = in.readString();
-        priority = Priority.valueOf(in.readString());
+        String priorityString = in.readString();
+        if(!priorityString.isEmpty()){
+            priority = Priority.valueOf(priorityString);
+        }else{
+            priority = null;
+        }
         in.readParcelable(Step.class.getClassLoader());
     }
 }

@@ -53,13 +53,15 @@
         android:name="honorsthesis.gabriella.honorsthesis.ItemFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
+        android:fillViewport="true"
+        tools:context=".Views.ViewProcessActivity"
         tools:listitem="@layout/fragment_item"
-        android:layout_toRightOf="@+id/process_list_info"
-        android:layout_toEndOf="@+id/process_list_info"
-        android:layout_below="@+id/steps_title"
-        android:layout_marginTop="10dp" />
+        android:layout_weight="1.40"
+        android:layout_below="@+id/steps_title">
+    </android.support.v7.widget.RecyclerView>
 
     <TextView
         android:layout_width="wrap_content"

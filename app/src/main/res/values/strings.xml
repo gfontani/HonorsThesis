@@ -18,6 +18,7 @@
     <string name="notes_underline"><u>Notes:</u></string>
     <string name="title_activity_view_process">ViewProcessActivity</string>
     <string name="steps_underline"><u>Steps:</u></string>
+    <string name="step_underline"><u>Step:</u></string>
     <string name="task_underline"><u>Task:</u></string>
     <string name="process_underline"><u>Process:</u></string>
     <string name="title_activity_view_step">ViewStepActivity</string>
