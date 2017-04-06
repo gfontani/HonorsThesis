@@ -24,7 +24,6 @@ import honorsthesis.gabriella.honorsthesis.R;
  * Screen that allows user to create a new list.
  */
 public class CreateListActivity extends AppCompatActivity {
-//TODO: Make this a popup instead
     //database
     private DataRepo mDataRepo;
     // UI references.

@@ -39,7 +39,6 @@ public class CreateStepActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    //set process name
     Intent i = getIntent();
     parentProcess = i.getParcelableExtra("parentProcess");
 
@@ -58,13 +57,13 @@ public class CreateStepActivity extends AppCompatActivity {
     mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
 
 
-    Button mCreateProcessButton = (Button) findViewById(R.id.create_step_button);
-    mCreateProcessButton.setOnClickListener(new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            createStep();
-        }
-    });
+//    Button mCreateProcessButton = (Button) findViewById(R.id.create_step_button);
+//    mCreateProcessButton.setOnClickListener(new OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            createStep();
+//        }
+//    });
 
     //set up toolbar
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -15,8 +15,17 @@ public class Task implements Parcelable{
     private String notes;
     private Priority priority;
     private Date date;
-    private Task parent;
+    private String parent;
     private List<Task> children;
+
+    public Task(String name){
+        this.name = name;
+        this.notes = "";
+        this.priority = null;
+        this.date = null;
+        this.parent = null;
+        this.children = new ArrayList<Task>();
+    }
 
     public Task(String name, String notes, Priority priority, Date date){
         this.name = name;
@@ -59,11 +68,11 @@ public class Task implements Parcelable{
         this.date = date;
     }
 
-    public Task getParent() {
+    public String getParent() {
         return parent;
     }
 
-    public void setParent(Task parent) {
+    public void setParent(String parent) {
         this.parent = parent;
     }
 
@@ -107,12 +116,32 @@ public class Task implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(notes);
-        dest.writeString(priority.toString());
-        dest.writeLong(date.getTime());
-        dest.writeParcelable(parent, flags);
-        dest.writeList(children);
+        if(null != name){
+            dest.writeString(name);
+        }
+        if(null != notes){
+            dest.writeString(notes);
+        }else{
+            dest.writeString("");
+        }
+        if(null != priority){
+            dest.writeString(priority.toString());
+        }else{
+            dest.writeString("");
+        }
+        if(null != date){
+            dest.writeLong(date.getTime());
+        }else {
+            dest.writeLong(-1);
+        }
+        if(null != parent){
+            dest.writeString(parent);
+        }else{
+            dest.writeString("");
+        }
+        if(null != children){
+            dest.writeList(children);
+        }
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -130,9 +159,18 @@ public class Task implements Parcelable{
     private Task(Parcel in) {
         name = in.readString();
         notes = in.readString();
-        priority = Priority.valueOf(in.readString());
-        date = new Date(in.readLong());
-        parent = in.readParcelable(Task.class.getClassLoader());
+        String priorityString = in.readString();
+        if(null != priorityString && !priorityString.isEmpty()){
+            priority = Priority.valueOf(priorityString);
+        }
+        Long dateLong = in.readLong();
+        if(dateLong != -1){
+            date = new Date(dateLong);
+        }
+        parent = in.readString();
+        if(parent.isEmpty()){
+            parent = null;
+        }
         children = new ArrayList<Task>();
         in.readList(children, Task.class.getClassLoader());
     }

@@ -60,13 +60,19 @@ public class ListTaskFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        mDataRepo = new DataRepo(this.getContext());
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-            list = new ThesisList(getArguments().getString(ARG_LIST_NAME));
-            list.tasks = mDataRepo.getTasks(list.getName());
+        try {
+
+
+            super.onCreate(savedInstanceState);
+            setHasOptionsMenu(true);
+            mDataRepo = new DataRepo(this.getContext());
+            if (getArguments() != null) {
+                mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+                list = new ThesisList(getArguments().getString(ARG_LIST_NAME));
+                list.tasks = mDataRepo.getTasks(list.getName());
+            }
+        }catch(Exception e){
+            System.out.println("here");
         }
     }
 
@@ -88,7 +94,7 @@ public class ListTaskFragment extends Fragment {
                 } else {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
-                recyclerView.setAdapter(new TaskRecyclerViewAdapter(list.getTasks(), list.getName(), mListener));
+                recyclerView.setAdapter(new TaskRecyclerViewAdapter(context, list.getTasks(), list.getName(), mListener));
             }
         }else{
             ((RecyclerView)view.findViewById(R.id.list)).setVisibility(View.GONE);

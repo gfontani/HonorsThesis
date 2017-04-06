@@ -139,7 +139,9 @@ public class DataRepo {
         List<Task> tasks = new ArrayList<Task>();
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
         String name;
+        String dateString;
         Date date = new Date();
+        String priorityString;
         Priority priority;
         String notes;
 
@@ -149,11 +151,24 @@ public class DataRepo {
                         cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_NAME));
                 notes = cursor.getString(
                         cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_NOTES));
-                date = formatter.parse(cursor.getString(
-                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_DATE)));
-                priority = Priority.valueOf(cursor.getString(
-                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_PRIORITY)));
-                tasks.add(new Task(name, notes, priority, date));
+                dateString = cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_DATE));
+                priorityString = cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_PRIORITY));
+
+                Task newTask = new Task(name);
+                if(null != notes){
+                    newTask.setNotes(notes);
+                }
+                if(null != priorityString && !priorityString.isEmpty()){
+                    priority = Priority.valueOf(priorityString);
+                    newTask.setPriority(priority);
+                }
+                if(null != dateString && !dateString.isEmpty()){
+                    date = formatter.parse(dateString);
+                    newTask.setDate(date);
+                }
+                tasks.add(newTask);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -176,8 +191,7 @@ public class DataRepo {
                 Task parentTask = tasks.get(tasks.indexOf(tempParentTask));
 
                 //add the parent task to the task
-                //TODO: check if this adds a reference or if it adds a copy
-                task.setParent(parentTask);
+                task.setParent(parentTaskName);
                 //add the task to the parent task's children
                 parentTask.addChild(task);
             }
@@ -185,16 +199,6 @@ public class DataRepo {
         cursor.close();
         return tasks;
     }
-
-    /*
-    private Task getTask(String taskName, String listName){
-
-        //TODO: do I need this?
-        Task task = new Task("", "", Priority.HIGH, new Date());
-
-        return task;
-    }
-    */
 
     public void removeTask(Task task, String listName){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -230,7 +234,7 @@ public class DataRepo {
             values.put(DatabaseContract.Task.COLUMN_DATE, formatter.format(task.getDate()));
         }
         if(null != task.getParent()){
-            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
+            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent());
         }
         values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, listName);
 
@@ -254,7 +258,7 @@ public class DataRepo {
             values.put(DatabaseContract.Task.COLUMN_DATE, formatter.format(task.getDate()));
         }
         if(null != task.getParent()){
-            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent().getName());
+            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent());
         }
         values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, listName);
 

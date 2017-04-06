@@ -20,6 +20,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -52,6 +53,7 @@ public class CreateProcessActivity extends AppCompatActivity{
 
     // UI references.
     private EditText mProcessNameView;
+    private EditText mStepNameView;
     private EditText mNotesView;
 
     List<Step> steps;
@@ -68,7 +70,6 @@ public class CreateProcessActivity extends AppCompatActivity{
         mDataRepo = new DataRepo(this);
 
         steps = new ArrayList<Step>();
-        steps.add(new Step("name"));
 
         setContentView(R.layout.activity_create_process);
         // Set up the create process form.
@@ -88,30 +89,41 @@ public class CreateProcessActivity extends AppCompatActivity{
         }
 
         //set listener for add step
-        TextView mAddStep = (TextView) findViewById(R.id.create_subTask);
+        ImageView mAddStep = (ImageView) findViewById(R.id.create_step);
         mAddStep.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                Intent createStep = new Intent(CreateProcessActivity.this, CreateStepActivity.class);
-                //createStep.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                createStep.putExtra("listName", listName);
-                if(null == process){
-                    createStep.putExtra("parentProcess", new Process("Create Process"));
+//                Intent createStep = new Intent(CreateProcessActivity.this, CreateStepActivity.class);
+//                //createStep.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                createStep.putExtra("listName", listName);
+//                if(null == process){
+//                    createStep.putExtra("parentProcess", new Process("Create Process"));
+//                }
+//                else{
+//                    createStep.putExtra("parentProcess", process);
+//                }
+//                startActivityForResult(createStep, 1);
+                String stepName = mStepNameView.getText().toString();
+                boolean cancel = false;
+                View focusView = null;
+                if (TextUtils.isEmpty(stepName)) {
+                    mStepNameView.setError(getString(R.string.error_field_required));
+                    focusView = mStepNameView;
+                    cancel = true;
                 }
-                else{
-                    createStep.putExtra("parentProcess", process);
+                if (cancel) {
+                    // There was an error; don't attempt login and focus the first
+                    // form field with an error.
+                    focusView.requestFocus();
+                } else {
+                    steps.add(new Step(stepName));
+                    mAdapter.notifyDataSetChanged();
+                    mStepNameView.clearFocus();
+                    mStepNameView.setText("");
                 }
-                startActivityForResult(createStep, 1);
             }
         });
-
-        Button mCreateProcessButton = (Button) findViewById(R.id.create_process_button);
-        mCreateProcessButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createProcess();
-            }
-        });
+        mStepNameView = (AutoCompleteTextView) findViewById(R.id.step_name);
 
         //set up toolbar
         // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
@@ -152,9 +164,6 @@ public class CreateProcessActivity extends AppCompatActivity{
             if(resultCode == RESULT_OK) {
                 Step step = data.getParcelableExtra("newStep");
                 steps.add(step);
-                //mAdapter = new StepRecyclerViewAdapter(this, steps, process, mListener);
-                //mRecyclerView.setAdapter(mAdapter);
-                //TODO: figure out why this isn't working
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -187,22 +196,14 @@ public class CreateProcessActivity extends AppCompatActivity{
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(notes)) {
-            mNotesView.setError(getString(R.string.error_field_required));
-            focusView = mNotesView;
-            cancel = true;
-        }
-
         if (cancel) {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
-
             //make process and add it to the database
             Process process = new Process(processName);
             process.setNotes(notes);
-            //delete temp steps
             for(Step step : steps){
                 step.setParent(process);
             }
@@ -210,33 +211,9 @@ public class CreateProcessActivity extends AppCompatActivity{
             mDataRepo.addProcess(process, listName);
             Intent mainActivity = new Intent(this, MainActivity.class);
             mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mainActivity.putExtra("listName", listName);
+            mainActivity.putExtra("process", listName);
             startActivity(mainActivity);
         }
     }
-
-
-
-//    private void initiatePopupWindow(View v) {
-//        try {
-//            //We need to get the instance of the LayoutInflater, use the context of this activity
-//            LayoutInflater inflater = (LayoutInflater) ProfileView.this
-//                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            //Inflate the view from a predefined XML layout
-//            View layout = inflater.inflate(R.layout.popup,
-//                    (ViewGroup) findViewById(R.id.popup_element));
-//            // create a 300px width and 470px height PopupWindow
-//            pw = new PopupWindow(layout, 300, 470, true);
-//            // display the popup in the center
-//            pw.showAtLocation(v, Gravity.CENTER, 0, 0);
-//
-//            TextView mResultText = (TextView) layout.findViewById(R.id.server_status_text);
-//            Button cancelButton = (Button) layout.findViewById(R.id.end_data_send_button);
-//            cancelButton.setOnClickListener(cancel_button_click_listener);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 }
 

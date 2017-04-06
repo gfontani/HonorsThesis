@@ -101,10 +101,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/steps_underline"
-                android:id="@+id/subTask_title"
-                android:layout_below="@+id/parent_task_info"
-                android:layout_alignLeft="@+id/task_list_info"
-                android:layout_alignStart="@+id/task_list_info"
+                android:id="@+id/step_title"
                 android:layout_marginTop="10dp" />
 
                 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -123,13 +120,33 @@
                 android:layout_weight="1.40">
                 </android.support.v7.widget.RecyclerView>
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/create_step_form"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="Add Subtask"
-                    android:id="@+id/create_subTask"
-                    android:icon="@drawable/ic_add_circle_outline_24dp"/>
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp">
+
+                    <ImageView
+                        android:id="@+id/create_step"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_circle_outline_24dp"/>
+
+                    <android.support.design.widget.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/step_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:singleLine="true" />
+                    </android.support.design.widget.TextInputLayout>
+                </LinearLayout>
 
                 <!--section for Notes-->
                 <LinearLayout
@@ -162,14 +179,14 @@
                     </android.support.design.widget.TextInputLayout>
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/create_process_button"
-                    style="?android:textAppearanceSmall"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/action_sign_in"
-                    android:textStyle="bold" />
+                <!--<Button-->
+                    <!--android:id="@+id/create_process_button"-->
+                    <!--style="?android:textAppearanceSmall"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="16dp"-->
+                    <!--android:text="@string/action_sign_in"-->
+                    <!--android:textStyle="bold" />-->
 
             </LinearLayout>
         </ScrollView>

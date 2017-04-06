@@ -21,6 +21,11 @@ public class ViewTaskActivity extends AppCompatActivity {
     private int mColumnCount = 1;
     private String parentList = "list name";
     private Task task;
+    public TaskRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ListTaskFragment.OnListFragmentTaskInteractionListener mListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +47,18 @@ public class ViewTaskActivity extends AppCompatActivity {
 
     private void setUpContent(){
         //set up subtask list
+        //TODO: figure out why if subtask is first in the list it doesn't show up in parent task subtask list
         if(task.getChildren().size() > 0) {
             View recView = findViewById(R.id.subTask_list);
             // Set the adapter
             if (recView instanceof RecyclerView) {
-                RecyclerView recyclerView = (RecyclerView) recView;
-                if (mColumnCount <= 1) {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                } else {
-                    recyclerView.setLayoutManager(new GridLayoutManager(this, mColumnCount));
+                if (recView instanceof RecyclerView) {
+                    mRecyclerView = (RecyclerView) recView;
+                    mLayoutManager = new LinearLayoutManager(this);
+                    mRecyclerView.setLayoutManager(mLayoutManager);
+                    mAdapter = new TaskRecyclerViewAdapter(this, task.getChildren(), parentList, mListener);
+                    mRecyclerView.setAdapter(mAdapter);
                 }
-                recyclerView.setAdapter(new TaskRecyclerViewAdapter(task.getChildren(), parentList, (ListTaskFragment.OnListFragmentTaskInteractionListener) this));
             }
         }else{
             (findViewById(R.id.subTask_list)).setVisibility(View.GONE);
@@ -66,11 +72,23 @@ public class ViewTaskActivity extends AppCompatActivity {
             findViewById(R.id.parent_task).setVisibility(View.GONE);
         }
         else{
-            ((TextView)findViewById(R.id.parent_task_text)).setText(task.getParent().getName());
+            ((TextView)findViewById(R.id.parent_task_text)).setText(task.getParent());
         }
-        ((TextView)findViewById(R.id.due_date_text)).setText(task.getDate().toString());
-        ((TextView)findViewById(R.id.priority_text)).setText(task.getPriority().toString());
-        ((TextView)findViewById(R.id.task_notes)).setText(task.getNotes());
+        if(null != task.getDate()){
+            ((TextView)findViewById(R.id.due_date_text)).setText(task.getDate().toString());
+        }else{
+            ((TextView)findViewById(R.id.due_date_text)).setVisibility(View.GONE);
+        }
+        if(null != task.getPriority()){
+            ((TextView)findViewById(R.id.priority_text)).setText(task.getPriority().toString());
+        }else{
+            ((TextView)findViewById(R.id.priority_text)).setVisibility(View.GONE);
+        }
+        if(null != task.getNotes()){
+            ((TextView)findViewById(R.id.task_notes)).setText(task.getNotes());
+        }else{
+            ((TextView)findViewById(R.id.task_notes)).setVisibility(View.GONE);
+        }
     }
 
     @Override

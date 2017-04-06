@@ -1,5 +1,6 @@
 package honorsthesis.gabriella.honorsthesis.Adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +24,11 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     private final List<Task> mValues;
     private final String mParentListName;
     private final ListTaskFragment.OnListFragmentTaskInteractionListener mListener;
+    private Context mContext;
 
-    public TaskRecyclerViewAdapter(List<Task> items, String listName, ListTaskFragment.OnListFragmentTaskInteractionListener listener) {
+
+    public TaskRecyclerViewAdapter(Context context, List<Task> items, String listName, ListTaskFragment.OnListFragmentTaskInteractionListener listener) {
+        mContext = context;
         mValues = items;
         mParentListName = listName;
         mListener = listener;

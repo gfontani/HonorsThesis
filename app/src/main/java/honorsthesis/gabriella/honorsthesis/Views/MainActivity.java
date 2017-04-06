@@ -46,11 +46,18 @@ public class MainActivity extends AppCompatActivity
         //navigationView.inflateMenu(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //TODO: differentiate if process or task was made
         Intent i = getIntent();
-        String listName = i.getStringExtra("listName");
-        if(null != listName){
-            Fragment fragment = ListTaskFragment.newInstance(1, listName);
+        String taskListName = i.getStringExtra("task");
+        String processListName = i.getStringExtra("process");
+
+        if(null != taskListName){
+            Fragment fragment = ListTaskFragment.newInstance(1, taskListName);
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        } else if(null != processListName){
+            Fragment fragment = ListProcessFragment.newInstance(1, processListName);
 
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -158,10 +165,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentTaskClick(Task item, String listName) {
-        Intent intent = new Intent(this, ViewTaskActivity.class);
-        intent.putExtra("task", item);
-        intent.putExtra("list", listName);
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(this, ViewTaskActivity.class);
+            intent.putExtra("task", item);
+            intent.putExtra("list", listName);
+            startActivity(intent);
+        }catch( Exception e){
+            System.out.println("here");
+        }
     }
 
     @Override

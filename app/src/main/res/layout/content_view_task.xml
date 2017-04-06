@@ -82,13 +82,15 @@
         android:name="honorsthesis.gabriella.honorsthesis.ItemFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
+        android:fillViewport="true"
+        tools:context=".Views.ViewTaskActivity"
         tools:listitem="@layout/fragment_item_with_checkbox"
-        android:layout_toRightOf="@+id/task_list_info"
-        android:layout_toEndOf="@+id/task_list_info"
-        android:layout_below="@+id/subTask_title"
-        android:layout_marginTop="10dp" />
+        android:layout_weight="1.40"
+        android:layout_below="@+id/subTask_title">
+    </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"
