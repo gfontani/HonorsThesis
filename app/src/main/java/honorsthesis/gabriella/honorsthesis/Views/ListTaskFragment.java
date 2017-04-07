@@ -69,7 +69,11 @@ public class ListTaskFragment extends Fragment {
             if (getArguments() != null) {
                 mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
                 list = new ThesisList(getArguments().getString(ARG_LIST_NAME));
-                list.tasks = mDataRepo.getTasks(list.getName());
+                if(list.getName().equals("All Tasks")){
+                    list.tasks = mDataRepo.getAllTasks();
+                }else{
+                    list.tasks = mDataRepo.getTasks(list.getName());
+                }
             }
         }catch(Exception e){
             System.out.println("here");

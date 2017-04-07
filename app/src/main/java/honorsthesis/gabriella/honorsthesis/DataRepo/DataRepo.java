@@ -106,6 +106,15 @@ public class DataRepo {
         long newRowId = db.insert(DatabaseContract.List.TABLE_NAME, null, values);
     }
 
+    public List<Task> getAllTasks(){
+        List<Task> tasks = new ArrayList<Task>();
+        List<String> lists = getLists();
+        for(String list : lists){
+            tasks.addAll(getTasks(list));
+        }
+        return tasks;
+    }
+
     public List<Task> getTasks(String listName){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -271,6 +280,14 @@ public class DataRepo {
                 values,
                 selection,
                 selectionArgs);
+    }
+    public List<Process> getAllProcesses(){
+        List<Process> processes = new ArrayList<Process>();
+        List<String> lists = getLists();
+        for(String list : lists){
+            processes.addAll(getProcesses(list));
+        }
+        return processes;
     }
 
     public List<Process> getProcesses(String listName){

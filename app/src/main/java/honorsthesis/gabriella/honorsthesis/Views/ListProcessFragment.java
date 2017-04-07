@@ -31,7 +31,7 @@ public class ListProcessFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-    private static final String LIST_NAME = "All Lists";
+    private static final String LIST_NAME = "All Processes";
     private ThesisList list;
     private DataRepo mDataRepo;
     private OnListFragmentProcessInteractionListener mListener;
@@ -61,7 +61,11 @@ public class ListProcessFragment extends Fragment {
 
         if (getArguments() != null) {
             list = new ThesisList(getArguments().getString(LIST_NAME));
-            list.processes = mDataRepo.getProcesses(list.getName());
+            if(list.getName().equals("All Processes")){
+                list.processes = mDataRepo.getAllProcesses();
+            }else{
+                list.processes = mDataRepo.getProcesses(list.getName());
+            }
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }

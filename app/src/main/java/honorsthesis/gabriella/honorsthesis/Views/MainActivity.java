@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         SubMenu processMenu = menu.findItem(R.id.nav_process_group).getSubMenu();
         listMenu.clear();
         processMenu.clear();
-        listMenu.add(R.id.nav_list_group, R.id.nav_all_lists, 0, "All Lists");
+        listMenu.add(R.id.nav_list_group, R.id.nav_all_lists, 0, "All Tasks");
         processMenu.add(R.id.nav_process_group, R.id.nav_all_processes, 0, "All Processes");
         for (String list:lists) {
             listMenu.add(R.id.nav_list_group, R.id.nav_list, 1, list);
