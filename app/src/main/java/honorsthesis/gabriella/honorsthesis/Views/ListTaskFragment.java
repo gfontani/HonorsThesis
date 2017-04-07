@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
@@ -41,6 +42,10 @@ public class ListTaskFragment extends Fragment {
     private DataRepo mDataRepo;
     private OnListFragmentTaskInteractionListener mListener;
 
+    public TaskRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -61,8 +66,6 @@ public class ListTaskFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         try {
-
-
             super.onCreate(savedInstanceState);
             setHasOptionsMenu(true);
             mDataRepo = new DataRepo(this.getContext());
@@ -92,13 +95,11 @@ public class ListTaskFragment extends Fragment {
             // Set the adapter
             if (recView instanceof RecyclerView) {
                 Context context = view.getContext();
-                RecyclerView recyclerView = (RecyclerView) recView;
-                if (mColumnCount <= 1) {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                } else {
-                    recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-                }
-                recyclerView.setAdapter(new TaskRecyclerViewAdapter(context, list.getTasks(), list.getName(), mListener));
+                mRecyclerView = (RecyclerView) recView;
+                mLayoutManager = new LinearLayoutManager(context);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mAdapter = new TaskRecyclerViewAdapter(context, list.getTasks(), list.getName(), mListener);
+                mRecyclerView.setAdapter(mAdapter);
             }
         }else{
             ((RecyclerView)view.findViewById(R.id.list)).setVisibility(View.GONE);
@@ -123,7 +124,7 @@ public class ListTaskFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // Inflate the menu; this adds items to the action bar if it is present.
         menu.clear();
-        inflater.inflate(R.menu.list_fragment_menu, menu);
+        inflater.inflate(R.menu.list_task_fragment_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -156,6 +157,16 @@ public class ListTaskFragment extends Fragment {
             navigationView.setNavigationItemSelectedListener(ma);
 
             return true;
+        } else if(id == R.id.action_sort_list){
+            //TODO: implement this!
+        } else if(id == R.id.action_delete_all){
+            for(Task task: list.getTasks()){
+                mDataRepo.removeTask(task, list.getName());
+            }
+            list.getTasks().clear();
+            mAdapter.notifyDataSetChanged();
+            ((RecyclerView)getView().findViewById(R.id.list)).setVisibility(View.GONE);
+            ((TextView)getView().findViewById(R.id.noTasksText)).setVisibility(View.VISIBLE);
         }
 
         return super.onOptionsItemSelected(item);

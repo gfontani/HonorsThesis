@@ -61,25 +61,7 @@ public class CreateListActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem create = menu.add(0, 1, 0, "Create");
-        create.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        create.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                createList();
-                return false;
-            }
-        });
-        MenuItem cancel = menu.add(0, 0, 0, "Cancel");
-        cancel.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        cancel.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                finish();
-                return false;
-            }
-        });
-        //getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.create_menu, menu);
         return true;
     }
 
@@ -87,6 +69,14 @@ public class CreateListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            case R.id.action_create:
+                // app icon in action bar clicked; goto parent activity.
+                createList();
+                return true;
+            case R.id.action_cancel:
                 // app icon in action bar clicked; goto parent activity.
                 this.finish();
                 return true;

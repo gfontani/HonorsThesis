@@ -94,7 +94,7 @@ public class ViewTaskActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.view_menu, menu);
         return true;
     }
 
@@ -106,7 +106,8 @@ public class ViewTaskActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             //noinspection SimplifiableIfStatement
-            case R.id.action_delete:
+            case R.id.action_edit:
+                //TODO: go to the edit task activity
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

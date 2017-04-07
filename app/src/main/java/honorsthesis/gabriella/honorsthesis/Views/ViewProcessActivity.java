@@ -81,7 +81,7 @@ public class ViewProcessActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.view_menu, menu);
         return true;
     }
 
@@ -93,7 +93,8 @@ public class ViewProcessActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             //noinspection SimplifiableIfStatement
-            case R.id.action_delete:
+            case R.id.action_edit:
+                //TODO: go to edit processacivity
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -101,7 +102,6 @@ public class ViewProcessActivity extends AppCompatActivity {
     }
 
     private void createInstance(){
-        //TODO: test this
         DataRepo dataRepo = new DataRepo(this);
         Task task = new Task(process.getName());
         if(null != process.getNotes()){
@@ -121,5 +121,11 @@ public class ViewProcessActivity extends AppCompatActivity {
             dataRepo.addTask(subtask, parentList);
         }
         dataRepo.addTask(task, parentList);
+
+        //go to the task list so user can see that their task was made
+        Intent mainActivity = new Intent(this, MainActivity.class);
+        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mainActivity.putExtra("task", parentList);
+        startActivity(mainActivity);
     }
 }

@@ -4,18 +4,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
 import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
@@ -35,6 +44,10 @@ public class ListProcessFragment extends Fragment {
     private ThesisList list;
     private DataRepo mDataRepo;
     private OnListFragmentProcessInteractionListener mListener;
+
+    public ProcessRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -83,13 +96,11 @@ public class ListProcessFragment extends Fragment {
             // Set the adapter
             if (recView instanceof RecyclerView) {
                 Context context = view.getContext();
-                RecyclerView recyclerView = (RecyclerView) recView;
-                if (mColumnCount <= 1) {
-                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                } else {
-                    recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-                }
-                recyclerView.setAdapter(new ProcessRecyclerViewAdapter(list.getProcesses(), list.getName(), mListener));
+                mRecyclerView = (RecyclerView) recView;
+                mLayoutManager = new LinearLayoutManager(context);
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mAdapter = new ProcessRecyclerViewAdapter(list.getProcesses(), list.getName(), mListener);
+                mRecyclerView.setAdapter(mAdapter);
             }
         }else{
             ((RecyclerView)view.findViewById(R.id.list)).setVisibility(View.GONE);
@@ -111,6 +122,34 @@ public class ListProcessFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menu.clear();
+        inflater.inflate(R.menu.list_process_fragment_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if(id == R.id.action_delete_all){
+            for(Process process: list.getProcesses()){
+                mDataRepo.removeProcess(process, list.getName());
+            }
+            list.getProcesses().clear();
+            mAdapter.notifyDataSetChanged();
+            ((RecyclerView)getView().findViewById(R.id.list)).setVisibility(View.GONE);
+            ((TextView)getView().findViewById(R.id.noProcessesText)).setVisibility(View.VISIBLE);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onAttach(Context context) {
