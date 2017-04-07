@@ -3,17 +3,20 @@ package honorsthesis.gabriella.honorsthesis.Views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
+import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 public class ViewProcessActivity extends AppCompatActivity {
@@ -66,7 +69,13 @@ public class ViewProcessActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.process_parent_list_text)).setText(parentList);
         ((TextView)findViewById(R.id.process_notes)).setText(process.getNotes());
 
-        //TODO: make button to make an instance of the process
+        Button createInstance = (Button) findViewById(R.id.create_instance_button);
+        createInstance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createInstance();
+            }
+        });
     }
 
     @Override
@@ -91,4 +100,26 @@ public class ViewProcessActivity extends AppCompatActivity {
         }
     }
 
+    private void createInstance(){
+        //TODO: test this
+        DataRepo dataRepo = new DataRepo(this);
+        Task task = new Task(process.getName());
+        if(null != process.getNotes()){
+            task.setNotes(process.getNotes());
+        }
+
+        for(Step step: process.getSteps()){
+            Task subtask = new Task(step.getName());
+            if(null != step.getPriority()){
+                subtask.setPriority(step.getPriority());
+            }
+            if(null != step.getNotes()){
+                subtask.setNotes(step.getNotes());
+            }
+            task.addChild(subtask);
+            subtask.setParent(task.getName());
+            dataRepo.addTask(subtask, parentList);
+        }
+        dataRepo.addTask(task, parentList);
+    }
 }

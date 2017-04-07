@@ -26,6 +26,7 @@
     <string name="title_activity_create_task">Create a Task</string>
     <string name="title_activity_create_process">Define a Process</string>
     <string name="title_activity_create_step">Create a Step</string>
+    <string name="instantiate_process">Instantiate this Process</string>
 
     <string name="prompt_list_name">List Name</string>
     <string name="action_create_list">Create List</string>
