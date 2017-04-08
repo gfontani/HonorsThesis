@@ -205,10 +205,10 @@ public class EditProcessActivity extends AppCompatActivity{
             }
             mDataRepo.updateProcess(process, oldProcessName, process.getParentList());
             finish();
-            Intent mainActivity = new Intent(this, MainActivity.class);
-            mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mainActivity.putExtra("process", process.getParentList());
-            startActivity(mainActivity);
+//            Intent mainActivity = new Intent(this, MainActivity.class);
+//            mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            mainActivity.putExtra("process", process.getParentList());
+//            startActivity(mainActivity);
         }
     }
 

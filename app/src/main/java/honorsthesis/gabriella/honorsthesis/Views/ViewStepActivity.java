@@ -56,7 +56,9 @@ public class ViewStepActivity extends AppCompatActivity {
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_edit:
-                //TODO: go to the edit step activity
+                Intent intent = new Intent(this, EditStepActivity.class);
+                intent.putExtra("step", step);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

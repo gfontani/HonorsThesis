@@ -45,6 +45,9 @@
             android:name=".Views.CreateTaskActivity"
             android:label="@string/title_activity_create_task" />
         <activity
+            android:name=".Views.EditTaskActivity"
+            android:label="@string/title_activity_edit_task" />
+        <activity
             android:name=".Views.CreateProcessActivity"
             android:label="@string/title_activity_create_process" />
         <activity
@@ -53,6 +56,9 @@
         <activity
             android:name=".Views.CreateStepActivity"
             android:label="@string/title_activity_create_step"></activity>
+        <activity
+            android:name=".Views.EditStepActivity"
+            android:label="@string/title_activity_edit_step"></activity>
     </application>
 
 </manifest>

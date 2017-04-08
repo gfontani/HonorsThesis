@@ -8,9 +8,11 @@
     <string name="title_activity_create_list">Create a List</string>
     <string name="title_activity_edit_list">Edit a List</string>
     <string name="title_activity_create_task">Create a Task</string>
+    <string name="title_activity_edit_task">Edit a Task</string>
     <string name="title_activity_create_process">Define a Process</string>
     <string name="title_activity_edit_process">Edit a Process</string>
     <string name="title_activity_create_step">Create a Step</string>
+    <string name="title_activity_edit_step">Edit a Step</string>
     <string name="title_activity_view_process">ViewProcessActivity</string>
     <string name="title_activity_view_task">ViewTaskActivity</string>
     <string name="title_activity_view_step">ViewStepActivity</string>

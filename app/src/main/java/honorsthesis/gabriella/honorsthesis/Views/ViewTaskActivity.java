@@ -106,7 +106,9 @@ public class ViewTaskActivity extends AppCompatActivity {
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_edit:
-                //TODO: go to the edit task activity
+                Intent intent = new Intent(this, EditTaskActivity.class);
+                intent.putExtra("task", task);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
