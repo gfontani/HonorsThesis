@@ -136,6 +136,7 @@ public class EditListActivity extends AppCompatActivity {
 
     private void deleteList(){
         mDataRepo.removeList(list);
+        this.finish();
         Intent mainActivity = new Intent(this, MainActivity.class);
         mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mainActivity.putExtra("task", "All Tasks");

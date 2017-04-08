@@ -94,7 +94,9 @@ public class ViewProcessActivity extends AppCompatActivity {
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_edit:
-                //TODO: go to edit processacivity
+                Intent intent = new Intent(this, EditProcessActivity.class);
+                intent.putExtra("process", process);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,61 +1,49 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Adapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
-import honorsthesis.gabriella.honorsthesis.BackEnd.*;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class CreateProcessActivity extends AppCompatActivity{
+public class EditProcessActivity extends AppCompatActivity{
     //constants
-    private String listName;
     private Process process;
-    public StepRecyclerViewAdapter mAdapter;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private ListProcessFragment.OnListFragmentProcessInteractionListener mListener;
+    private String oldProcessName;
 
     // UI references.
     private EditText mProcessNameView;
     private EditText mStepNameView;
     private EditText mNotesView;
+    public StepRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    List<Step> steps;
+    private ListProcessFragment.OnListFragmentProcessInteractionListener mListener;
 
     DataRepo mDataRepo;
 
@@ -64,18 +52,20 @@ public class CreateProcessActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         //set process name
         Intent i = getIntent();
-        listName = i.getStringExtra("listName");
+        process = (Process) i.getParcelableExtra("process");
+        oldProcessName = process.getName();
 
         mDataRepo = new DataRepo(this);
-
-        steps = new ArrayList<Step>();
 
         setContentView(R.layout.activity_create_process);
         // Set up the create process form.
         mProcessNameView = (AutoCompleteTextView) findViewById(R.id.process_name);
-        ((TextView)findViewById(R.id.list_name)).setText(listName);
+        mProcessNameView.setText(process.getName());
+        ((TextView)findViewById(R.id.list_name)).setText(process.getParentList());
         mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
-
+        if(null != process.getNotes() && !process.getNotes().isEmpty()){
+            mNotesView.setText(process.getNotes());
+        }
         //show empty list of steps with option to create a step
         View recView = findViewById(R.id.list);
         // Set the adapter
@@ -83,13 +73,13 @@ public class CreateProcessActivity extends AppCompatActivity{
             mRecyclerView = (RecyclerView) recView;
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mAdapter = new StepRecyclerViewAdapter(this, steps, process, mListener);
+            mAdapter = new StepRecyclerViewAdapter(this, process.getSteps(), process, mListener);
             mRecyclerView.setAdapter(mAdapter);
         }
 
         //set listener for add step
         ImageView mAddStep = (ImageView) findViewById(R.id.create_step);
-        mAddStep.setOnClickListener(new View.OnClickListener(){
+        mAddStep.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View view){
 //                Intent createStep = new Intent(CreateProcessActivity.this, CreateStepActivity.class);
@@ -115,10 +105,13 @@ public class CreateProcessActivity extends AppCompatActivity{
                     // form field with an error.
                     focusView.requestFocus();
                 } else {
-                    steps.add(new Step(stepName));
+                    Step step = new Step(stepName);
+                    step.setParent(process.getName());
+                    process.addStep(step);
                     mAdapter.notifyDataSetChanged();
                     mStepNameView.clearFocus();
                     mStepNameView.setText("");
+                    mDataRepo.addStep(step);
                 }
             }
         });
@@ -130,13 +123,13 @@ public class CreateProcessActivity extends AppCompatActivity{
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.title_activity_create_process));
+        getSupportActionBar().setTitle(getString(R.string.title_activity_edit_process));
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create_menu, menu);
+        getMenuInflater().inflate(R.menu.edit_menu, menu);
         return true;
     }
 
@@ -147,9 +140,13 @@ public class CreateProcessActivity extends AppCompatActivity{
                 // app icon in action bar clicked; goto parent activity.
                 this.finish();
                 return true;
-            case R.id.action_create:
+            case R.id.action_save:
                 // app icon in action bar clicked; goto parent activity.
-                createProcess();
+                updateProcess();
+                return true;
+            case R.id.action_delete:
+                // app icon in action bar clicked; goto parent activity.
+                deleteProcess();
                 return true;
             case R.id.action_cancel:
                 // app icon in action bar clicked; goto parent activity.
@@ -175,7 +172,7 @@ public class CreateProcessActivity extends AppCompatActivity{
      * attempts to create a process
      * adds the process to the database and goes back to the list that the process is from
      */
-    private void createProcess() {
+    private void updateProcess() {
         // Reset errors.
         mProcessNameView.setError(null);
         mNotesView.setError(null);
@@ -201,20 +198,27 @@ public class CreateProcessActivity extends AppCompatActivity{
             focusView.requestFocus();
         } else {
             //make process and add it to the database
-            Process process = new Process(processName);
+            process.setName(processName);
             process.setNotes(notes);
-            for(Step step : steps){
+            for(Step step : process.getSteps()){
                 step.setParent(process.getName());
             }
-            process.setSteps(steps);
-            process.setParentList(listName);
-            mDataRepo.addProcess(process);
+            mDataRepo.updateProcess(process, oldProcessName, process.getParentList());
             finish();
             Intent mainActivity = new Intent(this, MainActivity.class);
             mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mainActivity.putExtra("process", listName);
+            mainActivity.putExtra("process", process.getParentList());
             startActivity(mainActivity);
         }
+    }
+
+    private void deleteProcess(){
+        mDataRepo.removeProcess(process);
+        this.finish();
+//        Intent mainActivity = new Intent(this, MainActivity.class);
+//        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        mainActivity.putExtra("process", "All Tasks");
+//        startActivity(mainActivity);
     }
 }
 
