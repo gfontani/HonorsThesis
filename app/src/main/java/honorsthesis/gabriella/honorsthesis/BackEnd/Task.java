@@ -15,7 +15,8 @@ public class Task implements Parcelable{
     private String notes;
     private Priority priority;
     private Date date;
-    private String parent;
+    private String parentTask;
+    private String parentList;
     private List<Task> children;
 
     public Task(String name){
@@ -23,7 +24,7 @@ public class Task implements Parcelable{
         this.notes = "";
         this.priority = null;
         this.date = null;
-        this.parent = null;
+        this.parentTask = null;
         this.children = new ArrayList<Task>();
     }
 
@@ -32,7 +33,7 @@ public class Task implements Parcelable{
         this.notes = notes;
         this.priority = priority;
         this.date = date;
-        this.parent = null;
+        this.parentTask = null;
         this.children = new ArrayList<Task>();
     }
 
@@ -68,12 +69,20 @@ public class Task implements Parcelable{
         this.date = date;
     }
 
-    public String getParent() {
-        return parent;
+    public String getParentTask() {
+        return parentTask;
     }
 
-    public void setParent(String parent) {
-        this.parent = parent;
+    public void setParentTask(String parentTask) {
+        this.parentTask = parentTask;
+    }
+
+    public String getParentList() {
+        return parentList;
+    }
+
+    public void setParentList(String parentList) {
+        this.parentList = parentList;
     }
 
     public List<Task> getChildren() {
@@ -134,8 +143,13 @@ public class Task implements Parcelable{
         }else {
             dest.writeLong(-1);
         }
-        if(null != parent){
-            dest.writeString(parent);
+        if(null != parentTask){
+            dest.writeString(parentTask);
+        }else{
+            dest.writeString("");
+        }
+        if(null != parentList){
+            dest.writeString(parentList);
         }else{
             dest.writeString("");
         }
@@ -167,9 +181,13 @@ public class Task implements Parcelable{
         if(dateLong != -1){
             date = new Date(dateLong);
         }
-        parent = in.readString();
-        if(parent.isEmpty()){
-            parent = null;
+        parentTask = in.readString();
+        if(parentTask.isEmpty()){
+            parentTask = null;
+        }
+        parentList = in.readString();
+        if(parentList.isEmpty()){
+            parentList = null;
         }
         children = new ArrayList<Task>();
         in.readList(children, Task.class.getClassLoader());

@@ -4,28 +4,36 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- activity titles -->
+    <string name="title_activity_create_list">Create a List</string>
+    <string name="title_activity_edit_list">Edit a List</string>
+    <string name="title_activity_create_task">Create a Task</string>
+    <string name="title_activity_create_process">Define a Process</string>
+    <string name="title_activity_create_step">Create a Step</string>
+    <string name="title_activity_view_process">ViewProcessActivity</string>
     <string name="title_activity_view_task">ViewTaskActivity</string>
+    <string name="title_activity_view_step">ViewStepActivity</string>
+
+
+
+    <!-- view labels -->
     <string name="list_underline"><u>List:</u></string>
     <string name="parent_task_underline"><u>Parent Task:</u></string>
     <string name="subTask_underline"><u>SubTasks:</u></string>
     <string name="due_date_underline"><u>Due:</u></string>
     <string name="priority_underline"><u>Priority:</u></string>
     <string name="notes_underline"><u>Notes:</u></string>
-    <string name="title_activity_view_process">ViewProcessActivity</string>
     <string name="steps_underline"><u>Steps:</u></string>
     <string name="step_underline"><u>Step:</u></string>
     <string name="task_underline"><u>Task:</u></string>
     <string name="process_underline"><u>Process:</u></string>
-    <string name="title_activity_view_step">ViewStepActivity</string>
-    <string name="title_activity_create_list">Create a List</string>
-    <string name="title_activity_create_task">Create a Task</string>
-    <string name="title_activity_create_process">Define a Process</string>
-    <string name="title_activity_create_step">Create a Step</string>
-    <string name="instantiate_process">Instantiate this Process</string>
 
+    <!-- button names -->
+    <string name="instantiate_process">Instantiate this Process</string>
     <string name="prompt_list_name">List Name</string>
     <string name="action_create_list">Create List</string>
+
+    <!-- strings for data entry -->
     <string name="error_field_required">This field is required</string>
 
     <!-- Strings related to login -->
@@ -39,17 +47,17 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <!--<string name="permission_rationale">"Contacts permissions are needed for providing email-->
-    <!--completions."-->
-    <!--</string>-->
+
     <!-- Strings related to menus -->
     <string name="action_edit">Edit</string>
     <string name="action_settings">Settings</string>
     <string name="action_delete_list">Delete List</string>
     <string name="action_delete_all">Delete All</string>
+    <string name="action_delete">Delete</string>
     <string name="action_sort">Sort</string>
     <string name="action_create">Create</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_save">Save</string>
 
 
 

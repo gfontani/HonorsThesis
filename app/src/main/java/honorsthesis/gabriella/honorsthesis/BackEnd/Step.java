@@ -12,11 +12,13 @@ import java.util.ArrayList;
 public class Step implements Parcelable{
     private String name;
     private Priority priority;
-    private Process parent;
+    private String parent;
     private String notes;
 
     public Step(String name){
         this.name = name;
+        this.parent = "";
+        this.notes = "";
     }
 
     public String getName() {
@@ -35,11 +37,11 @@ public class Step implements Parcelable{
         this.priority = priority;
     }
 
-    public Process getParent() {
+    public String getParent() {
         return parent;
     }
 
-    public void setParent(Process parent) {
+    public void setParent(String parent) {
         this.parent = parent;
     }
 
@@ -66,7 +68,7 @@ public class Step implements Parcelable{
         else{
             dest.writeString("");
         }
-        dest.writeParcelable(parent, flags);
+        dest.writeString(parent);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -90,6 +92,6 @@ public class Step implements Parcelable{
         }else{
             priority = null;
         }
-        in.readParcelable(Step.class.getClassLoader());
+        parent = in.readString();
     }
 }

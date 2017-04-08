@@ -39,6 +39,9 @@
             android:name=".Views.CreateListActivity"
             android:label="@string/title_activity_create_list" />
         <activity
+            android:name=".Views.EditListActivity"
+            android:label="@string/title_activity_edit_list" />
+        <activity
             android:name=".Views.CreateTaskActivity"
             android:label="@string/title_activity_create_task" />
         <activity

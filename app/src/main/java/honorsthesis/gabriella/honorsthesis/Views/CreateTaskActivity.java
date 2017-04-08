@@ -1,22 +1,9 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -24,10 +11,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,13 +23,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Priority;
-import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
-import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
-import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
@@ -140,7 +120,9 @@ public class CreateTaskActivity extends AppCompatActivity {
                     // form field with an error.
                     focusView.requestFocus();
                 } else {
-                    subTasks.add(new Task(subTaskName));
+                    Task subTask = new Task(subTaskName);
+                    subTask.setParentList(listName);
+                    subTasks.add(subTask);
                     mAdapter.notifyDataSetChanged();
                     mSubTaskView.clearFocus();
                     mSubTaskView.setText("");
@@ -260,23 +242,23 @@ public class CreateTaskActivity extends AppCompatActivity {
             task = new Task(taskName, notes, priority, dueDate);
             //make task and add it to the database
             if (null != parentTask) {
-                task.setParent(parentTask);
+                task.setParentTask(parentTask);
             }
 
 //            if(null != parentTask){
-//                task.setParent(parentTask);
+//                task.setParentTask(parentTask);
 //                Intent intent = new Intent();
 //                intent.putExtra("newSubTask", task);
 //                setResult(Activity.RESULT_OK, intent);
 //                finish();
 //            } else {
             for (Task subTask : subTasks) {
-                subTask.setParent(task.getName());
-                mDataRepo.addTask(subTask, listName);
+                subTask.setParentTask(task.getName());
             }
             task.setChildren(subTasks);
-            mDataRepo.addTask(task, listName);
-
+            task.setParentList(listName);
+            mDataRepo.addTask(task);
+            finish();
             //TODO: change this to updating the list in the mainActivityView
             Intent mainActivity = new Intent(this, MainActivity.class);
             mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

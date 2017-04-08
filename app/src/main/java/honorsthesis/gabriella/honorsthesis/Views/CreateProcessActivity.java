@@ -208,10 +208,12 @@ public class CreateProcessActivity extends AppCompatActivity{
             Process process = new Process(processName);
             process.setNotes(notes);
             for(Step step : steps){
-                step.setParent(process);
+                step.setParent(process.getName());
             }
             process.setSteps(steps);
-            mDataRepo.addProcess(process, listName);
+            process.setParentList(listName);
+            mDataRepo.addProcess(process);
+            finish();
             Intent mainActivity = new Intent(this, MainActivity.class);
             mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mainActivity.putExtra("process", listName);

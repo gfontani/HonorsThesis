@@ -133,8 +133,9 @@ public class CreateStepActivity extends AppCompatActivity {
             //make process and add it to the database
             Step step = new Step(stepName);
             step.setNotes(notes);
-            step.setParent(parentProcess);
+            step.setParent(parentProcess.getName());
             mDataRepo.addStep(step);
+            finish();
             Intent intent = new Intent();
             intent.putExtra("newStep", step);
             setResult(Activity.RESULT_OK, intent);

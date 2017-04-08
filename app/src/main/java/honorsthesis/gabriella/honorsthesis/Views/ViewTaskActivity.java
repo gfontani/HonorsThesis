@@ -3,7 +3,6 @@ package honorsthesis.gabriella.honorsthesis.Views;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -67,12 +66,12 @@ public class ViewTaskActivity extends AppCompatActivity {
         }
 
         ((TextView)findViewById(R.id.task_parent_list_text)).setText(parentList);
-        if(null == task.getParent()){
+        if(null == task.getParentTask()){
             findViewById(R.id.parent_task_text).setVisibility(View.GONE);
             findViewById(R.id.parent_task).setVisibility(View.GONE);
         }
         else{
-            ((TextView)findViewById(R.id.parent_task_text)).setText(task.getParent());
+            ((TextView)findViewById(R.id.parent_task_text)).setText(task.getParentTask());
         }
         if(null != task.getDate()){
             ((TextView)findViewById(R.id.due_date_text)).setText(task.getDate().toString());

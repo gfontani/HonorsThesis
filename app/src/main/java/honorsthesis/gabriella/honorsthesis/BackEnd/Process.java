@@ -16,11 +16,16 @@ import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 public class Process implements Parcelable{
     private String name;
     private String notes;
+
+
+
+    private String parentList;
     private List<Step> steps;
 
     public Process(String name){
         this.name = name;
         this.notes = "";
+        this.parentList = "";
         this.steps = new ArrayList<Step>();
     }
 
@@ -38,6 +43,14 @@ public class Process implements Parcelable{
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getParentList() {
+        return parentList;
+    }
+
+    public void setParentList(String parentList) {
+        this.parentList = parentList;
     }
 
     public List<Step> getSteps() {
@@ -82,6 +95,7 @@ public class Process implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(notes);
+        dest.writeString(parentList);
         dest.writeList(steps);
     }
 
@@ -100,6 +114,7 @@ public class Process implements Parcelable{
     private Process(Parcel in) {
         name = in.readString();
         notes = in.readString();
+        parentList = in.readString();
         steps = new ArrayList<Step>();
         in.readList(steps, Step.class.getClassLoader());
     }

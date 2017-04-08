@@ -177,7 +177,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentTaskCheck(Task task, String listName) {
-        mDataRepo.removeTask(task, listName);
+        mDataRepo.removeTask(task);
         Fragment fragment = ListTaskFragment.newInstance(1, listName);
 
         // Insert the fragment by replacing any existing fragment

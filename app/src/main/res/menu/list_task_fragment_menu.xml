@@ -18,4 +18,10 @@
         android:orderInCategory="100"
         android:title="@string/action_delete_all"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_mode_edit_white_24px"
+        android:title="@string/action_edit"
+        app:showAsAction="ifRoom"/>
 </menu>

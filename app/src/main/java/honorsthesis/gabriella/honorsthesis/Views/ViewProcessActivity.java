@@ -104,6 +104,7 @@ public class ViewProcessActivity extends AppCompatActivity {
     private void createInstance(){
         DataRepo dataRepo = new DataRepo(this);
         Task task = new Task(process.getName());
+        task.setParentList(parentList);
         if(null != process.getNotes()){
             task.setNotes(process.getNotes());
         }
@@ -116,11 +117,11 @@ public class ViewProcessActivity extends AppCompatActivity {
             if(null != step.getNotes()){
                 subtask.setNotes(step.getNotes());
             }
+            subtask.setParentTask(task.getName());
+            subtask.setParentList(parentList);
             task.addChild(subtask);
-            subtask.setParent(task.getName());
-            dataRepo.addTask(subtask, parentList);
         }
-        dataRepo.addTask(task, parentList);
+        dataRepo.addTask(task);
 
         //go to the task list so user can see that their task was made
         Intent mainActivity = new Intent(this, MainActivity.class);

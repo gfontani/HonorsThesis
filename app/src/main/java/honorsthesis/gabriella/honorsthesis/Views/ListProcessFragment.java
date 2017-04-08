@@ -75,9 +75,14 @@ public class ListProcessFragment extends Fragment {
         if (getArguments() != null) {
             list = new ThesisList(getArguments().getString(LIST_NAME));
             if(list.getName().equals("All Processes")){
-                list.processes = mDataRepo.getAllProcesses();
+                list.setTasks(mDataRepo.getAllTasks());
             }else{
-                list.processes = mDataRepo.getProcesses(list.getName());
+                list.setTasks(mDataRepo.getTasks(list.getName()));
+            }
+            if(list.getName().equals("All Processes")){
+                list.setProcesses(mDataRepo.getAllProcesses());
+            }else{
+                list.setProcesses(mDataRepo.getProcesses(list.getName()));
             }
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -140,7 +145,7 @@ public class ListProcessFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if(id == R.id.action_delete_all){
             for(Process process: list.getProcesses()){
-                mDataRepo.removeProcess(process, list.getName());
+                mDataRepo.removeProcess(process);
             }
             list.getProcesses().clear();
             mAdapter.notifyDataSetChanged();

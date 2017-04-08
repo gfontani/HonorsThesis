@@ -73,9 +73,11 @@ public class ListTaskFragment extends Fragment {
                 mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
                 list = new ThesisList(getArguments().getString(ARG_LIST_NAME));
                 if(list.getName().equals("All Tasks")){
-                    list.tasks = mDataRepo.getAllTasks();
+                    list.setTasks(mDataRepo.getAllTasks());
+                    list.setProcesses(mDataRepo.getAllProcesses());
                 }else{
-                    list.tasks = mDataRepo.getTasks(list.getName());
+                    list.setTasks(mDataRepo.getTasks(list.getName()));
+                    list.setProcesses(mDataRepo.getProcesses(list.getName()));
                 }
             }
         }catch(Exception e){
@@ -143,7 +145,7 @@ public class ListTaskFragment extends Fragment {
             ListTaskFragment nextFrag= new ListTaskFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_COLUMN_COUNT, 1);
-            args.putString(ARG_LIST_NAME, "All Lists");
+            args.putString(ARG_LIST_NAME, "All Tasks");
             nextFrag.setArguments(args);
             fragmentTransaction.hide(ListTaskFragment.this);
             fragmentTransaction.replace(R.id.content_frame, nextFrag);
@@ -161,12 +163,21 @@ public class ListTaskFragment extends Fragment {
             //TODO: implement this!
         } else if(id == R.id.action_delete_all){
             for(Task task: list.getTasks()){
-                mDataRepo.removeTask(task, list.getName());
+                mDataRepo.removeTask(task);
             }
             list.getTasks().clear();
             mAdapter.notifyDataSetChanged();
             ((RecyclerView)getView().findViewById(R.id.list)).setVisibility(View.GONE);
             ((TextView)getView().findViewById(R.id.noTasksText)).setVisibility(View.VISIBLE);
+        } else if(id == R.id.action_edit){
+            try {
+                MainActivity ma = ((MainActivity) getActivity());
+                Intent intent = new Intent(ma, EditListActivity.class);
+                intent.putExtra("list", list);
+                startActivity(intent);
+            }catch(Exception e){
+                System.out.println("here");
+            }
         }
 
         return super.onOptionsItemSelected(item);

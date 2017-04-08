@@ -70,7 +70,7 @@ public class DataRepo {
 
         if(null != list.getProcesses()){
             for(Process process : list.getProcesses()){
-                removeProcess(process, list.getName());
+                removeProcess(process);
             }
         }
 
@@ -91,7 +91,7 @@ public class DataRepo {
         List<Task> tasks = list.getTasks();
         if(null != tasks && 0 != tasks.size()){
             for(Task task : tasks){
-                addTask(task, list.getName());
+                addTask(task);
             }
         }
 
@@ -99,11 +99,46 @@ public class DataRepo {
         List<Process> processes = list.getProcesses();
         if(null != processes && 0 != processes.size()){
             for(Process process : processes){
-                addProcess(process, list.getName());
+                addProcess(process);
             }
         }
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(DatabaseContract.List.TABLE_NAME, null, values);
+    }
+
+    public void updateList(ThesisList list, String oldName){
+        if(!list.getName().equals(oldName)) {
+            SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+            // New value for one column
+            ContentValues values = new ContentValues();
+            if (null != list.getName()) {
+                values.put(DatabaseContract.List.COLUMN_NAME, list.getName());
+            }
+
+            // Which row to update, based on the title
+            String selection = DatabaseContract.List.COLUMN_NAME + "=?";
+            String[] selectionArgs = {oldName};
+
+            int count = db.update(
+                    DatabaseContract.List.TABLE_NAME,
+                    values,
+                    selection,
+                    selectionArgs);
+
+            //update tasks
+            for(Task task: list.getTasks()){
+                task.setParentList(list.getName());
+                updateTask(task, task.getName(), oldName);
+            }
+
+            //update processes
+            for(Process process:list.getProcesses()){
+                process.setParentList(list.getName());
+                updateProcess(process, process.getName(), oldName);
+            }
+        }
+
     }
 
     public List<Task> getAllTasks(){
@@ -125,7 +160,8 @@ public class DataRepo {
                 DatabaseContract.Task.COLUMN_NOTES,
                 DatabaseContract.Task.COLUMN_PRIORITY,
                 DatabaseContract.Task.COLUMN_DATE,
-                DatabaseContract.Task.COLUMN_PARENT_TASK
+                DatabaseContract.Task.COLUMN_PARENT_TASK,
+                DatabaseContract.Task.COLUMN_PARENT_LIST
         };
 
 // Filter results WHERE "title" = 'My Title'
@@ -153,6 +189,7 @@ public class DataRepo {
         String priorityString;
         Priority priority;
         String notes;
+        String parentList;
 
         try {
             while(cursor.moveToNext()) {
@@ -164,6 +201,8 @@ public class DataRepo {
                         cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_DATE));
                 priorityString = cursor.getString(
                         cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_PRIORITY));
+                parentList = cursor.getString(
+                        cursor.getColumnIndexOrThrow(DatabaseContract.Task.COLUMN_PARENT_LIST));
 
                 Task newTask = new Task(name);
                 if(null != notes){
@@ -176,6 +215,9 @@ public class DataRepo {
                 if(null != dateString && !dateString.isEmpty()){
                     date = formatter.parse(dateString);
                     newTask.setDate(date);
+                }
+                if(null != parentList){
+                    newTask.setParentList(parentList);
                 }
                 tasks.add(newTask);
             }
@@ -200,7 +242,7 @@ public class DataRepo {
                 Task parentTask = tasks.get(tasks.indexOf(tempParentTask));
 
                 //add the parent task to the task
-                task.setParent(parentTaskName);
+                task.setParentTask(parentTaskName);
                 //add the task to the parent task's children
                 parentTask.addChild(task);
             }
@@ -209,12 +251,12 @@ public class DataRepo {
         return tasks;
     }
 
-    public void removeTask(Task task, String listName){
+    public void removeTask(Task task){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Define 'where' part of task child query.
         String childSelection = DatabaseContract.Task.COLUMN_PARENT_TASK + "=? AND " + DatabaseContract.Task.COLUMN_PARENT_LIST + "=?";
         // Specify arguments in placeholder order.
-        String[] selectionArgs = { task.getName(), listName};
+        String[] selectionArgs = { task.getName(), task.getParentList()};
         // Issue SQL statement.
         db.delete(DatabaseContract.Task.TABLE_NAME, childSelection, selectionArgs);
         // Define 'where' part of task parent query.
@@ -222,9 +264,14 @@ public class DataRepo {
         // Specify arguments in placeholder order.
         // Issue SQL statement.
         db.delete(DatabaseContract.Task.TABLE_NAME, parentSelection, selectionArgs);
+
+        //remove subtasks
+        for(Task subTask:task.getChildren()){
+            removeTask(subTask);
+        }
     }
 
-    public void addTask(Task task, String listName){
+    public void addTask(Task task){
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -242,21 +289,29 @@ public class DataRepo {
         if(null != task.getDate()){
             values.put(DatabaseContract.Task.COLUMN_DATE, formatter.format(task.getDate()));
         }
-        if(null != task.getParent()){
-            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent());
+        if(null != task.getParentTask()){
+            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParentTask());
         }
-        values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, listName);
+        values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, task.getParentList());
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(DatabaseContract.Task.TABLE_NAME, null, values);
+
+        //add subTasks
+        for(Task subTask:task.getChildren()){
+            addTask(subTask);
+        }
     }
 
-    public void updateTask(Task task, String listName){
+    public void updateTask(Task task, String oldName, String oldListName){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
 
         // New value for one column
         ContentValues values = new ContentValues();
+        if(null != task.getName()){
+            values.put(DatabaseContract.Task.COLUMN_NAME, task.getName());
+        }
         if(null != task.getNotes()){
             values.put(DatabaseContract.Task.COLUMN_NOTES, task.getNotes());
         }
@@ -266,21 +321,31 @@ public class DataRepo {
         if(null != task.getDate()){
             values.put(DatabaseContract.Task.COLUMN_DATE, formatter.format(task.getDate()));
         }
-        if(null != task.getParent()){
-            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParent());
+        if(null != task.getParentTask()){
+            values.put(DatabaseContract.Task.COLUMN_PARENT_TASK, task.getParentTask());
         }
-        values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, listName);
+        values.put(DatabaseContract.Task.COLUMN_PARENT_LIST, task.getParentList());
 
         // Which row to update, based on the title
         String selection = DatabaseContract.Task.COLUMN_NAME + "=? AND " + DatabaseContract.Task.COLUMN_PARENT_LIST + "=?";
-        String[] selectionArgs = { task.getName(), listName };
+        String[] selectionArgs = { oldName, oldListName };
 
         int count = db.update(
                 DatabaseContract.Task.TABLE_NAME,
                 values,
                 selection,
                 selectionArgs);
+
+        //update all  if necessary
+        if(!task.getName().equals(oldName) || !task.getParentList().equals(oldListName)) {
+            for (Task subTask : task.getChildren()) {
+                subTask.setParentTask(task.getName());
+                subTask.setParentList(task.getParentList());
+                updateTask(subTask, subTask.getName(), oldListName);
+            }
+        }
     }
+
     public List<Process> getAllProcesses(){
         List<Process> processes = new ArrayList<Process>();
         List<String> lists = getLists();
@@ -329,12 +394,13 @@ public class DataRepo {
             Process process = new Process(name);
             process.setNotes(notes);
             process.setSteps(steps);
+            process.setParentList(listName);
             processes.add(process);
         }
         return processes;
     }
 
-    public void removeProcess(Process process, String listName) {
+    public void removeProcess(Process process) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         //Delete all of the steps of the process
         // Define 'where' part of step query.
@@ -348,12 +414,17 @@ public class DataRepo {
         // Define 'where' part of process query.
         String processSelection = DatabaseContract.Process.COLUMN_NAME + "=? AND " + DatabaseContract.Process.COLUMN_PARENT_LIST + "=?";
         // Specify arguments in placeholder order.
-        String[] processSelectionArgs = { process.getName(), listName };
+        String[] processSelectionArgs = { process.getName(), process.getParentList() };
         // Issue SQL statement.
         db.delete(DatabaseContract.Process.TABLE_NAME, processSelection, processSelectionArgs);
+
+        //remove all steps
+        for(Step step: process.getSteps()){
+            removeStep(step);
+        }
     }
 
-    public void addProcess(Process process, String listName){
+    public void addProcess(Process process){
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -363,34 +434,46 @@ public class DataRepo {
         if(null != process.getNotes()){
             values.put(DatabaseContract.Process.COLUMN_NOTES, process.getNotes());
         }
-        values.put(DatabaseContract.Process.COLUMN_PARENT_LIST, listName);
+        values.put(DatabaseContract.Process.COLUMN_PARENT_LIST, process.getParentList());
 
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(DatabaseContract.Process.TABLE_NAME, null, values);
+
+        //add steps to database
         List<Step> steps = process.getSteps();
         if(null != steps){
             for(Step step : steps){
                 addStep(step);
             }
         }
-        // Insert the new row, returning the primary key value of the new row
-        long newRowId = db.insert(DatabaseContract.Process.TABLE_NAME, null, values);
     }
 
-    public void updateProcess(Process process, String listName){
+    public void updateProcess(Process process, String oldName, String oldParentListName){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
 // New value for one column
         ContentValues values = new ContentValues();
+        values.put(DatabaseContract.Process.COLUMN_NAME, process.getName());
         values.put(DatabaseContract.Process.COLUMN_NOTES, process.getNotes());
+        values.put(DatabaseContract.Process.COLUMN_PARENT_LIST, process.getParentList());
 
 // Which row to update, based on the title
         String selection = DatabaseContract.Process.COLUMN_NAME + "=? AND " + DatabaseContract.Process.COLUMN_PARENT_LIST + "=?";
-        String[] selectionArgs = { process.getName(), listName };
+        String[] selectionArgs = { oldName, oldParentListName };
 
         int count = db.update(
                 DatabaseContract.Process.TABLE_NAME,
                 values,
                 selection,
                 selectionArgs);
+
+        //update steps if necessary
+        if(!process.getName().equals(oldName) || !process.getParentList().equals(oldParentListName)){
+            for(Step step: process.getSteps()){
+                step.setParent(process.getName());
+                updateStep(step, step.getName(), oldName);
+            }
+        }
     }
 
     public List<Step> getSteps(String processName){
@@ -437,17 +520,18 @@ public class DataRepo {
                 step.setPriority(Priority.valueOf(priorityString));
             }
             step.setNotes(notes);
+            step.setParent(processName);
             steps.add(step);
         }
         return steps;
     }
 
-    public void removeStep(Step step, String processName){
+    public void removeStep(Step step){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Define 'where' part of query.
         String stepSelection = DatabaseContract.Step.COLUMN_NAME + "=? AND " + DatabaseContract.Step.COLUMN_PARENT_PROCESS + "=?";
         // Specify arguments in placeholder order.
-        String[] stepSelectionArgs = { step.getName(), step.getParent().getName()};
+        String[] stepSelectionArgs = { step.getName(), step.getParent()};
         // Issue SQL statement.
         db.delete(DatabaseContract.Step.TABLE_NAME, stepSelection, stepSelectionArgs);
     }
@@ -465,27 +549,33 @@ public class DataRepo {
         if(null != step.getPriority()){
             values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
         }
-        values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParent().getName());
+        values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParent());
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(DatabaseContract.Step.TABLE_NAME, null, values);
     }
 
-    public void updateStep (Step step){
+    public void updateStep (Step step, String oldName, String oldParentName){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         // New value for one column
         ContentValues values = new ContentValues();
+        if(null != step.getNotes()){
+            values.put(DatabaseContract.Step.COLUMN_NAME, step.getName());
+        }
         if(null != step.getNotes()){
             values.put(DatabaseContract.Step.COLUMN_NOTES, step.getNotes());
         }
         if(null != step.getPriority()){
             values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
         }
+        if(null != step.getParent()){
+            values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParent());
+        }
 
 // Which row to update, based on the title
         String selection = DatabaseContract.Step.COLUMN_NAME + "=? AND " + DatabaseContract.Step.COLUMN_PARENT_PROCESS + "=?";
-        String[] selectionArgs = { step.getName(), step.getParent().getName() };
+        String[] selectionArgs = { oldName, oldParentName };
 
         int count = db.update(
                 DatabaseContract.Step.TABLE_NAME,
