@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/list_task_view"
-    tools:context=".notInUse.OLD_ListTaskView"
+    tools:context=".Views.ListTaskFragment"
     android:visibility="visible"
     android:layout_marginTop="55dp">
 

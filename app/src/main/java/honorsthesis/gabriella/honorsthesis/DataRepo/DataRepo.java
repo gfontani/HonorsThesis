@@ -24,9 +24,9 @@ import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
  */
 public class DataRepo {
 
-    String filename;
+    private String filename;
     private Context mContext;
-    DatabaseHelper mDbHelper;
+    private DatabaseHelper mDbHelper;
 
     public DataRepo(Context context){
         mContext = context;
@@ -390,12 +390,13 @@ public class DataRepo {
                     cursor.getColumnIndexOrThrow(DatabaseContract.Process.COLUMN_NAME));
             notes = cursor.getString(
                     cursor.getColumnIndexOrThrow(DatabaseContract.Process.COLUMN_NOTES));
-            List<Step> steps = getSteps(name);
             Process process = new Process(name);
             process.setNotes(notes);
-            process.setSteps(steps);
             process.setParentList(listName);
             processes.add(process);
+            List<Step> steps = getSteps(process);
+            process.setSteps(steps);
+
         }
         return processes;
     }
@@ -470,13 +471,13 @@ public class DataRepo {
         //update steps if necessary
         if(!process.getName().equals(oldName) || !process.getParentList().equals(oldParentListName)){
             for(Step step: process.getSteps()){
-                step.setParent(process.getName());
+                step.setParentProcess(process.getName());
                 updateStep(step, step.getName(), oldName);
             }
         }
     }
 
-    public List<Step> getSteps(String processName){
+    public List<Step> getSteps(Process process){
         List<Step> steps = new ArrayList<Step>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -490,7 +491,7 @@ public class DataRepo {
 
 // Filter results WHERE "title" = 'My Title'
         String selection = DatabaseContract.Step.COLUMN_PARENT_PROCESS + " = ?";
-        String[] selectionArgs = { processName };
+        String[] selectionArgs = { process.getName() };
 
 // How you want the results sorted in the resulting Cursor
         //String sortOrder = DatabaseContract.Task.COLUMN_PRIORITY + " DESC";
@@ -520,7 +521,7 @@ public class DataRepo {
                 step.setPriority(Priority.valueOf(priorityString));
             }
             step.setNotes(notes);
-            step.setParent(processName);
+            step.setParentProcess(process.getName());
             steps.add(step);
         }
         return steps;
@@ -531,7 +532,7 @@ public class DataRepo {
         // Define 'where' part of query.
         String stepSelection = DatabaseContract.Step.COLUMN_NAME + "=? AND " + DatabaseContract.Step.COLUMN_PARENT_PROCESS + "=?";
         // Specify arguments in placeholder order.
-        String[] stepSelectionArgs = { step.getName(), step.getParent()};
+        String[] stepSelectionArgs = { step.getName(), step.getParentProcess()};
         // Issue SQL statement.
         db.delete(DatabaseContract.Step.TABLE_NAME, stepSelection, stepSelectionArgs);
     }
@@ -549,7 +550,7 @@ public class DataRepo {
         if(null != step.getPriority()){
             values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
         }
-        values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParent());
+        values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParentProcess());
 
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(DatabaseContract.Step.TABLE_NAME, null, values);
@@ -569,8 +570,8 @@ public class DataRepo {
         if(null != step.getPriority()){
             values.put(DatabaseContract.Step.COLUMN_PRIORITY, step.getPriority().toString());
         }
-        if(null != step.getParent()){
-            values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParent());
+        if(null != step.getParentProcess()){
+            values.put(DatabaseContract.Step.COLUMN_PARENT_PROCESS, step.getParentProcess());
         }
 
 // Which row to update, based on the title

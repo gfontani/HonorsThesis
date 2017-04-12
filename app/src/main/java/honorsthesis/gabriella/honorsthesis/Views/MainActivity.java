@@ -23,7 +23,7 @@ import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ListTaskFragment.OnListFragmentTaskInteractionListener, ListProcessFragment.OnListFragmentProcessInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ListTaskFragment.OnListFragmentTaskInteractionListener, ListProcessFragment.OnListFragmentProcessInteractionListener, ListProcessFragment.OnListFragmentStepInteractionListener {
 
     DataRepo mDataRepo;
     @Override

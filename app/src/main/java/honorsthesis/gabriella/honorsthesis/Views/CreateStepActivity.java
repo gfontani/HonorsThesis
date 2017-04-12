@@ -10,14 +10,9 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.*;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
@@ -133,7 +128,7 @@ public class CreateStepActivity extends AppCompatActivity {
             //make process and add it to the database
             Step step = new Step(stepName);
             step.setNotes(notes);
-            step.setParent(parentProcess.getName());
+            step.setParentProcess(parentProcess.getName());
             mDataRepo.addStep(step);
             finish();
             Intent intent = new Intent();

@@ -1,36 +1,24 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Adapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.*;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
@@ -48,7 +36,7 @@ public class CreateProcessActivity extends AppCompatActivity{
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ListProcessFragment.OnListFragmentProcessInteractionListener mListener;
+    private ListProcessFragment.OnListFragmentStepInteractionListener mListener;
 
     // UI references.
     private EditText mProcessNameView;
@@ -203,11 +191,11 @@ public class CreateProcessActivity extends AppCompatActivity{
             //make process and add it to the database
             Process process = new Process(processName);
             process.setNotes(notes);
+            process.setParentList(listName);
             for(Step step : steps){
-                step.setParent(process.getName());
+                step.setParentProcess(process.getName());
             }
             process.setSteps(steps);
-            process.setParentList(listName);
             mDataRepo.addProcess(process);
             finish();
 //            Intent mainActivity = new Intent(this, MainActivity.class);

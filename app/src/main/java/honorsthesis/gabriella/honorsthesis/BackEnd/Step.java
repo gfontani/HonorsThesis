@@ -4,7 +4,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.lang.*;
-import java.util.ArrayList;
 
 /**
  * Created by Gabriella on 11/3/2016.
@@ -12,12 +11,12 @@ import java.util.ArrayList;
 public class Step implements Parcelable{
     private String name;
     private Priority priority;
-    private String parent;
+    private String parentProcess;
     private String notes;
 
     public Step(String name){
         this.name = name;
-        this.parent = "";
+        this.parentProcess = null;
         this.notes = "";
     }
 
@@ -37,12 +36,12 @@ public class Step implements Parcelable{
         this.priority = priority;
     }
 
-    public String getParent() {
-        return parent;
+    public String getParentProcess() {
+        return parentProcess;
     }
 
-    public void setParent(String parent) {
-        this.parent = parent;
+    public void setParentProcess(String parentProcess) {
+        this.parentProcess = parentProcess;
     }
 
     public String getNotes() {
@@ -68,7 +67,7 @@ public class Step implements Parcelable{
         else{
             dest.writeString("");
         }
-        dest.writeString(parent);
+        dest.writeString(parentProcess);
     }
 
     // this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -92,6 +91,6 @@ public class Step implements Parcelable{
         }else{
             priority = null;
         }
-        parent = in.readString();
+        parentProcess = in.readString();
     }
 }

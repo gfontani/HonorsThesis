@@ -1,6 +1,5 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
@@ -44,7 +42,7 @@ public class EditStepActivity extends AppCompatActivity {
         // Set up the create process form.
         mStepNameView = (AutoCompleteTextView) findViewById(R.id.step_name);
         mStepNameView.setText(step.getName());
-        ((TextView) findViewById(R.id.process_name)).setText(step.getParent());
+        ((TextView) findViewById(R.id.process_name)).setText(step.getParentProcess());
 
         mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
         mNotesView.setText(step.getNotes());
@@ -130,12 +128,11 @@ public class EditStepActivity extends AppCompatActivity {
             //make process and add it to the database
             step.setName(stepName);
             step.setNotes(notes);
-            mDataRepo.updateStep(step, oldName, step.getParent());
+            mDataRepo.updateStep(step, oldName, step.getParentProcess());
             finish();
-//            Intent intent = new Intent();
-//            intent.putExtra("newStep", step);
-//            setResult(Activity.RESULT_OK, intent);
-//            finish();
+            Intent viewStep = new Intent(this, ViewStepActivity.class);
+            viewStep.putExtra("step", step);
+            startActivity(viewStep);
         }
     }
 

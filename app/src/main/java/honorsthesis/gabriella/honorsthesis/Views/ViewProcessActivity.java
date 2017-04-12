@@ -1,5 +1,6 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,12 +20,12 @@ import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
-public class ViewProcessActivity extends AppCompatActivity {
+public class ViewProcessActivity extends AppCompatActivity implements ListProcessFragment.OnListFragmentStepInteractionListener {
 
     public StepRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ListProcessFragment.OnListFragmentProcessInteractionListener mListener;
+    private ListProcessFragment.OnListFragmentStepInteractionListener mListener;
 
     private int mColumnCount = 1;
     private String parentList = "list name";
@@ -33,10 +34,11 @@ public class ViewProcessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListener = (ListProcessFragment.OnListFragmentStepInteractionListener) this;
 
         Intent i = getIntent();
         process = (Process) i.getParcelableExtra("process");
-        parentList = i.getStringExtra("list");
+        parentList = process.getParentList();
 
         setContentView(R.layout.activity_view_process);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -91,9 +93,14 @@ public class ViewProcessActivity extends AppCompatActivity {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
                 this.finish();
+                Intent mainActivity = new Intent(this, MainActivity.class);
+                mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mainActivity.putExtra("process", parentList);
+                startActivity(mainActivity);
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_edit:
+                finish();
                 Intent intent = new Intent(this, EditProcessActivity.class);
                 intent.putExtra("process", process);
                 startActivity(intent);
@@ -130,5 +137,13 @@ public class ViewProcessActivity extends AppCompatActivity {
         mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         mainActivity.putExtra("task", parentList);
         startActivity(mainActivity);
+    }
+
+    @Override
+    public void onListFragmentStepInteraction(Step item, Process parent) {
+        Intent intent = new Intent(this, ViewStepActivity.class);
+        intent.putExtra("step", item);
+        intent.putExtra("parent", parent);
+        startActivity(intent);
     }
 }

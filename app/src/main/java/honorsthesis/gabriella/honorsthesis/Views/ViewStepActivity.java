@@ -9,12 +9,10 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.*;
-import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.R;
 
 public class ViewStepActivity extends AppCompatActivity {
 
-    private honorsthesis.gabriella.honorsthesis.BackEnd.Process parent;
     private Step step;
 
     @Override
@@ -22,7 +20,6 @@ public class ViewStepActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent i = getIntent();
-        parent = (Process) i.getParcelableExtra("parent");
         step = i.getParcelableExtra("step");
 
         setContentView(R.layout.activity_view_step);
@@ -36,7 +33,7 @@ public class ViewStepActivity extends AppCompatActivity {
     }
 
     private void setUpContent(){
-        ((TextView)findViewById(R.id.step_parent_process_text)).setText(parent.getName());
+        ((TextView)findViewById(R.id.step_parent_process_text)).setText(step.getParentProcess());
         ((TextView)findViewById(R.id.step_notes)).setText(step.getNotes());
     }
 
@@ -53,9 +50,13 @@ public class ViewStepActivity extends AppCompatActivity {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
                 this.finish();
+                Intent viewProcess = new Intent(this, ViewProcessActivity.class);
+                viewProcess.putExtra("process", step.getParentProcess());
+                startActivity(viewProcess);
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_edit:
+                finish();
                 Intent intent = new Intent(this, EditStepActivity.class);
                 intent.putExtra("step", step);
                 startActivity(intent);

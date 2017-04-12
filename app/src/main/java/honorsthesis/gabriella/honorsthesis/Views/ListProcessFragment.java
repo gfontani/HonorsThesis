@@ -185,7 +185,9 @@ public class ListProcessFragment extends Fragment {
      */
     public interface OnListFragmentProcessInteractionListener {
         void onListFragmentProcessInteraction(Process item, String listName);
-        void onListFragmentStepInteraction(Step item, Process parent);
+    }
 
+    public interface OnListFragmentStepInteractionListener {
+        void onListFragmentStepInteraction(Step item, Process parent);
     }
 }

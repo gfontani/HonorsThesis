@@ -30,6 +30,7 @@
     <string name="step_underline"><u>Step:</u></string>
     <string name="task_underline"><u>Task:</u></string>
     <string name="process_underline"><u>Process:</u></string>
+    <string name="parent_process_underline"><u>Parent Process:</u></string>
 
     <!-- button names -->
     <string name="instantiate_process">Instantiate this Process</string>

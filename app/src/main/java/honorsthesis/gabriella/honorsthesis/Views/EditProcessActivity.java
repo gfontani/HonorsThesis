@@ -16,11 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
@@ -30,7 +25,7 @@ import honorsthesis.gabriella.honorsthesis.R;
 /**
  * A login screen that offers login via email/password.
  */
-public class EditProcessActivity extends AppCompatActivity{
+public class EditProcessActivity extends AppCompatActivity implements ListProcessFragment.OnListFragmentStepInteractionListener{
     //constants
     private Process process;
     private String oldProcessName;
@@ -43,7 +38,7 @@ public class EditProcessActivity extends AppCompatActivity{
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private ListProcessFragment.OnListFragmentProcessInteractionListener mListener;
+    private ListProcessFragment.OnListFragmentStepInteractionListener mListener;
 
     DataRepo mDataRepo;
 
@@ -106,7 +101,7 @@ public class EditProcessActivity extends AppCompatActivity{
                     focusView.requestFocus();
                 } else {
                     Step step = new Step(stepName);
-                    step.setParent(process.getName());
+                    step.setParentProcess(process.getName());
                     process.addStep(step);
                     mAdapter.notifyDataSetChanged();
                     mStepNameView.clearFocus();
@@ -201,14 +196,13 @@ public class EditProcessActivity extends AppCompatActivity{
             process.setName(processName);
             process.setNotes(notes);
             for(Step step : process.getSteps()){
-                step.setParent(process.getName());
+                step.setParentProcess(process.getName());
             }
             mDataRepo.updateProcess(process, oldProcessName, process.getParentList());
             finish();
-//            Intent mainActivity = new Intent(this, MainActivity.class);
-//            mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            mainActivity.putExtra("process", process.getParentList());
-//            startActivity(mainActivity);
+            Intent viewProcess = new Intent(this, ViewProcessActivity.class);
+            viewProcess.putExtra("process", process);
+            startActivity(viewProcess);
         }
     }
 
@@ -219,6 +213,14 @@ public class EditProcessActivity extends AppCompatActivity{
 //        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        mainActivity.putExtra("process", "All Tasks");
 //        startActivity(mainActivity);
+    }
+
+    @Override
+    public void onListFragmentStepInteraction(Step item, Process parent) {
+        Intent intent = new Intent(this, ViewStepActivity.class);
+        intent.putExtra("step", item);
+        intent.putExtra("parent", parent);
+        startActivity(intent);
     }
 }
 

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.Views.ListProcessFragment;
 import honorsthesis.gabriella.honorsthesis.Views.ListProcessFragment.OnListFragmentProcessInteractionListener;
 import honorsthesis.gabriella.honorsthesis.R;
 
@@ -23,10 +24,10 @@ public class StepRecyclerViewAdapter extends RecyclerView.Adapter<StepRecyclerVi
 
     private List<Step> mValues;
     private final Process mParent;
-    private final OnListFragmentProcessInteractionListener mListener;
+    private final ListProcessFragment.OnListFragmentStepInteractionListener mListener;
     private Context mContext;
 
-    public StepRecyclerViewAdapter(Context context, List<Step> items, Process parentProcess, OnListFragmentProcessInteractionListener listener) {
+    public StepRecyclerViewAdapter(Context context, List<Step> items, Process parentProcess, ListProcessFragment.OnListFragmentStepInteractionListener listener) {
         mContext = context;
         mValues = items;
         mParent = parentProcess;
