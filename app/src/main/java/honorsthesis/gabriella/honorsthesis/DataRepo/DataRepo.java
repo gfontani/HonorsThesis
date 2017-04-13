@@ -355,6 +355,45 @@ public class DataRepo {
         return processes;
     }
 
+    public Process getProcess(String processName, String listName){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+// Define a projection that specifies which columns from the database
+// you will actually use after this query.
+        String[] projection = {
+                DatabaseContract.Process.COLUMN_NAME,
+                DatabaseContract.Process.COLUMN_NOTES,
+        };
+
+// Filter results WHERE "title" = 'My Title'
+        String selection = DatabaseContract.Process.COLUMN_PARENT_LIST + " = ? AND " + DatabaseContract.Process.COLUMN_NAME + " = ?";
+        String[] selectionArgs = { listName, processName};
+
+// How you want the results sorted in the resulting Cursor
+        //String sortOrder = DatabaseContract.Task.COLUMN_PRIORITY + " DESC";
+
+        Cursor cursor = db.query(
+                DatabaseContract.Process.TABLE_NAME,      // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+
+            String name = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Process.COLUMN_NAME));
+            String notes = cursor.getString(
+                    cursor.getColumnIndexOrThrow(DatabaseContract.Process.COLUMN_NOTES));
+            Process process = new Process(name);
+            process.setNotes(notes);
+            process.setParentList(listName);
+            List<Step> steps = getSteps(process);
+            process.setSteps(steps);
+        return process;
+    }
+
     public List<Process> getProcesses(String listName){
         List<Process> processes = new ArrayList<Process>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();

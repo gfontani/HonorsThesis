@@ -30,6 +30,7 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
     private int mColumnCount = 1;
     private String parentList = "list name";
     private Process process;
+    boolean wasEdited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
         Intent i = getIntent();
         process = (Process) i.getParcelableExtra("process");
         parentList = process.getParentList();
+        wasEdited = i.getExtras().getBoolean("wasEdited");
 
         setContentView(R.layout.activity_view_process);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -92,18 +94,19 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                if(wasEdited){
+                    Intent mainActivity = new Intent(this, MainActivity.class);
+                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mainActivity.putExtra("process", parentList);
+                    startActivity(mainActivity);
+                }
                 this.finish();
-                Intent mainActivity = new Intent(this, MainActivity.class);
-                mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mainActivity.putExtra("process", parentList);
-                startActivity(mainActivity);
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_edit:
-                finish();
                 Intent intent = new Intent(this, EditProcessActivity.class);
                 intent.putExtra("process", process);
-                startActivity(intent);
+                startActivityForResult(intent, 3);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -139,11 +142,42 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
         startActivity(mainActivity);
     }
 
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            //result is from view step activity
+            //TODO: figure out why the resultCode is always 0 here
+            //(resultCode == RESULT_OK) {
+                //the steps were modified. get the process from the database and restart it
+                DataRepo dataRepo = new DataRepo(this);
+            //TODO: I think the data repo method is wrong so check what's wrong with it!
+                Process updatedProcess = dataRepo.getProcess(process.getName(), process.getParentList());
+                Intent refresh = new Intent(this, ViewProcessActivity.class);
+                refresh.putExtra("process", updatedProcess);
+                refresh.putExtra("wasEdited", true);
+                startActivity(refresh);
+                this.finish();
+            //}
+        } else if(requestCode == 3){
+            //result is from edit process activity
+            if(resultCode == RESULT_OK) {
+                //the steps were modified. get the process from the database and restart it
+                Process updatedProcess = data.getParcelableExtra("newProcess");
+                Intent refresh = new Intent(this, ViewProcessActivity.class);
+                refresh.putExtra("process", updatedProcess);
+                refresh.putExtra("wasEdited", true);
+                startActivity(refresh);
+                this.finish();
+            }
+        }
+    }
+
     @Override
     public void onListFragmentStepInteraction(Step item, Process parent) {
         Intent intent = new Intent(this, ViewStepActivity.class);
         intent.putExtra("step", item);
         intent.putExtra("parent", parent);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 }

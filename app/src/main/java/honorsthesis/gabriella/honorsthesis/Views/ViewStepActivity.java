@@ -1,5 +1,6 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import honorsthesis.gabriella.honorsthesis.R;
 public class ViewStepActivity extends AppCompatActivity {
 
     private Step step;
+    boolean wasEdited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,8 @@ public class ViewStepActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         step = i.getParcelableExtra("step");
+        //TODO: figure out how to get boolean extra
+        wasEdited = i.getExtras().getBoolean("wasEdited");
 
         setContentView(R.layout.activity_view_step);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -49,20 +53,47 @@ public class ViewStepActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                if(wasEdited){
+                    Intent wasEditedIntent = getIntent();
+                    wasEditedIntent.putExtra("wasEdited", true);
+                    setResult(RESULT_OK, wasEditedIntent);
+                }
+                else{
+                    setResult(Activity.RESULT_CANCELED, null);
+                }
                 this.finish();
-                Intent viewProcess = new Intent(this, ViewProcessActivity.class);
-                viewProcess.putExtra("process", step.getParentProcess());
-                startActivity(viewProcess);
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_edit:
-                finish();
                 Intent intent = new Intent(this, EditStepActivity.class);
                 intent.putExtra("step", step);
-                startActivity(intent);
+                startActivityForResult(intent, 2);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        setResult(RESULT_OK);
+        super.onBackPressed();
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2) {
+            if(resultCode == RESULT_OK) {
+                //dataSet was changed refresh the view
+                Step step = data.getParcelableExtra("newStep");
+                wasEdited = true;
+                Intent refresh = new Intent(this, ViewStepActivity.class);
+                refresh.putExtra("step", step);
+                refresh.putExtra("wasEdited", true);
+                startActivity(refresh);
+                this.finish();
+            }
         }
     }
 }

@@ -133,6 +133,7 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                setResult(RESULT_CANCELED, null);
                 this.finish();
                 return true;
             case R.id.action_save:
@@ -145,23 +146,13 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
                 return true;
             case R.id.action_cancel:
                 // app icon in action bar clicked; goto parent activity.
+                setResult(RESULT_CANCELED, null);
                 this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1) {
-//            if(resultCode == RESULT_OK) {
-//                Step step = data.getParcelableExtra("newStep");
-//                steps.add(step);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
 
     /**
      * attempts to create a process
@@ -199,14 +190,15 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
                 step.setParentProcess(process.getName());
             }
             mDataRepo.updateProcess(process, oldProcessName, process.getParentList());
+            Intent intent = new Intent();
+            intent.putExtra("newProcess", process);
+            setResult(RESULT_OK, intent);
             finish();
-            Intent viewProcess = new Intent(this, ViewProcessActivity.class);
-            viewProcess.putExtra("process", process);
-            startActivity(viewProcess);
         }
     }
 
     private void deleteProcess(){
+        //TODO: figure out how to do this
         mDataRepo.removeProcess(process);
         this.finish();
 //        Intent mainActivity = new Intent(this, MainActivity.class);

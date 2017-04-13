@@ -72,10 +72,17 @@ public class EditStepActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed(){
+        setResult(RESULT_OK, null);
+        super.onBackPressed();;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                setResult(RESULT_CANCELED, null);
                 this.finish();
                 return true;
             case R.id.action_save:
@@ -88,6 +95,7 @@ public class EditStepActivity extends AppCompatActivity {
                 return true;
             case R.id.action_cancel:
                 // app icon in action bar clicked; goto parent activity.
+                setResult(RESULT_CANCELED, null);
                 this.finish();
                 return true;
             default:
@@ -129,15 +137,16 @@ public class EditStepActivity extends AppCompatActivity {
             step.setName(stepName);
             step.setNotes(notes);
             mDataRepo.updateStep(step, oldName, step.getParentProcess());
+            Intent intent = new Intent();
+            intent.putExtra("newStep", step);
+            setResult(RESULT_OK, intent);
             finish();
-            Intent viewStep = new Intent(this, ViewStepActivity.class);
-            viewStep.putExtra("step", step);
-            startActivity(viewStep);
         }
     }
 
     private void deleteStep() {
         mDataRepo.removeStep(step);
+        //TODO: deal with this result so that it goes to the right place!
         finish();
     }
 }

@@ -117,7 +117,7 @@ public class ListProcessFragment extends Fragment {
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //go to the create task activity
+                //go to the create process activity
                 MainActivity ma = ((MainActivity)getActivity());
                 Intent intent = new Intent(ma, CreateProcessActivity.class);
                 intent.putExtra("listName", list.getName());
