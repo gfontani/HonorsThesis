@@ -22,7 +22,7 @@ import honorsthesis.gabriella.honorsthesis.R;
 public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragment.OnListFragmentTaskInteractionListener{
 
     private int mColumnCount = 1;
-    private String parentList = "list name";
+    //private String parentList = "list name";
     private Task task;
     public TaskRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -30,6 +30,7 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
     private ListTaskFragment.OnListFragmentTaskInteractionListener mListener;
 
     private boolean wasEdited = false;
+    private boolean isSubtask = false;
 
 
     @Override
@@ -38,7 +39,11 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
 
         Intent i = getIntent();
         task = (Task) i.getParcelableExtra("task");
-        parentList = i.getStringExtra("list");
+        //TODO: remove parentList extra every time start this activity
+        //parentList = i.getStringExtra("list");
+        wasEdited = i.getExtras().getBoolean("wasEdited");
+        isSubtask = i.getExtras().getBoolean("isSubtask");
+
 
         setContentView(R.layout.activity_view_task);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -61,7 +66,7 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
                     mRecyclerView = (RecyclerView) recView;
                     mLayoutManager = new LinearLayoutManager(this);
                     mRecyclerView.setLayoutManager(mLayoutManager);
-                    mAdapter = new TaskRecyclerViewAdapter(this, task.getChildren(), parentList, mListener);
+                    mAdapter = new TaskRecyclerViewAdapter(this, task.getChildren(), task.getParentList(), mListener);
                     mRecyclerView.setAdapter(mAdapter);
                 }
             }
@@ -71,7 +76,7 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
 
         }
 
-        ((TextView)findViewById(R.id.task_parent_list_text)).setText(parentList);
+        ((TextView)findViewById(R.id.task_parent_list_text)).setText(task.getParentList());
         if(null == task.getParentTask()){
             findViewById(R.id.parent_task_text).setVisibility(View.GONE);
             findViewById(R.id.parent_task).setVisibility(View.GONE);
@@ -108,24 +113,45 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
-                this.finish();
-                //if(wasEdited){
-                    Intent mainActivity = new Intent(this, MainActivity.class);
-                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mainActivity.putExtra("task", parentList);
-                    startActivity(mainActivity);
-                //}
+                if(wasEdited){
+                    if(isSubtask){
+                        Intent wasEditedIntent = getIntent();
+                        wasEditedIntent.putExtra("wasEdited", true);
+                        setResult(RESULT_OK, wasEditedIntent);
+                    } else {
+                        Intent mainActivity = new Intent(this, MainActivity.class);
+                        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mainActivity.putExtra("task", task.getParentList());
+                        startActivity(mainActivity);
+                    }
+                }
+                finish();
                 return true;
             //noinspection SimplifiableIfStatement
             case R.id.action_edit:
-                wasEdited = true;
-                finish();
                 Intent intent = new Intent(this, EditTaskActivity.class);
                 intent.putExtra("task", task);
-                startActivity(intent);
+                startActivityForResult(intent, 5);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 5) {
+            if(resultCode == RESULT_OK) {
+                //dataSet was changed refresh the view
+                Task updatedTask = data.getParcelableExtra("newTask");
+                wasEdited = true;
+                Intent refresh = new Intent(this, ViewTaskActivity.class);
+                refresh.putExtra("task", updatedTask);
+                refresh.putExtra("wasEdited", true);
+                refresh.putExtra("isSubtask", isSubtask);
+                startActivity(refresh);
+                this.finish();
+            }
         }
     }
 
@@ -135,7 +161,8 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
             Intent intent = new Intent(this, ViewTaskActivity.class);
             intent.putExtra("task", item);
             intent.putExtra("list", listName);
-            startActivity(intent);
+            intent.putExtra("isSubtask", isSubtask);
+            startActivityForResult(intent, 5);
         }catch( Exception e){
             System.out.println("here");
         }

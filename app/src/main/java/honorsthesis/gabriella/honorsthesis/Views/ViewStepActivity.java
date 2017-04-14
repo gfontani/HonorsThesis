@@ -23,7 +23,6 @@ public class ViewStepActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         step = i.getParcelableExtra("step");
-        //TODO: figure out how to get boolean extra
         wasEdited = i.getExtras().getBoolean("wasEdited");
 
         setContentView(R.layout.activity_view_step);

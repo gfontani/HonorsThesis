@@ -270,11 +270,10 @@ public class EditTaskActivity extends AppCompatActivity implements ListTaskFragm
                 subTask.setParentTask(task.getName());
             }
             mDataRepo.updateTask(task, oldName, task.getParentList());
+            Intent intent = new Intent();
+            intent.putExtra("newTask", task);
+            setResult(RESULT_OK, intent);
             finish();
-            Intent viewTask = new Intent(this, ViewTaskActivity.class);
-            viewTask.putExtra("task", task);
-            viewTask.putExtra("list", task.getParentList());
-            startActivity(viewTask);
         }
     }
 

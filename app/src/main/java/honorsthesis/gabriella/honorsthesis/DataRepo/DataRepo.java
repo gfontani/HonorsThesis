@@ -366,7 +366,7 @@ public class DataRepo {
         };
 
 // Filter results WHERE "title" = 'My Title'
-        String selection = DatabaseContract.Process.COLUMN_PARENT_LIST + " = ? AND " + DatabaseContract.Process.COLUMN_NAME + " = ?";
+        String selection = DatabaseContract.Process.COLUMN_PARENT_LIST + "=? AND " + DatabaseContract.Process.COLUMN_NAME + "=?";
         String[] selectionArgs = { listName, processName};
 
 // How you want the results sorted in the resulting Cursor
@@ -382,6 +382,7 @@ public class DataRepo {
                 null                                     // The sort order
         );
 
+        while(cursor.moveToNext()) {
             String name = cursor.getString(
                     cursor.getColumnIndexOrThrow(DatabaseContract.Process.COLUMN_NAME));
             String notes = cursor.getString(
@@ -391,7 +392,9 @@ public class DataRepo {
             process.setParentList(listName);
             List<Step> steps = getSteps(process);
             process.setSteps(steps);
-        return process;
+            return process;
+        }
+        return null;
     }
 
     public List<Process> getProcesses(String listName){
