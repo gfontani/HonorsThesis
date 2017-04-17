@@ -150,6 +150,13 @@ public class DataRepo {
         return tasks;
     }
 
+    public Task getTask(String taskName, String listName){
+        List<Task> allTasks = getTasks(listName);
+        Task tempTask = new Task(taskName);
+        Task task = allTasks.get(allTasks.indexOf(tempTask));
+        return task;
+    }
+
     public List<Task> getTasks(String listName){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 

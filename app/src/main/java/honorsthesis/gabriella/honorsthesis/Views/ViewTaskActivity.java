@@ -17,6 +17,7 @@ import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
+import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragment.OnListFragmentTaskInteractionListener{
@@ -36,6 +37,8 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mListener = (ListTaskFragment.OnListFragmentTaskInteractionListener) this;
 
         Intent i = getIntent();
         task = (Task) i.getParcelableExtra("task");
@@ -109,22 +112,32 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
     }
 
     @Override
+    public void onBackPressed(){
+        backOrUpPressed();
+        super.onBackPressed();
+    }
+
+    private void backOrUpPressed(){
+        if(wasEdited){
+            if(isSubtask){
+                Intent wasEditedIntent = new Intent();
+                wasEditedIntent.putExtra("wasEdited", true);
+                setResult(RESULT_OK, wasEditedIntent);
+            } else {
+                Intent mainActivity = new Intent(this, MainActivity.class);
+                mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mainActivity.putExtra("task", task.getParentList());
+                startActivity(mainActivity);
+            }
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
-                if(wasEdited){
-                    if(isSubtask){
-                        Intent wasEditedIntent = getIntent();
-                        wasEditedIntent.putExtra("wasEdited", true);
-                        setResult(RESULT_OK, wasEditedIntent);
-                    } else {
-                        Intent mainActivity = new Intent(this, MainActivity.class);
-                        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mainActivity.putExtra("task", task.getParentList());
-                        startActivity(mainActivity);
-                    }
-                }
+                backOrUpPressed();
                 finish();
                 return true;
             //noinspection SimplifiableIfStatement
@@ -140,10 +153,20 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 5) {
-            if(resultCode == RESULT_OK) {
+            if(resultCode == RESULT_OK || requestCode == 6) {
                 //dataSet was changed refresh the view
-                Task updatedTask = data.getParcelableExtra("newTask");
+                Task updatedTask;
+                if(requestCode == 5){
+                    //get the updated task
+                    updatedTask = data.getParcelableExtra("newTask");
+                } else if(requestCode == 6){
+                    DataRepo dataRepo = new DataRepo(this);
+                    updatedTask = dataRepo.getTask(task.getName(), task.getParentList());
+                } else{
+                    //wrong result code exit the method
+                    finish();
+                    return;
+                }
                 wasEdited = true;
                 Intent refresh = new Intent(this, ViewTaskActivity.class);
                 refresh.putExtra("task", updatedTask);
@@ -152,31 +175,21 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
                 startActivity(refresh);
                 this.finish();
             }
-        }
     }
 
     @Override
     public void onListFragmentTaskClick(Task item, String listName) {
-        try {
             Intent intent = new Intent(this, ViewTaskActivity.class);
             intent.putExtra("task", item);
-            intent.putExtra("list", listName);
-            intent.putExtra("isSubtask", isSubtask);
-            startActivityForResult(intent, 5);
-        }catch( Exception e){
-            System.out.println("here");
-        }
+            intent.putExtra("isSubtask", true);
+            startActivityForResult(intent, 6);
     }
 
     @Override
     public void onListFragmentTaskCheck(Task task, String listName) {
-        //mDataRepo.removeTask(task);
-        //TODO: figure out what to do with check
-        Fragment fragment = ListTaskFragment.newInstance(1, listName);
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-
+        DataRepo dataRepo = new DataRepo(this);
+        dataRepo.removeTask(task);
+        task.removeChild(task);
+        mAdapter.notifyDataSetChanged();
     }
 }

@@ -151,7 +151,6 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
             //(resultCode == RESULT_OK) {
                 //the steps were modified. get the process from the database and restart it
                 DataRepo dataRepo = new DataRepo(this);
-            //TODO: I think the data repo method is wrong so check what's wrong with it!
                 Process updatedProcess = dataRepo.getProcess(process.getName(), process.getParentList());
                 Intent refresh = new Intent(this, ViewProcessActivity.class);
                 refresh.putExtra("process", updatedProcess);
