@@ -41,14 +41,6 @@ public class CreateListActivity extends AppCompatActivity {
             // Set up the login form.
             mListNameView = (AutoCompleteTextView) findViewById(R.id.list_name);
 
-            Button mCreateListButton = (Button) findViewById(R.id.create_list_button);
-            mCreateListButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    createList();
-                }
-            });
-
             //set up toolbar
             // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

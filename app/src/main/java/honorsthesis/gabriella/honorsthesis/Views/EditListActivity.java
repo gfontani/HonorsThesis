@@ -53,9 +53,6 @@ public class EditListActivity extends AppCompatActivity {
             mListNameView = (AutoCompleteTextView) findViewById(R.id.list_name);
             mListNameView.setText(list.getName());
 
-            Button mCreateListButton = (Button) findViewById(R.id.create_list_button);
-            mCreateListButton.setVisibility(View.GONE);
-
             //set up toolbar
             // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
