@@ -1,9 +1,11 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -22,7 +25,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
@@ -34,7 +39,7 @@ import honorsthesis.gabriella.honorsthesis.R;
 /**
  * A login screen that offers login via email/password.
  */
-public class EditTaskActivity extends AppCompatActivity implements ListTaskFragment.OnListFragmentTaskInteractionListener{
+public class EditTaskActivity extends AppCompatActivity implements ListTaskFragment.OnListFragmentTaskInteractionListener, DatePickerDialog.OnDateSetListener {
     //constants
     private String oldName;
     private Task task;
@@ -50,6 +55,8 @@ public class EditTaskActivity extends AppCompatActivity implements ListTaskFragm
     public TaskRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private DatePickerFragment mDatePicker;
+
 
     DataRepo mDataRepo;
 
@@ -117,9 +124,22 @@ public class EditTaskActivity extends AppCompatActivity implements ListTaskFragm
         });
         mSubTaskView = (EditText) findViewById(R.id.subTask_name);
         mDueDateView = (EditText) findViewById(R.id.date);
+        mDatePicker = new DatePickerFragment(this);
+        mDueDateView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                mDatePicker.show(ft, "date_dialog");
+            }
+        });
         if(null != task.getDate()){
-            mDueDateView.setText(formatter.format(task.getDate()));
+            Date date = task.getDate();
+            mDueDateView.setText(formatter.format(date));
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+            mDatePicker.setDate(calendar);
         }
+
         mPriorityView = (Spinner) findViewById(R.id.priority);
         if(null != task.getPriority()){
             mPriorityView.setSelection(task.getPriority().ordinal());
@@ -265,5 +285,13 @@ public void onListFragmentTaskCheck(Task task, String listName) {
 //        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
+        Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+        mDueDateView.setText(formatter.format(cal.getTime()));
+        mDatePicker.setDate(cal);
+    }
 }
 

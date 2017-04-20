@@ -1,5 +1,9 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
+import android.app.DatePickerDialog;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 
@@ -12,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -21,7 +26,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
@@ -33,7 +40,7 @@ import honorsthesis.gabriella.honorsthesis.R;
 /**
  * A login screen that offers login via email/password.
  */
-public class CreateTaskActivity extends AppCompatActivity {
+public class CreateTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     //constants
     private String listName;
     private String parentTask;
@@ -51,6 +58,8 @@ public class CreateTaskActivity extends AppCompatActivity {
     public TaskRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private DatePickerFragment mDatePicker;
 
     DataRepo mDataRepo;
 
@@ -116,6 +125,14 @@ public class CreateTaskActivity extends AppCompatActivity {
         });
         mSubTaskView = (EditText) findViewById(R.id.subTask_name);
         mDueDateView = (EditText) findViewById(R.id.date);
+        mDatePicker = new DatePickerFragment(this);
+        mDueDateView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                mDatePicker.show(ft, "date_dialog");
+            }
+        });
         mPriorityView = (Spinner) findViewById(R.id.priority);
         mNotesView = (EditText) findViewById(R.id.notes);
 
@@ -186,13 +203,11 @@ public class CreateTaskActivity extends AppCompatActivity {
             focusView = mTaskNameView;
             cancel = true;
         }
-        if (!TextUtils.isEmpty(dateString)) {
             try {
-                dueDate = formatter.parse(dateString);
-            } catch (ParseException e) {
+                dueDate = new Date(dateString);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
 
         if (!TextUtils.isEmpty(priorityString)) {
             priority = Priority.valueOf(priorityString.toUpperCase());
@@ -222,6 +237,14 @@ public class CreateTaskActivity extends AppCompatActivity {
             startActivity(mainActivity);
             //}
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
+        Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+        mDueDateView.setText(formatter.format(cal.getTime()));
+        mDatePicker.setDate(cal);
     }
 }
 
