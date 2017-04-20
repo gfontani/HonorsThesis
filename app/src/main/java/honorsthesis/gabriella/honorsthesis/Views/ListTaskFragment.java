@@ -82,7 +82,11 @@ public class ListTaskFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_task, container, false);
-        getActivity().setTitle(list.getName());
+        if(list.getName().equals(getResources().getText(R.string.all_tasks).toString())){
+            getActivity().setTitle(list.getName());
+        } else{
+            getActivity().setTitle("Tasks for " + list.getName());
+        }
         if (list.getTasks().size() > 0) {
             view.findViewById(R.id.noTasksText).setVisibility(View.GONE);
             view.findViewById(R.id.list).setVisibility(View.VISIBLE);

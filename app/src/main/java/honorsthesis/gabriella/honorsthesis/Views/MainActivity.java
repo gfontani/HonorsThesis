@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ListTaskFragment.OnListFragmentTaskInteractionListener, ListProcessFragment.OnListFragmentProcessInteractionListener, ListProcessFragment.OnListFragmentStepInteractionListener {
 
     DataRepo mDataRepo;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +44,8 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         setUpNavDrawer(navigationView);
-        //navigationView.inflateMenu(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         Intent i = getIntent();
@@ -55,10 +55,16 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment;
         if (null != taskListName) {
             fragment = ListTaskFragment.newInstance(1, taskListName);
+            SubMenu taskMenu = navigationView.getMenu().findItem(R.id.nav_list_group).getSubMenu();
+            setMenuItemChecked(taskMenu, taskListName);
         } else if (null != processListName) {
             fragment = ListProcessFragment.newInstance(1, processListName);
+            SubMenu processMenu = navigationView.getMenu().findItem(R.id.nav_process_group).getSubMenu();
+            setMenuItemChecked(processMenu, processListName);
         } else {
             fragment = ListTaskFragment.newInstance(1, getResources().getText(R.string.all_tasks).toString());
+            SubMenu taskMenu = navigationView.getMenu().findItem(R.id.nav_list_group).getSubMenu();
+            setMenuItemChecked(taskMenu, getResources().getText(R.string.all_tasks).toString());
         }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -118,10 +124,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
-        Class fragmentClass;
-        try {
-
-
             switch (menuItem.getItemId()) {
                 case R.id.nav_all_lists:
                 case R.id.nav_list:
@@ -143,22 +145,46 @@ public class MainActivity extends AppCompatActivity
                     fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
         // Highlight the selected item has been done by NavigationView
-        //menuItem.setChecked(true);
+        if(!menuItem.isChecked()){
+            unCheckAllMenuItems(navigationView.getMenu());
+            menuItem.setChecked(true);
+        }
         // Set action bar title
         setTitle(menuItem.getTitle());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void unCheckAllMenuItems(Menu menu) {
+        int size = menu.size();
+        for (int i = 0; i < size; i++) {
+            final MenuItem item = menu.getItem(i);
+            if(item.hasSubMenu()) {
+                // Un check sub menu items
+                unCheckAllMenuItems(item.getSubMenu());
+            } else {
+                item.setChecked(false);
+            }
+        }
+    }
+
+    private void setMenuItemChecked(Menu menu, String itemName) {
+        int size = menu.size();
+        for (int i = 0; i < size; i++) {
+            final MenuItem item = menu.getItem(i);
+            if(item.getTitle().equals(itemName)) {
+                //check menu item if it matches the name
+                item.setChecked(true);
+                return;
+            }
+        }
     }
 
     @Override

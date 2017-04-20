@@ -81,8 +81,11 @@ public class ListProcessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_process, container, false);
-
-        getActivity().setTitle(list.getName());
+        if(list.getName().equals(getResources().getText(R.string.all_processes).toString())){
+            getActivity().setTitle(list.getName());
+        } else{
+            getActivity().setTitle("Processes for " + list.getName());
+        }
         if (list.getProcesses().size() > 0) {
             ((TextView) view.findViewById(R.id.noProcessesText)).setVisibility(View.GONE);
             ((RecyclerView) view.findViewById(R.id.list)).setVisibility(View.VISIBLE);
