@@ -3,15 +3,18 @@
 
     <item
         android:id="@+id/nav_list_group"
-        android:title="Lists">
+        android:title="Task Lists"
+        android:background="?attr/colorPrimary">
         <menu>
             <item
                 android:id="@+id/nav_all_lists"
-                android:title="All Lists" />
+                android:title="All Lists"
+                android:icon="@drawable/ic_transparent"/>
             <item
                 android:id="@+id/nav_list"
                 android:title="List"
-                android:visible="false"/>
+                android:visible="false"
+                android:icon="@drawable/ic_transparent"/>
             <item
                 android:id="@+id/nav_create_list"
                 android:icon="@drawable/ic_add_circle_outline_24dp"
@@ -21,15 +24,18 @@
 
     <item
         android:id="@+id/nav_process_group"
-        android:title="Processes">
+        android:title="Process Lists"
+        android:background="?attr/colorPrimary">
         <menu>
             <item
                 android:id="@+id/nav_all_processes"
-                android:title="All Processes" />
+                android:title="All Processes"
+                android:icon="@drawable/ic_transparent"/>
             <item
                 android:id="@+id/nav_process"
                 android:title="Process"
-                android:visible="false"/>
+                android:visible="false"
+                android:icon="@drawable/ic_transparent"/>
         </menu>
     </item>
 
