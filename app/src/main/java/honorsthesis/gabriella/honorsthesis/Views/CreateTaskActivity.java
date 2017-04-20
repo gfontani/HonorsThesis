@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -45,7 +46,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private EditText mTaskNameView;
     private EditText mSubTaskView;
     private EditText mDueDateView;
-    private EditText mPriorityView;
+    private Spinner mPriorityView;
     private EditText mNotesView;
     public TaskRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -66,7 +67,7 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_create_task);
         // Set up the create task form.
-        mTaskNameView = (AutoCompleteTextView) findViewById(R.id.task_name);
+        mTaskNameView = (EditText) findViewById(R.id.task_name);
         ((TextView) findViewById(R.id.list_name)).setText(listName);
         if (null != parentTask) {
             ((TextView) findViewById(R.id.parent_name)).setText(parentTask);
@@ -86,27 +87,10 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
 
         //set listener for add step
-        ImageView mAddStep = (ImageView) findViewById(R.id.create_subTask);
-        mAddStep.setOnClickListener(new View.OnClickListener() {
+        ImageView mAddSubTask = (ImageView) findViewById(R.id.create_subTask);
+        mAddSubTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent createSubTask = getIntent();
-                //createStep.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                createSubTask.putExtra("listName", listName);
-                if(null == task){
-                    createSubTask.putExtra("parentTask", new Task("Create Task"));
-                }
-                else{
-                    createSubTask.putExtra("parentTask", task);
-                }
-                try{
-                    startActivityForResult(createSubTask, 1);
-                    //finish();
-
-                }catch(Exception e)
-                {
-                    System.out.println("here!");
-                }*/
                 String subTaskName = mSubTaskView.getText().toString();
                 boolean cancel = false;
                 View focusView = null;
@@ -130,19 +114,10 @@ public class CreateTaskActivity extends AppCompatActivity {
 
             }
         });
-        mSubTaskView = (AutoCompleteTextView) findViewById(R.id.subTask_name);
-        mDueDateView = (AutoCompleteTextView) findViewById(R.id.date);
-        mPriorityView = (AutoCompleteTextView) findViewById(R.id.priority);
-        mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
-
-        //remove button in favor of toolbar option
-//        Button mCreateTaskButton = (Button) findViewById(R.id.create_task_button);
-//        mCreateTaskButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                createTask();
-//            }
-//        });
+        mSubTaskView = (EditText) findViewById(R.id.subTask_name);
+        mDueDateView = (EditText) findViewById(R.id.date);
+        mPriorityView = (Spinner) findViewById(R.id.priority);
+        mNotesView = (EditText) findViewById(R.id.notes);
 
         //set up toolbar
         // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
@@ -180,17 +155,6 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
     }
 
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1) {
-//            if(resultCode == RESULT_OK) {
-//                Task subTask = data.getParcelableExtra("newSubTask");
-//                subTasks.add(subTask);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
-
     /**
      * attempts to create a task
      * adds the task to the database and goes back to the list that the task is from
@@ -201,14 +165,14 @@ public class CreateTaskActivity extends AppCompatActivity {
         // Reset errors.
         mTaskNameView.setError(null);
         mDueDateView.setError(null);
-        mPriorityView.setError(null);
+        //mPriorityView.setError(null);
         mNotesView.setError(null);
 
         // Store values at the time of the login attempt.
         String taskName = mTaskNameView.getText().toString();
         String dateString = mDueDateView.getText().toString();
         Date dueDate = null;
-        String priorityString = mPriorityView.getText().toString();
+        String priorityString = mPriorityView.getSelectedItem().toString();
         Priority priority = null;
         String notes = mNotesView.getText().toString();
 
@@ -244,14 +208,6 @@ public class CreateTaskActivity extends AppCompatActivity {
             if (null != parentTask) {
                 task.setParentTask(parentTask);
             }
-
-//            if(null != parentTask){
-//                task.setParentTask(parentTask);
-//                Intent intent = new Intent();
-//                intent.putExtra("newSubTask", task);
-//                setResult(Activity.RESULT_OK, intent);
-//                finish();
-//            } else {
             for (Task subTask : subTasks) {
                 subTask.setParentTask(task.getName());
             }

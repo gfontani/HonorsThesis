@@ -63,6 +63,12 @@
     <string name="action_cancel">Cancel</string>
     <string name="action_save">Save</string>
 
+    <!-- Strings related to priority -->
+    <string name="priority_none">NONE</string>
+    <string name="priority_low">LOW</string>
+    <string name="priority_medium">MEDIUM</string>
+    <string name="priority_high">HIGH</string>
+    <string name="priority_caps">PRIORITY</string>
 
 
 </resources>
