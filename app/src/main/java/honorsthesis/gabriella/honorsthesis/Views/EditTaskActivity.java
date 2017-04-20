@@ -43,7 +43,7 @@ public class EditTaskActivity extends AppCompatActivity implements ListTaskFragm
     //constants
     private String oldName;
     private Task task;
-    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
+    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
     private ListTaskFragment.OnListFragmentTaskInteractionListener mListener;
     // UI references.
@@ -55,8 +55,8 @@ public class EditTaskActivity extends AppCompatActivity implements ListTaskFragm
     public TaskRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private DatePickerFragment mDatePicker;
 
+    private DatePickerFragment mDatePicker;
 
     DataRepo mDataRepo;
 
@@ -197,8 +197,6 @@ public class EditTaskActivity extends AppCompatActivity implements ListTaskFragm
      * adds the task to the database and goes back to the list that the task is from
      */
     private void updateTask() {
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
-
         // Reset errors.
         mTaskNameView.setError(null);
         mDueDateView.setError(null);
@@ -288,7 +286,6 @@ public void onListFragmentTaskCheck(Task task, String listName) {
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
         Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
         mDueDateView.setText(formatter.format(cal.getTime()));
         mDatePicker.setDate(cal);

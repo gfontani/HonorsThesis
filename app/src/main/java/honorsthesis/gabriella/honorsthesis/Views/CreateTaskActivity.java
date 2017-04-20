@@ -60,6 +60,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
     private RecyclerView.LayoutManager mLayoutManager;
 
     private DatePickerFragment mDatePicker;
+    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
     DataRepo mDataRepo;
 
@@ -177,8 +178,6 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
      * adds the task to the database and goes back to the list that the task is from
      */
     private void createTask() {
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
-
         // Reset errors.
         mTaskNameView.setError(null);
         mDueDateView.setError(null);
@@ -241,7 +240,6 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
 
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
         Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
         mDueDateView.setText(formatter.format(cal.getTime()));
         mDatePicker.setDate(cal);

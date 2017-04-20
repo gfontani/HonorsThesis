@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
 import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
@@ -33,6 +36,7 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
     private boolean wasEdited = false;
     private boolean isSubtask = false;
 
+    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +92,7 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
             ((TextView)findViewById(R.id.parent_task_text)).setText(task.getParentTask());
         }
         if(null != task.getDate()){
-            ((TextView)findViewById(R.id.due_date_text)).setText(task.getDate().toString());
+            ((TextView)findViewById(R.id.due_date_text)).setText(formatter.format(task.getDate()));
         }else{
             ((TextView)findViewById(R.id.due_date_text)).setVisibility(View.GONE);
         }
