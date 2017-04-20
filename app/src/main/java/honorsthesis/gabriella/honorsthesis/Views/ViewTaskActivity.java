@@ -94,17 +94,20 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
         if(null != task.getDate()){
             ((TextView)findViewById(R.id.due_date_text)).setText(formatter.format(task.getDate()));
         }else{
-            ((TextView)findViewById(R.id.due_date_text)).setVisibility(View.GONE);
+            findViewById(R.id.due_date).setVisibility(View.GONE);
+            findViewById(R.id.due_date_text).setVisibility(View.GONE);
         }
         if(null != task.getPriority()){
             ((TextView)findViewById(R.id.priority_text)).setText(task.getPriority().toString());
         }else{
-            ((TextView)findViewById(R.id.priority_text)).setVisibility(View.GONE);
+            findViewById(R.id.priority).setVisibility(View.GONE);
+            findViewById(R.id.priority_text).setVisibility(View.GONE);
         }
-        if(null != task.getNotes()){
+        if(null != task.getNotes() && !task.getNotes().isEmpty()){
             ((TextView)findViewById(R.id.task_notes)).setText(task.getNotes());
         }else{
-            ((TextView)findViewById(R.id.task_notes)).setVisibility(View.GONE);
+            findViewById(R.id.task_notes_title).setVisibility(View.GONE);
+            findViewById(R.id.task_notes).setVisibility(View.GONE);
         }
     }
 

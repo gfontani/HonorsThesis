@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.*;
@@ -37,7 +38,12 @@ public class ViewStepActivity extends AppCompatActivity {
 
     private void setUpContent(){
         ((TextView)findViewById(R.id.step_parent_process_text)).setText(step.getParentProcess());
-        ((TextView)findViewById(R.id.step_notes)).setText(step.getNotes());
+        if(null != step.getNotes() || step.getNotes().isEmpty()){
+            (findViewById(R.id.step_notes_title)).setVisibility(View.GONE);
+            (findViewById(R.id.step_notes)).setVisibility(View.GONE);
+        }else{
+            ((TextView)findViewById(R.id.step_notes)).setText(step.getNotes());
+        }
     }
 
     @Override
