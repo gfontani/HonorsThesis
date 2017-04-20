@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -52,7 +51,7 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
 
         mDataRepo = new DataRepo(this);
 
-        setContentView(R.layout.activity_create_process);
+        setContentView(R.layout.activity_create_edit_process);
         // Set up the create process form.
         mProcessNameView = (EditText) findViewById(R.id.process_name);
         mProcessNameView.setText(process.getName());

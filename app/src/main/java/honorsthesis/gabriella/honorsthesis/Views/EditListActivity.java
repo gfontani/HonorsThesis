@@ -2,18 +2,12 @@ package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
@@ -48,7 +42,7 @@ public class EditListActivity extends AppCompatActivity {
         try {
 
             mDataRepo = new DataRepo(this);
-            setContentView(R.layout.activity_create_list);
+            setContentView(R.layout.activity_create_edit_list);
             // Set up the login form.
             mListNameView = (EditText) findViewById(R.id.list_name);
             mListNameView.setText(list.getName());

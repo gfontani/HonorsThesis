@@ -1,8 +1,6 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.app.DatePickerDialog;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +13,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -75,7 +71,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         mDataRepo = new DataRepo(this);
         subTasks = new ArrayList<Task>();
 
-        setContentView(R.layout.activity_create_task);
+        setContentView(R.layout.activity_create_edit_task);
         // Set up the create task form.
         mTaskNameView = (EditText) findViewById(R.id.task_name);
         ((TextView) findViewById(R.id.list_name)).setText(listName);

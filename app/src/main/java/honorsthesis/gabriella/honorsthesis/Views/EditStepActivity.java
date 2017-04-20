@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -38,7 +37,7 @@ public class EditStepActivity extends AppCompatActivity {
 
         mDataRepo = new DataRepo(this);
 
-        setContentView(R.layout.activity_create_step);
+        setContentView(R.layout.activity_create_edit_step);
         // Set up the create process form.
         mStepNameView = (EditText) findViewById(R.id.step_name);
         mStepNameView.setText(step.getName());

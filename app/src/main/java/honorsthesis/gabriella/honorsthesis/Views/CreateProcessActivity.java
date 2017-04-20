@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,7 +57,7 @@ public class CreateProcessActivity extends AppCompatActivity{
 
         steps = new ArrayList<Step>();
 
-        setContentView(R.layout.activity_create_process);
+        setContentView(R.layout.activity_create_edit_process);
         // Set up the create process form.
         mProcessNameView = (EditText) findViewById(R.id.process_name);
         ((TextView)findViewById(R.id.list_name)).setText(listName);

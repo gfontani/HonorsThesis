@@ -3,8 +3,6 @@ package honorsthesis.gabriella.honorsthesis.Views;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +12,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,11 +21,9 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Priority;
@@ -70,7 +65,7 @@ public class EditTaskActivity extends AppCompatActivity implements ListTaskFragm
 
         mDataRepo = new DataRepo(this);
 
-        setContentView(R.layout.activity_create_task);
+        setContentView(R.layout.activity_create_edit_task);
         // Set up the create task form.
         mTaskNameView = (EditText) findViewById(R.id.task_name);
         mTaskNameView.setText(task.getName());
