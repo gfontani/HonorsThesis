@@ -52,10 +52,9 @@
                     android:id="@+id/task_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/prompt_email"
+                    android:hint="@string/prompt_task_name"
                     android:inputType="text"
-                    android:maxLines="1"
-                    android:singleLine="true" />
+                    android:maxLines="1"/>
             </LinearLayout>
 
             <!--section for List name-->
@@ -158,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:hint="@string/prompt_step_name" />
             </LinearLayout>
 
             <!--section for Due Date-->
@@ -182,7 +181,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="datetime"
-                    android:focusable="false"/>
+                    android:focusable="false"
+                    android:hint="@string/prompt_due_date"/>
 
             </LinearLayout>
 
@@ -230,7 +230,9 @@
                     android:id="@+id/notes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"/>
+                    android:inputType="textMultiLine"
+                    android:hint="@string/prompt_notes"
+                    android:maxLines="10"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
