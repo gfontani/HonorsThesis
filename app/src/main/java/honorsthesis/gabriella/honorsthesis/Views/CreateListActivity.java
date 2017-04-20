@@ -39,7 +39,7 @@ public class CreateListActivity extends AppCompatActivity {
             mDataRepo = new DataRepo(this);
             setContentView(R.layout.activity_create_list);
             // Set up the login form.
-            mListNameView = (AutoCompleteTextView) findViewById(R.id.list_name);
+            mListNameView = (EditText) findViewById(R.id.list_name);
 
             //set up toolbar
             // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);

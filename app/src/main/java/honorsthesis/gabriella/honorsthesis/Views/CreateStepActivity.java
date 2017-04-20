@@ -41,7 +41,7 @@ public class CreateStepActivity extends AppCompatActivity {
 
     setContentView(R.layout.activity_create_step);
     // Set up the create process form.
-    mStepNameView = (AutoCompleteTextView) findViewById(R.id.step_name);
+    mStepNameView = (EditText) findViewById(R.id.step_name);
     if(!parentProcess.getName().equals("Create Process")){
         ((TextView)findViewById(R.id.process_name)).setText(parentProcess.getName());
     }
@@ -49,16 +49,7 @@ public class CreateStepActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.process_name)).setVisibility(View.GONE);
         ((TextView)findViewById(R.id.process_title)).setVisibility(View.GONE);
     }
-    mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
-
-
-//    Button mCreateProcessButton = (Button) findViewById(R.id.create_step_button);
-//    mCreateProcessButton.setOnClickListener(new OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            createStep();
-//        }
-//    });
+    mNotesView = (EditText) findViewById(R.id.notes);
 
     //set up toolbar
     Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

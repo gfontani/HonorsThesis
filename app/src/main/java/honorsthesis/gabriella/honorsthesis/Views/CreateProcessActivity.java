@@ -60,9 +60,9 @@ public class CreateProcessActivity extends AppCompatActivity{
 
         setContentView(R.layout.activity_create_process);
         // Set up the create process form.
-        mProcessNameView = (AutoCompleteTextView) findViewById(R.id.process_name);
+        mProcessNameView = (EditText) findViewById(R.id.process_name);
         ((TextView)findViewById(R.id.list_name)).setText(listName);
-        mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
+        mNotesView = (EditText) findViewById(R.id.notes);
 
         //show empty list of steps with option to create a step
         View recView = findViewById(R.id.list);
@@ -80,16 +80,6 @@ public class CreateProcessActivity extends AppCompatActivity{
         mAddStep.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-//                Intent createStep = new Intent(CreateProcessActivity.this, CreateStepActivity.class);
-//                //createStep.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                createStep.putExtra("listName", listName);
-//                if(null == process){
-//                    createStep.putExtra("parentProcess", new Process("Create Process"));
-//                }
-//                else{
-//                    createStep.putExtra("parentProcess", process);
-//                }
-//                startActivityForResult(createStep, 1);
                 String stepName = mStepNameView.getText().toString();
                 boolean cancel = false;
                 View focusView = null;
@@ -110,7 +100,7 @@ public class CreateProcessActivity extends AppCompatActivity{
                 }
             }
         });
-        mStepNameView = (AutoCompleteTextView) findViewById(R.id.step_name);
+        mStepNameView = (EditText) findViewById(R.id.step_name);
 
         //set up toolbar
         // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
@@ -147,17 +137,6 @@ public class CreateProcessActivity extends AppCompatActivity{
                 return super.onOptionsItemSelected(item);
         }
     }
-
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1) {
-//            if(resultCode == RESULT_OK) {
-//                Step step = data.getParcelableExtra("newStep");
-//                steps.add(step);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
 
     /**
      * attempts to create a process

@@ -54,10 +54,10 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
 
         setContentView(R.layout.activity_create_process);
         // Set up the create process form.
-        mProcessNameView = (AutoCompleteTextView) findViewById(R.id.process_name);
+        mProcessNameView = (EditText) findViewById(R.id.process_name);
         mProcessNameView.setText(process.getName());
         ((TextView)findViewById(R.id.list_name)).setText(process.getParentList());
-        mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
+        mNotesView = (EditText) findViewById(R.id.notes);
         if(null != process.getNotes() && !process.getNotes().isEmpty()){
             mNotesView.setText(process.getNotes());
         }
@@ -77,16 +77,6 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
         mAddStep.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View view){
-//                Intent createStep = new Intent(CreateProcessActivity.this, CreateStepActivity.class);
-//                //createStep.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                createStep.putExtra("listName", listName);
-//                if(null == process){
-//                    createStep.putExtra("parentProcess", new Process("Create Process"));
-//                }
-//                else{
-//                    createStep.putExtra("parentProcess", process);
-//                }
-//                startActivityForResult(createStep, 1);
                 String stepName = mStepNameView.getText().toString();
                 boolean cancel = false;
                 View focusView = null;
@@ -110,7 +100,7 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
                 }
             }
         });
-        mStepNameView = (AutoCompleteTextView) findViewById(R.id.step_name);
+        mStepNameView = (EditText) findViewById(R.id.step_name);
 
         //set up toolbar
         // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);

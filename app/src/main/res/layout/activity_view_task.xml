@@ -171,7 +171,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/task_notes_title"
@@ -188,9 +188,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
-                    android:layout_marginLeft="@dimen/align_label_with_text_margin"
                     android:text="These are some notes!"
-                    android:textSize="@dimen/create_label" />
+                    android:textSize="@dimen/create_label"
+                    android:layout_marginLeft="@dimen/text_margin" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

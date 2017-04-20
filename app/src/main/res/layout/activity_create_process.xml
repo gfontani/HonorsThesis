@@ -34,7 +34,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:weightSum="1">
             <!--section for Process name-->
@@ -53,19 +53,13 @@
                     android:text="@string/process_underline"
                     android:textSize="@dimen/create_label" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <AutoCompleteTextView
+                    <EditText
                         android:id="@+id/process_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prompt_notes"
+                        android:hint="@string/prompt_process_name"
                         android:inputType="text"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                        android:maxLines="1" />
             </LinearLayout>
 
             <!--section for List name-->
@@ -135,19 +129,13 @@
                     android:layout_marginTop="@dimen/create_align_label_margin"
                     android:src="@drawable/ic_add_circle_outline_24dp"
                     android:layout_gravity="center"/>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <AutoCompleteTextView
+                    <EditText
                         android:id="@+id/step_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-                </android.support.design.widget.TextInputLayout>
+                        android:hint="@string/prompt_step_name"
+                        android:maxLines="1" />
             </LinearLayout>
 
             <!--section for Notes-->
@@ -155,7 +143,7 @@
                 android:id="@+id/notes_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/notes_title"
@@ -166,19 +154,14 @@
                     android:text="@string/notes_underline"
                     android:textSize="@dimen/create_label" />
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <AutoCompleteTextView
+                    <EditText
                         android:id="@+id/notes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
+                        android:layout_marginLeft="@dimen/text_margin"
+                        android:inputType="textMultiLine"
+                        android:hint="@string/prompt_notes"
+                        android:maxLines="10" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

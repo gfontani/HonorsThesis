@@ -48,20 +48,14 @@
                     android:text="@string/list_underline"
                     android:textSize="@dimen/create_label" />
 
-                <android.support.design.widget.TextInputLayout
+                <EditText
+                    android:id="@+id/list_name"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_list_name"
+                    android:inputType="text"
+                    android:maxLines="1" />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/list_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/prompt_list_name"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

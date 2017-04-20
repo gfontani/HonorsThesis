@@ -50,7 +50,7 @@ public class EditListActivity extends AppCompatActivity {
             mDataRepo = new DataRepo(this);
             setContentView(R.layout.activity_create_list);
             // Set up the login form.
-            mListNameView = (AutoCompleteTextView) findViewById(R.id.list_name);
+            mListNameView = (EditText) findViewById(R.id.list_name);
             mListNameView.setText(list.getName());
 
             //set up toolbar

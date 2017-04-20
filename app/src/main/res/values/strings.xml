@@ -34,17 +34,19 @@
 
     <!-- button names -->
     <string name="instantiate_process">Instantiate this Process</string>
-    <string name="prompt_list_name">List Name</string>
     <string name="action_create_list">Create List</string>
 
     <!-- strings for data entry -->
     <string name="error_field_required">This field is required</string>
 
-    <!-- Strings related to login -->
+    <!-- Strings related to entr text prompts -->
     <string name="prompt_task_name">Enter Task Name</string>
     <string name="prompt_step_name">Enter Step Name</string>
     <string name="prompt_due_date">Select Due Date</string>
     <string name="prompt_notes">Enter Notes</string>
+    <string name="prompt_list_name">Enter List Name</string>
+    <string name="prompt_process_name">Enter Process Name</string>
+
 
 
     <!-- Strings related to menus -->

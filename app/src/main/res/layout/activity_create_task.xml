@@ -215,7 +215,7 @@
                 android:id="@+id/notes_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/notes_title"
@@ -230,6 +230,7 @@
                     android:id="@+id/notes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/text_margin"
                     android:inputType="textMultiLine"
                     android:hint="@string/prompt_notes"
                     android:maxLines="10"/>
