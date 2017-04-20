@@ -50,19 +50,17 @@ public class MainActivity extends AppCompatActivity
         String taskListName = i.getStringExtra("task");
         String processListName = i.getStringExtra("process");
 
+        Fragment fragment;
         if(null != taskListName){
-            Fragment fragment = ListTaskFragment.newInstance(1, taskListName);
-
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+            fragment = ListTaskFragment.newInstance(1, taskListName);
         } else if(null != processListName){
-            Fragment fragment = ListProcessFragment.newInstance(1, processListName);
-
+            fragment = ListProcessFragment.newInstance(1, processListName);
+        } else {
+            fragment = ListTaskFragment.newInstance(1, getResources().getText(R.string.all_tasks).toString());
+        }
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-        }
     }
 
     public void setUpNavDrawer(NavigationView navigationView){
@@ -73,8 +71,8 @@ public class MainActivity extends AppCompatActivity
         SubMenu processMenu = menu.findItem(R.id.nav_process_group).getSubMenu();
         listMenu.clear();
         processMenu.clear();
-        listMenu.add(R.id.nav_list_group, R.id.nav_all_lists, 0, "All Tasks");
-        processMenu.add(R.id.nav_process_group, R.id.nav_all_processes, 0, "All Processes");
+        listMenu.add(R.id.nav_list_group, R.id.nav_all_lists, 0, getResources().getText(R.string.all_tasks).toString());
+        processMenu.add(R.id.nav_process_group, R.id.nav_all_processes, 0, getResources().getText(R.string.all_processes).toString());
         for (String list:lists) {
             listMenu.add(R.id.nav_list_group, R.id.nav_list, 1, list);
             processMenu.add(R.id.nav_process_group, R.id.nav_process, 1, list);

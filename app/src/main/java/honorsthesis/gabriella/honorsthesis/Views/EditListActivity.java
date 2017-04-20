@@ -136,7 +136,7 @@ public class EditListActivity extends AppCompatActivity {
         this.finish();
         Intent mainActivity = new Intent(this, MainActivity.class);
         mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mainActivity.putExtra("task", "All Tasks");
+        mainActivity.putExtra("task", getResources().getText(R.string.all_tasks).toString());
         startActivity(mainActivity);
     }
 }

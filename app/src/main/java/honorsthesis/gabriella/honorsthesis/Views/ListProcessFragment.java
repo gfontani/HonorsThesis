@@ -74,14 +74,11 @@ public class ListProcessFragment extends Fragment {
 
         if (getArguments() != null) {
             list = new ThesisList(getArguments().getString(LIST_NAME));
-            if(list.getName().equals("All Processes")){
+            if(list.getName().equals(getResources().getText(R.string.all_processes).toString())){
                 list.setTasks(mDataRepo.getAllTasks());
-            }else{
-                list.setTasks(mDataRepo.getTasks(list.getName()));
-            }
-            if(list.getName().equals("All Processes")){
                 list.setProcesses(mDataRepo.getAllProcesses());
             }else{
+                list.setTasks(mDataRepo.getTasks(list.getName()));
                 list.setProcesses(mDataRepo.getProcesses(list.getName()));
             }
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);

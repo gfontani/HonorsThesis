@@ -65,14 +65,13 @@ public class ListTaskFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        try {
             super.onCreate(savedInstanceState);
             setHasOptionsMenu(true);
             mDataRepo = new DataRepo(this.getContext());
             if (getArguments() != null) {
                 mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
                 list = new ThesisList(getArguments().getString(ARG_LIST_NAME));
-                if(list.getName().equals("All Tasks")){
+                if(list.getName().equals(getResources().getText(R.string.all_tasks).toString())){
                     list.setTasks(mDataRepo.getAllTasks());
                     list.setProcesses(mDataRepo.getAllProcesses());
                 }else{
@@ -80,9 +79,6 @@ public class ListTaskFragment extends Fragment {
                     list.setProcesses(mDataRepo.getProcesses(list.getName()));
                 }
             }
-        }catch(Exception e){
-            System.out.println("here");
-        }
     }
 
     @Override
@@ -145,7 +141,7 @@ public class ListTaskFragment extends Fragment {
             ListTaskFragment nextFrag= new ListTaskFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_COLUMN_COUNT, 1);
-            args.putString(ARG_LIST_NAME, "All Tasks");
+            args.putString(ARG_LIST_NAME, getResources().getText(R.string.all_tasks).toString());
             nextFrag.setArguments(args);
             fragmentTransaction.hide(ListTaskFragment.this);
             fragmentTransaction.replace(R.id.content_frame, nextFrag);
