@@ -67,11 +67,16 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
         }else{
             (findViewById(R.id.steps_list)).setVisibility(View.GONE);
             (findViewById(R.id.steps_title)).setVisibility(View.GONE);
-
         }
 
         ((TextView)findViewById(R.id.process_parent_list_text)).setText(parentList);
-        ((TextView)findViewById(R.id.process_notes)).setText(process.getNotes());
+
+        if(null == process.getNotes() || process.getNotes().isEmpty()){
+            (findViewById(R.id.process_notes_title)).setVisibility(View.GONE);
+            (findViewById(R.id.process_notes)).setVisibility(View.GONE);
+        } else{
+            ((TextView)findViewById(R.id.process_notes)).setText(process.getNotes());
+        }
 
         Button createInstance = (Button) findViewById(R.id.create_instance_button);
         createInstance.setOnClickListener(new View.OnClickListener() {

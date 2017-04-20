@@ -175,11 +175,11 @@ public class CreateProcessActivity extends AppCompatActivity{
             }
             process.setSteps(steps);
             mDataRepo.addProcess(process);
+            Intent mainActivity = new Intent(this, MainActivity.class);
+            mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mainActivity.putExtra("process", listName);
+            startActivity(mainActivity);
             finish();
-//            Intent mainActivity = new Intent(this, MainActivity.class);
-//            mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            mainActivity.putExtra("process", listName);
-//            startActivity(mainActivity);
         }
     }
 }
