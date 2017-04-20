@@ -22,7 +22,7 @@ import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 /**
- * A login screen that offers login via email/password.
+ * A screen that allows users to edit a process.
  */
 public class EditProcessActivity extends AppCompatActivity implements ListProcessFragment.OnListFragmentStepInteractionListener{
     //constants
@@ -156,7 +156,6 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
         String processName = mProcessNameView.getText().toString();
         String notes = mNotesView.getText().toString();
 
-
         boolean cancel = false;
         View focusView = null;
 
@@ -187,13 +186,12 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
     }
 
     private void deleteProcess(){
-        //TODO: figure out how to do this
         mDataRepo.removeProcess(process);
         this.finish();
-//        Intent mainActivity = new Intent(this, MainActivity.class);
-//        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        mainActivity.putExtra("process", "All Tasks");
-//        startActivity(mainActivity);
+        Intent mainActivity = new Intent(this, MainActivity.class);
+        mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mainActivity.putExtra("process", process.getParentList());
+        startActivity(mainActivity);
     }
 
     @Override

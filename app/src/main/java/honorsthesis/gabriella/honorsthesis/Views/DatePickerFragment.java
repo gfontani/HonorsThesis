@@ -1,11 +1,9 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.app.DatePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
-import android.widget.DatePicker;
+import android.support.v4.app.DialogFragment;
 
 import java.util.Calendar;
 
@@ -19,7 +17,7 @@ public class DatePickerFragment extends DialogFragment{
     private Calendar mCalendar;
 
     public DatePickerFragment(){
-
+        //this is needed to not break other things, but does not have to be implemented
     }
 
     public DatePickerFragment(DatePickerDialog.OnDateSetListener listener){

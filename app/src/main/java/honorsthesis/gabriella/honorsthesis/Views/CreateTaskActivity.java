@@ -1,11 +1,10 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.app.DatePickerDialog;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -42,9 +41,10 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
     private String parentTask;
     private Task task;
     private List<Task> subTasks;
-
-
+    private DataRepo mDataRepo;
+    private DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
     private ListTaskFragment.OnListFragmentTaskInteractionListener mListener;
+
     // UI references.
     private EditText mTaskNameView;
     private EditText mSubTaskView;
@@ -54,11 +54,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
     public TaskRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-
     private DatePickerFragment mDatePicker;
-    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-
-    DataRepo mDataRepo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +62,6 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         //set parent list and task names
         Intent i = getIntent();
         listName = i.getStringExtra("listName");
-        //parentTask = i.getParcelableExtra("parentTask");
-
         mDataRepo = new DataRepo(this);
         subTasks = new ArrayList<Task>();
 
@@ -123,9 +117,9 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         mSubTaskView = (EditText) findViewById(R.id.subTask_name);
         mDueDateView = (EditText) findViewById(R.id.date);
         mDatePicker = new DatePickerFragment(this);
-        mDueDateView.setOnClickListener(new View.OnClickListener(){
+        mDueDateView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 mDatePicker.show(ft, "date_dialog");
             }
@@ -188,7 +182,6 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
         Priority priority = null;
         String notes = mNotesView.getText().toString();
 
-
         boolean cancel = false;
         View focusView = null;
 
@@ -198,11 +191,11 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
             focusView = mTaskNameView;
             cancel = true;
         }
-            try {
-                dueDate = new Date(dateString);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            dueDate = new Date(dateString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (!TextUtils.isEmpty(priorityString)) {
             priority = Priority.valueOf(priorityString.toUpperCase());
@@ -230,7 +223,6 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
             mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mainActivity.putExtra("task", listName);
             startActivity(mainActivity);
-            //}
         }
     }
 

@@ -1,6 +1,5 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +26,6 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
     private RecyclerView.LayoutManager mLayoutManager;
     private ListProcessFragment.OnListFragmentStepInteractionListener mListener;
 
-    private int mColumnCount = 1;
     private String parentList = "list name";
     private Process process;
     boolean wasEdited = false;
@@ -35,10 +33,10 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListener = (ListProcessFragment.OnListFragmentStepInteractionListener) this;
+        mListener = this;
 
         Intent i = getIntent();
-        process = (Process) i.getParcelableExtra("process");
+        process = i.getParcelableExtra("process");
         parentList = process.getParentList();
         wasEdited = i.getExtras().getBoolean("wasEdited");
 
@@ -52,9 +50,9 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
         setUpContent();
     }
 
-    private void setUpContent(){
+    private void setUpContent() {
         //set up step list
-        if(process.getSteps().size() > 0) {
+        if (process.getSteps().size() > 0) {
             View recView = findViewById(R.id.steps_list);
             // Set the adapter
             if (recView instanceof RecyclerView) {
@@ -64,18 +62,18 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
                 mAdapter = new StepRecyclerViewAdapter(this, process.getSteps(), process, mListener);
                 mRecyclerView.setAdapter(mAdapter);
             }
-        }else{
+        } else {
             (findViewById(R.id.steps_list)).setVisibility(View.GONE);
             (findViewById(R.id.steps_title)).setVisibility(View.GONE);
         }
 
-        ((TextView)findViewById(R.id.process_parent_list_text)).setText(parentList);
+        ((TextView) findViewById(R.id.process_parent_list_text)).setText(parentList);
 
-        if(null == process.getNotes() || process.getNotes().isEmpty()){
+        if (null == process.getNotes() || process.getNotes().isEmpty()) {
             (findViewById(R.id.process_notes_title)).setVisibility(View.GONE);
             (findViewById(R.id.process_notes)).setVisibility(View.GONE);
-        } else{
-            ((TextView)findViewById(R.id.process_notes)).setText(process.getNotes());
+        } else {
+            ((TextView) findViewById(R.id.process_notes)).setText(process.getNotes());
         }
 
         Button createInstance = (Button) findViewById(R.id.create_instance_button);
@@ -99,7 +97,7 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
-                if(wasEdited){
+                if (wasEdited) {
                     Intent mainActivity = new Intent(this, MainActivity.class);
                     mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mainActivity.putExtra("process", parentList);
@@ -107,7 +105,6 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
                 }
                 this.finish();
                 return true;
-            //noinspection SimplifiableIfStatement
             case R.id.action_edit:
                 Intent intent = new Intent(this, EditProcessActivity.class);
                 intent.putExtra("process", process);
@@ -118,20 +115,20 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
         }
     }
 
-    private void createInstance(){
+    private void createInstance() {
         DataRepo dataRepo = new DataRepo(this);
         Task task = new Task(process.getName());
         task.setParentList(parentList);
-        if(null != process.getNotes()){
+        if (null != process.getNotes()) {
             task.setNotes(process.getNotes());
         }
 
-        for(Step step: process.getSteps()){
+        for (Step step : process.getSteps()) {
             Task subtask = new Task(step.getName());
-            if(null != step.getPriority()){
+            if (null != step.getPriority()) {
                 subtask.setPriority(step.getPriority());
             }
-            if(null != step.getNotes()){
+            if (null != step.getNotes()) {
                 subtask.setNotes(step.getNotes());
             }
             subtask.setParentTask(task.getName());
@@ -154,18 +151,18 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
             //result is from view step activity
             //TODO: figure out why the resultCode is always 0 here
             //(resultCode == RESULT_OK) {
-                //the steps were modified. get the process from the database and restart it
-                DataRepo dataRepo = new DataRepo(this);
-                Process updatedProcess = dataRepo.getProcess(process.getName(), process.getParentList());
-                Intent refresh = new Intent(this, ViewProcessActivity.class);
-                refresh.putExtra("process", updatedProcess);
-                refresh.putExtra("wasEdited", true);
-                startActivity(refresh);
-                this.finish();
+            //the steps were modified. get the process from the database and restart it
+            DataRepo dataRepo = new DataRepo(this);
+            Process updatedProcess = dataRepo.getProcess(process.getName(), process.getParentList());
+            Intent refresh = new Intent(this, ViewProcessActivity.class);
+            refresh.putExtra("process", updatedProcess);
+            refresh.putExtra("wasEdited", true);
+            startActivity(refresh);
+            this.finish();
             //}
-        } else if(requestCode == 3){
+        } else if (requestCode == 3) {
             //result is from edit process activity
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 //the steps were modified. get the process from the database and restart it
                 Process updatedProcess = data.getParcelableExtra("newProcess");
                 Intent refresh = new Intent(this, ViewProcessActivity.class);

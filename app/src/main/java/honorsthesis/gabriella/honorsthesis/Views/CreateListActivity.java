@@ -1,9 +1,8 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -36,13 +35,12 @@ public class CreateListActivity extends AppCompatActivity {
             mListNameView = (EditText) findViewById(R.id.list_name);
 
             //set up toolbar
-            // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.title_activity_create_list));
-        }catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -61,7 +59,7 @@ public class CreateListActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.action_create:
-                // app icon in action bar clicked; goto parent activity.
+                // app icon in action bar clicked; create list.
                 createList();
                 return true;
             case R.id.action_cancel:

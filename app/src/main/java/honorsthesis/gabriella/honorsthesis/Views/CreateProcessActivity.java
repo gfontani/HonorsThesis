@@ -1,9 +1,8 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,21 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import honorsthesis.gabriella.honorsthesis.Adapters.StepRecyclerViewAdapter;
-import honorsthesis.gabriella.honorsthesis.BackEnd.*;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 /**
- * A login screen that offers login via email/password.
+ * A screen that allows for the creation of a process.
  */
-public class CreateProcessActivity extends AppCompatActivity{
+public class CreateProcessActivity extends AppCompatActivity {
     //constants
     private String listName;
     private Process process;
-    public StepRecyclerViewAdapter mAdapter;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private List<Step> steps;
+    private DataRepo mDataRepo;
 
     private ListProcessFragment.OnListFragmentStepInteractionListener mListener;
 
@@ -41,10 +39,9 @@ public class CreateProcessActivity extends AppCompatActivity{
     private EditText mProcessNameView;
     private EditText mStepNameView;
     private EditText mNotesView;
-
-    List<Step> steps;
-
-    DataRepo mDataRepo;
+    public StepRecyclerViewAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +57,7 @@ public class CreateProcessActivity extends AppCompatActivity{
         setContentView(R.layout.activity_create_edit_process);
         // Set up the create process form.
         mProcessNameView = (EditText) findViewById(R.id.process_name);
-        ((TextView)findViewById(R.id.list_name)).setText(listName);
+        ((TextView) findViewById(R.id.list_name)).setText(listName);
         mNotesView = (EditText) findViewById(R.id.notes);
 
         //show empty list of steps with option to create a step
@@ -76,9 +73,9 @@ public class CreateProcessActivity extends AppCompatActivity{
 
         //set listener for add step
         ImageView mAddStep = (ImageView) findViewById(R.id.create_step);
-        mAddStep.setOnClickListener(new View.OnClickListener(){
+        mAddStep.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
+            public void onClick(View view) {
                 String stepName = mStepNameView.getText().toString();
                 boolean cancel = false;
                 View focusView = null;
@@ -102,7 +99,6 @@ public class CreateProcessActivity extends AppCompatActivity{
         mStepNameView = (EditText) findViewById(R.id.step_name);
 
         //set up toolbar
-        // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -125,7 +121,7 @@ public class CreateProcessActivity extends AppCompatActivity{
                 this.finish();
                 return true;
             case R.id.action_create:
-                // app icon in action bar clicked; goto parent activity.
+                // app icon in action bar clicked; create process.
                 createProcess();
                 return true;
             case R.id.action_cancel:
@@ -150,7 +146,6 @@ public class CreateProcessActivity extends AppCompatActivity{
         String processName = mProcessNameView.getText().toString();
         String notes = mNotesView.getText().toString();
 
-
         boolean cancel = false;
         View focusView = null;
 
@@ -170,7 +165,7 @@ public class CreateProcessActivity extends AppCompatActivity{
             Process process = new Process(processName);
             process.setNotes(notes);
             process.setParentList(listName);
-            for(Step step : steps){
+            for (Step step : steps) {
                 step.setParentProcess(process.getName());
             }
             process.setSteps(steps);

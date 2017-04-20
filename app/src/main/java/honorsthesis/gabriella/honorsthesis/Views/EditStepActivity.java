@@ -62,9 +62,9 @@ public class EditStepActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         setResult(RESULT_OK, null);
-        super.onBackPressed();;
+        super.onBackPressed();
     }
 
     @Override
@@ -107,7 +107,6 @@ public class EditStepActivity extends AppCompatActivity {
         String stepName = mStepNameView.getText().toString();
         String notes = mNotesView.getText().toString();
 
-
         boolean cancel = false;
         View focusView = null;
 
@@ -136,7 +135,7 @@ public class EditStepActivity extends AppCompatActivity {
 
     private void deleteStep() {
         mDataRepo.removeStep(step);
-        //TODO: deal with this result so that it goes to the right place!
+        setResult(RESULT_OK);
         finish();
     }
 }

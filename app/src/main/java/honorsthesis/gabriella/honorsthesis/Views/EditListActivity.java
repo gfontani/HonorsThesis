@@ -15,14 +15,14 @@ import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 /**
- * Screen that allows user to create a new list.
+ * Screen that allows user to edit a new list.
  */
 public class EditListActivity extends AppCompatActivity {
-    ThesisList list;
-    String oldListName;
-
-    //database
+    //constants
+    private ThesisList list;
+    private String oldListName;
     private DataRepo mDataRepo;
+
     // UI references.
     private EditText mListNameView;
 
@@ -31,16 +31,15 @@ public class EditListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
         list = (ThesisList) i.getParcelableExtra("list");
-        if(null != list){
+        if (null != list) {
             oldListName = list.getName();
         }
 
         setUpContent();
     }
 
-    private void setUpContent(){
+    private void setUpContent() {
         try {
-
             mDataRepo = new DataRepo(this);
             setContentView(R.layout.activity_create_edit_list);
             // Set up the login form.
@@ -48,13 +47,12 @@ public class EditListActivity extends AppCompatActivity {
             mListNameView.setText(list.getName());
 
             //set up toolbar
-            // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.title_activity_create_list));
-        }catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -73,11 +71,9 @@ public class EditListActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.action_save:
-                // app icon in action bar clicked; goto parent activity.
                 updateList();
                 return true;
             case R.id.action_delete:
-                // app icon in action bar clicked; goto parent activity.
                 deleteList();
                 return true;
             case R.id.action_cancel:
@@ -125,7 +121,7 @@ public class EditListActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteList(){
+    private void deleteList() {
         mDataRepo.removeList(list);
         this.finish();
         Intent mainActivity = new Intent(this, MainActivity.class);

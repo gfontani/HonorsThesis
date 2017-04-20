@@ -2,9 +2,9 @@ package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,8 +17,9 @@ import android.view.SubMenu;
 import java.util.Collections;
 import java.util.List;
 
-import honorsthesis.gabriella.honorsthesis.BackEnd.*;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, ListTaskFragment.OnListFragmentTaskInteractionListener, ListProcessFragment.OnListFragmentProcessInteractionListener, ListProcessFragment.OnListFragmentStepInteractionListener {
 
     DataRepo mDataRepo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,19 +53,19 @@ public class MainActivity extends AppCompatActivity
         String processListName = i.getStringExtra("process");
 
         Fragment fragment;
-        if(null != taskListName){
+        if (null != taskListName) {
             fragment = ListTaskFragment.newInstance(1, taskListName);
-        } else if(null != processListName){
+        } else if (null != processListName) {
             fragment = ListProcessFragment.newInstance(1, processListName);
         } else {
             fragment = ListTaskFragment.newInstance(1, getResources().getText(R.string.all_tasks).toString());
         }
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 
-    public void setUpNavDrawer(NavigationView navigationView){
+    public void setUpNavDrawer(NavigationView navigationView) {
         List<String> lists = mDataRepo.getLists();
         Collections.sort(lists);
         Menu menu = navigationView.getMenu();
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity
         processMenu.clear();
         listMenu.add(R.id.nav_list_group, R.id.nav_all_lists, 0, getResources().getText(R.string.all_tasks).toString());
         processMenu.add(R.id.nav_process_group, R.id.nav_all_processes, 0, getResources().getText(R.string.all_processes).toString());
-        for (String list:lists) {
+        for (String list : lists) {
             listMenu.add(R.id.nav_list_group, R.id.nav_list, 1, list);
             processMenu.add(R.id.nav_process_group, R.id.nav_process, 1, list);
         }
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity
         MenuItem item = listMenu.add(R.id.nav_list_group, R.id.nav_create_list, 2, "Create List");
         item.setIcon(R.drawable.ic_add_circle_outline_24dp);
     }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -100,9 +103,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -119,29 +119,29 @@ public class MainActivity extends AppCompatActivity
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
         Class fragmentClass;
-        try{
+        try {
 
 
-        switch(menuItem.getItemId()) {
-            case R.id.nav_all_lists:
-            case R.id.nav_list:
-                fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
-                break;
-            case R.id.nav_create_list:
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                if (drawer.isDrawerOpen(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
-                }
-                Intent intent = new Intent(this, CreateListActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.nav_all_processes:
-            case R.id.nav_process:
-                fragment = ListProcessFragment.newInstance(1, menuItem.getTitle().toString());
-                break;
-            default:
-                fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
-        }
+            switch (menuItem.getItemId()) {
+                case R.id.nav_all_lists:
+                case R.id.nav_list:
+                    fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
+                    break;
+                case R.id.nav_create_list:
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    if (drawer.isDrawerOpen(GravityCompat.START)) {
+                        drawer.closeDrawer(GravityCompat.START);
+                    }
+                    Intent intent = new Intent(this, CreateListActivity.class);
+                    startActivity(intent);
+                    return true;
+                case R.id.nav_all_processes:
+                case R.id.nav_process:
+                    fragment = ListProcessFragment.newInstance(1, menuItem.getTitle().toString());
+                    break;
+                default:
+                    fragment = ListTaskFragment.newInstance(1, menuItem.getTitle().toString());
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra("task", item);
             intent.putExtra("list", listName);
             startActivity(intent);
-        }catch( Exception e){
+        } catch (Exception e) {
             System.out.println("here");
         }
     }
@@ -199,5 +199,4 @@ public class MainActivity extends AppCompatActivity
         intent.putExtra("parent", parent);
         startActivity(intent);
     }
-
 }
