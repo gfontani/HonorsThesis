@@ -4,11 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,14 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import honorsthesis.gabriella.honorsthesis.Adapters.ProcessRecyclerViewAdapter;
-import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
-import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
-import honorsthesis.gabriella.honorsthesis.BackEnd.Task;
-import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
+import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
@@ -74,14 +66,11 @@ public class ListProcessFragment extends Fragment {
 
         if (getArguments() != null) {
             list = new ThesisList(getArguments().getString(LIST_NAME));
-            if(list.getName().equals("All Processes")){
+            if (list.getName().equals(getResources().getText(R.string.all_processes).toString())) {
                 list.setTasks(mDataRepo.getAllTasks());
-            }else{
-                list.setTasks(mDataRepo.getTasks(list.getName()));
-            }
-            if(list.getName().equals("All Processes")){
                 list.setProcesses(mDataRepo.getAllProcesses());
-            }else{
+            } else {
+                list.setTasks(mDataRepo.getTasks(list.getName()));
                 list.setProcesses(mDataRepo.getProcesses(list.getName()));
             }
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
@@ -92,11 +81,14 @@ public class ListProcessFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_process, container, false);
-
-        getActivity().setTitle(list.getName());
-        if(list.getProcesses().size() > 0) {
-            ((TextView)view.findViewById(R.id.noProcessesText)).setVisibility(View.GONE);
-            ((RecyclerView)view.findViewById(R.id.list)).setVisibility(View.VISIBLE);
+        if(list.getName().equals(getResources().getText(R.string.all_processes).toString())){
+            getActivity().setTitle(list.getName());
+        } else{
+            getActivity().setTitle("Processes for " + list.getName());
+        }
+        if (list.getProcesses().size() > 0) {
+            ((TextView) view.findViewById(R.id.noProcessesText)).setVisibility(View.GONE);
+            ((RecyclerView) view.findViewById(R.id.list)).setVisibility(View.VISIBLE);
             View recView = view.findViewById(R.id.list);
             // Set the adapter
             if (recView instanceof RecyclerView) {
@@ -107,18 +99,17 @@ public class ListProcessFragment extends Fragment {
                 mAdapter = new ProcessRecyclerViewAdapter(list.getProcesses(), list.getName(), mListener);
                 mRecyclerView.setAdapter(mAdapter);
             }
-        }else{
-            ((RecyclerView)view.findViewById(R.id.list)).setVisibility(View.GONE);
-            ((TextView)view.findViewById(R.id.noProcessesText)).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.list).setVisibility(View.GONE);
+            view.findViewById(R.id.noProcessesText).setVisibility(View.VISIBLE);
         }
-
 
         FloatingActionButton addTask = (FloatingActionButton) view.findViewById(R.id.add_process);
         addTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //go to the create process activity
-                MainActivity ma = ((MainActivity)getActivity());
+                MainActivity ma = ((MainActivity) getActivity());
                 Intent intent = new Intent(ma, CreateProcessActivity.class);
                 intent.putExtra("listName", list.getName());
                 startActivity(intent);
@@ -137,20 +128,17 @@ public class ListProcessFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if(id == R.id.action_delete_all){
-            for(Process process: list.getProcesses()){
+        if (id == R.id.action_delete_all) {
+            for (Process process : list.getProcesses()) {
                 mDataRepo.removeProcess(process);
             }
             list.getProcesses().clear();
             mAdapter.notifyDataSetChanged();
-            ((RecyclerView)getView().findViewById(R.id.list)).setVisibility(View.GONE);
-            ((TextView)getView().findViewById(R.id.noProcessesText)).setVisibility(View.VISIBLE);
+            ((RecyclerView) getView().findViewById(R.id.list)).setVisibility(View.GONE);
+            ((TextView) getView().findViewById(R.id.noProcessesText)).setVisibility(View.VISIBLE);
         }
 
         return super.onOptionsItemSelected(item);
@@ -178,10 +166,6 @@ public class ListProcessFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentProcessInteractionListener {
         void onListFragmentProcessInteraction(Process item, String listName);

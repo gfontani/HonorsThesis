@@ -1,9 +1,10 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,16 +12,18 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import honorsthesis.gabriella.honorsthesis.Adapters.TaskRecyclerViewAdapter;
@@ -32,26 +35,26 @@ import honorsthesis.gabriella.honorsthesis.R;
 /**
  * A login screen that offers login via email/password.
  */
-public class CreateTaskActivity extends AppCompatActivity {
+public class CreateTaskActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     //constants
     private String listName;
     private String parentTask;
     private Task task;
     private List<Task> subTasks;
-
-
+    private DataRepo mDataRepo;
+    private DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
     private ListTaskFragment.OnListFragmentTaskInteractionListener mListener;
+
     // UI references.
     private EditText mTaskNameView;
     private EditText mSubTaskView;
     private EditText mDueDateView;
-    private EditText mPriorityView;
+    private Spinner mPriorityView;
     private EditText mNotesView;
     public TaskRecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-
-    DataRepo mDataRepo;
+    private DatePickerFragment mDatePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +62,12 @@ public class CreateTaskActivity extends AppCompatActivity {
         //set parent list and task names
         Intent i = getIntent();
         listName = i.getStringExtra("listName");
-        //parentTask = i.getParcelableExtra("parentTask");
-
         mDataRepo = new DataRepo(this);
         subTasks = new ArrayList<Task>();
 
-        setContentView(R.layout.activity_create_task);
+        setContentView(R.layout.activity_create_edit_task);
         // Set up the create task form.
-        mTaskNameView = (AutoCompleteTextView) findViewById(R.id.task_name);
+        mTaskNameView = (EditText) findViewById(R.id.task_name);
         ((TextView) findViewById(R.id.list_name)).setText(listName);
         if (null != parentTask) {
             ((TextView) findViewById(R.id.parent_name)).setText(parentTask);
@@ -86,27 +87,10 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
 
         //set listener for add step
-        ImageView mAddStep = (ImageView) findViewById(R.id.create_subTask);
-        mAddStep.setOnClickListener(new View.OnClickListener() {
+        ImageView mAddSubTask = (ImageView) findViewById(R.id.create_subTask);
+        mAddSubTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent createSubTask = getIntent();
-                //createStep.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                createSubTask.putExtra("listName", listName);
-                if(null == task){
-                    createSubTask.putExtra("parentTask", new Task("Create Task"));
-                }
-                else{
-                    createSubTask.putExtra("parentTask", task);
-                }
-                try{
-                    startActivityForResult(createSubTask, 1);
-                    //finish();
-
-                }catch(Exception e)
-                {
-                    System.out.println("here!");
-                }*/
                 String subTaskName = mSubTaskView.getText().toString();
                 boolean cancel = false;
                 View focusView = null;
@@ -130,19 +114,18 @@ public class CreateTaskActivity extends AppCompatActivity {
 
             }
         });
-        mSubTaskView = (AutoCompleteTextView) findViewById(R.id.subTask_name);
-        mDueDateView = (AutoCompleteTextView) findViewById(R.id.date);
-        mPriorityView = (AutoCompleteTextView) findViewById(R.id.priority);
-        mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
-
-        //remove button in favor of toolbar option
-//        Button mCreateTaskButton = (Button) findViewById(R.id.create_task_button);
-//        mCreateTaskButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                createTask();
-//            }
-//        });
+        mSubTaskView = (EditText) findViewById(R.id.subTask_name);
+        mDueDateView = (EditText) findViewById(R.id.date);
+        mDatePicker = new DatePickerFragment(this);
+        mDueDateView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                mDatePicker.show(ft, "date_dialog");
+            }
+        });
+        mPriorityView = (Spinner) findViewById(R.id.priority);
+        mNotesView = (EditText) findViewById(R.id.notes);
 
         //set up toolbar
         // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
@@ -180,38 +163,24 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
     }
 
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1) {
-//            if(resultCode == RESULT_OK) {
-//                Task subTask = data.getParcelableExtra("newSubTask");
-//                subTasks.add(subTask);
-//                mAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
-
     /**
      * attempts to create a task
      * adds the task to the database and goes back to the list that the task is from
      */
     private void createTask() {
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy k:mm");
-
         // Reset errors.
         mTaskNameView.setError(null);
         mDueDateView.setError(null);
-        mPriorityView.setError(null);
+        //mPriorityView.setError(null);
         mNotesView.setError(null);
 
         // Store values at the time of the login attempt.
         String taskName = mTaskNameView.getText().toString();
         String dateString = mDueDateView.getText().toString();
         Date dueDate = null;
-        String priorityString = mPriorityView.getText().toString();
+        String priorityString = mPriorityView.getSelectedItem().toString();
         Priority priority = null;
         String notes = mNotesView.getText().toString();
-
 
         boolean cancel = false;
         View focusView = null;
@@ -222,12 +191,10 @@ public class CreateTaskActivity extends AppCompatActivity {
             focusView = mTaskNameView;
             cancel = true;
         }
-        if (!TextUtils.isEmpty(dateString)) {
-            try {
-                dueDate = formatter.parse(dateString);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+        try {
+            dueDate = new Date(dateString);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (!TextUtils.isEmpty(priorityString)) {
@@ -244,14 +211,6 @@ public class CreateTaskActivity extends AppCompatActivity {
             if (null != parentTask) {
                 task.setParentTask(parentTask);
             }
-
-//            if(null != parentTask){
-//                task.setParentTask(parentTask);
-//                Intent intent = new Intent();
-//                intent.putExtra("newSubTask", task);
-//                setResult(Activity.RESULT_OK, intent);
-//                finish();
-//            } else {
             for (Task subTask : subTasks) {
                 subTask.setParentTask(task.getName());
             }
@@ -264,8 +223,14 @@ public class CreateTaskActivity extends AppCompatActivity {
             mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             mainActivity.putExtra("task", listName);
             startActivity(mainActivity);
-            //}
         }
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar cal = new GregorianCalendar(year, monthOfYear, dayOfMonth);
+        mDueDateView.setText(formatter.format(cal.getTime()));
+        mDatePicker.setDate(cal);
     }
 }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Views.ViewTaskActivity">
+    tools:context=".Views.CreateTaskActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/view"
@@ -23,7 +23,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <ScrollView
-        android:id="@+id/create_step_form"
+        android:id="@+id/create_task_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
@@ -36,16 +36,40 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <!--list section-->
+            <!--section for Task name-->
             <LinearLayout
-                android:id="@+id/task_list_info"
+                android:id="@+id/task_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/task_parent_list"
+                    android:id="@+id/task_entry_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="@dimen/create_align_label_margin"
+                    android:text="@string/task_underline"
+                    android:textSize="@dimen/create_label" />
+
+                <EditText
+                    android:id="@+id/task_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_task_name"
+                    android:inputType="text"
+                    android:maxLines="1"/>
+            </LinearLayout>
+
+            <!--section for List name-->
+            <LinearLayout
+                android:id="@+id/list_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/list_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -54,7 +78,7 @@
                     android:textSize="@dimen/create_label" />
 
                 <TextView
-                    android:id="@+id/task_parent_list_text"
+                    android:id="@+id/list_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -64,14 +88,15 @@
                     android:textSize="@dimen/create_label" />
             </LinearLayout>
 
+            <!--section for Parent Task name-->
             <LinearLayout
-                android:id="@+id/parent_task_info"
+                android:id="@+id/parent_form"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/parent_task"
+                    android:id="@+id/parent_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -80,53 +105,74 @@
                     android:textSize="@dimen/create_label" />
 
                 <TextView
-                    android:id="@+id/parent_task_text"
+                    android:id="@+id/parent_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:layout_marginLeft="@dimen/align_label_with_text_margin"
-                    android:text="Task Name"
+                    android:text="List Name"
                     android:textSize="@dimen/create_label" />
             </LinearLayout>
 
-            <!-- subtask section-->
+            <!--section for subtasks-->
             <TextView
                 android:id="@+id/subTask_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/create_align_label_margin"
+                android:layout_marginTop="@dimen/create_align_label_margin"
                 android:text="@string/subTask_underline"
                 android:textSize="@dimen/create_label" />
 
             <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/subTask_list"
+                android:id="@+id/list"
                 android:name="honorsthesis.gabriella.honorsthesis.ItemFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/subTask_title"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_weight="1.40"
                 android:fillViewport="true"
                 app:layoutManager="LinearLayoutManager"
-                tools:context=".Views.ViewTaskActivity"
-                tools:listitem="@layout/fragment_item_with_checkbox">
+                tools:context=".Views.CreateTaskActivity"
+                tools:listitem="@layout/fragment_item" />
 
-            </android.support.v7.widget.RecyclerView>
-
-            <!-- due date section-->
             <LinearLayout
-                android:id="@+id/due_date_info"
+                android:id="@+id/create_subTask_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/create_subTask"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/create_align_label_margin"
+                    android:src="@drawable/ic_add_circle_outline_24dp" />
+
+                <EditText
+                    android:id="@+id/subTask_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:hint="@string/prompt_step_name" />
+            </LinearLayout>
+
+            <!--section for Due Date-->
+            <LinearLayout
+                android:id="@+id/date_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/due_date"
+                    android:id="@+id/date_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -134,26 +180,25 @@
                     android:text="@string/due_date_underline"
                     android:textSize="@dimen/create_label" />
 
-                <TextView
-                    android:id="@+id/due_date_text"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/date"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/create_align_label_margin"
-                    android:layout_marginLeft="@dimen/align_label_with_text_margin"
-                    android:text="Due Date"
-                    android:textSize="@dimen/create_label" />
+                    android:inputType="datetime"
+                    android:focusable="false"
+                    android:hint="@string/prompt_due_date"/>
+
             </LinearLayout>
 
-            <!--priority section-->
+            <!--section for Priority-->
             <LinearLayout
-                android:id="@+id/priority_info"
+                android:id="@+id/priority_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/priority"
+                    android:id="@+id/priority_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -161,24 +206,23 @@
                     android:text="@string/priority_underline"
                     android:textSize="@dimen/create_label" />
 
-                <TextView
-                    android:id="@+id/priority_text"
-                    android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/priority"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/create_align_label_margin"
-                    android:layout_marginLeft="@dimen/align_label_with_text_margin"
-                    android:text="PRIORITY"
-                    android:textSize="@dimen/create_label" />
+                    android:prompt="@string/priority_caps"
+                    android:entries="@array/priority_type_list" />
             </LinearLayout>
 
+            <!--section for Notes-->
             <LinearLayout
+                android:id="@+id/notes_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/task_notes_title"
+                    android:id="@+id/notes_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
@@ -186,17 +230,15 @@
                     android:text="@string/notes_underline"
                     android:textSize="@dimen/create_label" />
 
-                <TextView
-                    android:id="@+id/task_notes"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/notes"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/create_align_label_margin"
-                    android:text="These are some notes!"
-                    android:textSize="@dimen/create_label"
-                    android:layout_marginLeft="@dimen/text_margin" />
+                    android:layout_marginLeft="@dimen/text_margin"
+                    android:inputType="textMultiLine"
+                    android:hint="@string/prompt_notes"
+                    android:maxLines="10"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
 </android.support.design.widget.CoordinatorLayout>

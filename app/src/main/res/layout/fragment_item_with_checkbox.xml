@@ -8,7 +8,8 @@
         android:id="@+id/task_check_box"
         android:layout_width="0dip"
         android:layout_weight="0.2"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"/>
 
     <TextView
         android:id="@+id/content"

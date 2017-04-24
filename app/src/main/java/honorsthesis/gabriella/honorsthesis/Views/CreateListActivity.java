@@ -1,22 +1,15 @@
 package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 
-import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
 import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
@@ -37,26 +30,17 @@ public class CreateListActivity extends AppCompatActivity {
         try {
 
             mDataRepo = new DataRepo(this);
-            setContentView(R.layout.activity_create_list);
+            setContentView(R.layout.activity_create_edit_list);
             // Set up the login form.
-            mListNameView = (AutoCompleteTextView) findViewById(R.id.list_name);
-
-            Button mCreateListButton = (Button) findViewById(R.id.create_list_button);
-            mCreateListButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    createList();
-                }
-            });
+            mListNameView = (EditText) findViewById(R.id.list_name);
 
             //set up toolbar
-            // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.title_activity_create_list));
-        }catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -75,7 +59,7 @@ public class CreateListActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.action_create:
-                // app icon in action bar clicked; goto parent activity.
+                // app icon in action bar clicked; create list.
                 createList();
                 return true;
             case R.id.action_cancel:

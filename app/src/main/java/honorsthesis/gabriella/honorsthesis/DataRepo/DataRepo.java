@@ -245,13 +245,17 @@ public class DataRepo {
                 Task tempTask = new Task(name, "", Priority.NONE, new Date());
 
                 //get the task
-                Task task = tasks.get(tasks.indexOf(tempTask));
-                Task parentTask = tasks.get(tasks.indexOf(tempParentTask));
+                int taskIndex = tasks.indexOf(tempTask);
+                int parentTaskIndex = tasks.indexOf(tempParentTask);
+                if(taskIndex >= 0 && taskIndex < tasks.size()  && parentTaskIndex >= 0 && parentTaskIndex < tasks.size()) {
+                    Task task = tasks.get(taskIndex);
+                    Task parentTask = tasks.get(parentTaskIndex);
 
-                //add the parent task to the task
-                task.setParentTask(parentTaskName);
-                //add the task to the parent task's children
-                parentTask.addChild(task);
+                    //add the parent task to the task
+                    task.setParentTask(parentTaskName);
+                    //add the task to the parent task's children
+                    parentTask.addChild(task);
+                }
             }
         }
         cursor.close();

@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -38,23 +37,14 @@ public class EditStepActivity extends AppCompatActivity {
 
         mDataRepo = new DataRepo(this);
 
-        setContentView(R.layout.activity_create_step);
+        setContentView(R.layout.activity_create_edit_step);
         // Set up the create process form.
-        mStepNameView = (AutoCompleteTextView) findViewById(R.id.step_name);
+        mStepNameView = (EditText) findViewById(R.id.step_name);
         mStepNameView.setText(step.getName());
         ((TextView) findViewById(R.id.process_name)).setText(step.getParentProcess());
 
-        mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
+        mNotesView = (EditText) findViewById(R.id.notes);
         mNotesView.setText(step.getNotes());
-
-
-//    Button mCreateProcessButton = (Button) findViewById(R.id.create_step_button);
-//    mCreateProcessButton.setOnClickListener(new OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            createStep();
-//        }
-//    });
 
         //set up toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -72,9 +62,9 @@ public class EditStepActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         setResult(RESULT_OK, null);
-        super.onBackPressed();;
+        super.onBackPressed();
     }
 
     @Override
@@ -117,7 +107,6 @@ public class EditStepActivity extends AppCompatActivity {
         String stepName = mStepNameView.getText().toString();
         String notes = mNotesView.getText().toString();
 
-
         boolean cancel = false;
         View focusView = null;
 
@@ -146,7 +135,7 @@ public class EditStepActivity extends AppCompatActivity {
 
     private void deleteStep() {
         mDataRepo.removeStep(step);
-        //TODO: deal with this result so that it goes to the right place!
+        setResult(RESULT_OK);
         finish();
     }
 }

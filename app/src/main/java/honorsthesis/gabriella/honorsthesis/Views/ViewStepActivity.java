@@ -7,9 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
-import honorsthesis.gabriella.honorsthesis.BackEnd.*;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.R;
 
 public class ViewStepActivity extends AppCompatActivity {
@@ -35,9 +36,14 @@ public class ViewStepActivity extends AppCompatActivity {
         setUpContent();
     }
 
-    private void setUpContent(){
-        ((TextView)findViewById(R.id.step_parent_process_text)).setText(step.getParentProcess());
-        ((TextView)findViewById(R.id.step_notes)).setText(step.getNotes());
+    private void setUpContent() {
+        ((TextView) findViewById(R.id.step_parent_process_text)).setText(step.getParentProcess());
+        if (null != step.getNotes() || step.getNotes().isEmpty()) {
+            (findViewById(R.id.step_notes_title)).setVisibility(View.GONE);
+            (findViewById(R.id.step_notes)).setVisibility(View.GONE);
+        } else {
+            ((TextView) findViewById(R.id.step_notes)).setText(step.getNotes());
+        }
     }
 
     @Override
@@ -52,17 +58,15 @@ public class ViewStepActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
-                if(wasEdited){
+                if (wasEdited) {
                     Intent wasEditedIntent = getIntent();
                     wasEditedIntent.putExtra("wasEdited", true);
                     setResult(RESULT_OK, wasEditedIntent);
-                }
-                else{
+                } else {
                     setResult(Activity.RESULT_CANCELED, null);
                 }
                 this.finish();
                 return true;
-            //noinspection SimplifiableIfStatement
             case R.id.action_edit:
                 Intent intent = new Intent(this, EditStepActivity.class);
                 intent.putExtra("step", step);
@@ -74,8 +78,7 @@ public class ViewStepActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         setResult(RESULT_OK);
         super.onBackPressed();
     }
@@ -83,7 +86,7 @@ public class ViewStepActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2) {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 //dataSet was changed refresh the view
                 Step step = data.getParcelableExtra("newStep");
                 wasEdited = true;

@@ -2,18 +2,12 @@ package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 
 import honorsthesis.gabriella.honorsthesis.BackEnd.ThesisList;
@@ -21,14 +15,14 @@ import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
 /**
- * Screen that allows user to create a new list.
+ * Screen that allows user to edit a new list.
  */
 public class EditListActivity extends AppCompatActivity {
-    ThesisList list;
-    String oldListName;
-
-    //database
+    //constants
+    private ThesisList list;
+    private String oldListName;
     private DataRepo mDataRepo;
+
     // UI references.
     private EditText mListNameView;
 
@@ -37,33 +31,28 @@ public class EditListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
         list = (ThesisList) i.getParcelableExtra("list");
-        if(null != list){
+        if (null != list) {
             oldListName = list.getName();
         }
 
         setUpContent();
     }
 
-    private void setUpContent(){
+    private void setUpContent() {
         try {
-
             mDataRepo = new DataRepo(this);
-            setContentView(R.layout.activity_create_list);
+            setContentView(R.layout.activity_create_edit_list);
             // Set up the login form.
-            mListNameView = (AutoCompleteTextView) findViewById(R.id.list_name);
+            mListNameView = (EditText) findViewById(R.id.list_name);
             mListNameView.setText(list.getName());
 
-            Button mCreateListButton = (Button) findViewById(R.id.create_list_button);
-            mCreateListButton.setVisibility(View.GONE);
-
             //set up toolbar
-            // toolbar = (Toolbar) getLayoutInflater().inflate(R.layout.app_bar_main, null).findViewById(R.id.toolbar);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setTitle(getString(R.string.title_activity_create_list));
-        }catch(Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -82,11 +71,9 @@ public class EditListActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.action_save:
-                // app icon in action bar clicked; goto parent activity.
                 updateList();
                 return true;
             case R.id.action_delete:
-                // app icon in action bar clicked; goto parent activity.
                 deleteList();
                 return true;
             case R.id.action_cancel:
@@ -134,12 +121,12 @@ public class EditListActivity extends AppCompatActivity {
         }
     }
 
-    private void deleteList(){
+    private void deleteList() {
         mDataRepo.removeList(list);
         this.finish();
         Intent mainActivity = new Intent(this, MainActivity.class);
         mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mainActivity.putExtra("task", "All Tasks");
+        mainActivity.putExtra("task", getResources().getText(R.string.all_tasks).toString());
         startActivity(mainActivity);
     }
 }

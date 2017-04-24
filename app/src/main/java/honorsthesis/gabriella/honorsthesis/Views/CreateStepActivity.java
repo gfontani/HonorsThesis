@@ -2,20 +2,18 @@ package honorsthesis.gabriella.honorsthesis.Views;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import honorsthesis.gabriella.honorsthesis.BackEnd.*;
 import honorsthesis.gabriella.honorsthesis.BackEnd.Process;
+import honorsthesis.gabriella.honorsthesis.BackEnd.Step;
 import honorsthesis.gabriella.honorsthesis.DataRepo.DataRepo;
 import honorsthesis.gabriella.honorsthesis.R;
 
@@ -25,49 +23,38 @@ import honorsthesis.gabriella.honorsthesis.R;
 public class CreateStepActivity extends AppCompatActivity {
     //constants
     private Process parentProcess;
+    DataRepo mDataRepo;
+
     // UI references.
     private EditText mStepNameView;
     private EditText mNotesView;
 
-    DataRepo mDataRepo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    Intent i = getIntent();
-    parentProcess = i.getParcelableExtra("parentProcess");
+        super.onCreate(savedInstanceState);
+        Intent i = getIntent();
+        parentProcess = i.getParcelableExtra("parentProcess");
 
-    mDataRepo = new DataRepo(this);
+        mDataRepo = new DataRepo(this);
 
-    setContentView(R.layout.activity_create_step);
-    // Set up the create process form.
-    mStepNameView = (AutoCompleteTextView) findViewById(R.id.step_name);
-    if(!parentProcess.getName().equals("Create Process")){
-        ((TextView)findViewById(R.id.process_name)).setText(parentProcess.getName());
+        setContentView(R.layout.activity_create_edit_step);
+        // Set up the create process form.
+        mStepNameView = (EditText) findViewById(R.id.step_name);
+        if (!parentProcess.getName().equals("Create Process")) {
+            ((TextView) findViewById(R.id.process_name)).setText(parentProcess.getName());
+        } else {
+            findViewById(R.id.process_name).setVisibility(View.GONE);
+            findViewById(R.id.process_title).setVisibility(View.GONE);
+        }
+        mNotesView = (EditText) findViewById(R.id.notes);
+
+        //set up toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle(getString(R.string.title_activity_create_step));
     }
-    else{
-        ((TextView)findViewById(R.id.process_name)).setVisibility(View.GONE);
-        ((TextView)findViewById(R.id.process_title)).setVisibility(View.GONE);
-    }
-    mNotesView = (AutoCompleteTextView) findViewById(R.id.notes);
-
-
-//    Button mCreateProcessButton = (Button) findViewById(R.id.create_step_button);
-//    mCreateProcessButton.setOnClickListener(new OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            createStep();
-//        }
-//    });
-
-    //set up toolbar
-    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-    setSupportActionBar(toolbar);
-    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    getSupportActionBar().setDisplayShowHomeEnabled(true);
-    getSupportActionBar().setTitle(getString(R.string.title_activity_create_step));
-}
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,7 +70,6 @@ public class CreateStepActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.action_create:
-                // app icon in action bar clicked; goto parent activity.
                 createStep();
                 return true;
             case R.id.action_cancel:
@@ -96,11 +82,10 @@ public class CreateStepActivity extends AppCompatActivity {
     }
 
     /**
-     * attempts to create a process
-     * adds the process to the database and goes back to the list that the process is from
+     * attempts to create a step
+     * adds the step to the database and goes back to the process that the step is from
      */
     private void createStep() {
-
         // Reset errors.
         mStepNameView.setError(null);
         mNotesView.setError(null);
@@ -108,7 +93,6 @@ public class CreateStepActivity extends AppCompatActivity {
         // Store values at the time of the login attempt.
         String stepName = mStepNameView.getText().toString();
         String notes = mNotesView.getText().toString();
-
 
         boolean cancel = false;
         View focusView = null;
