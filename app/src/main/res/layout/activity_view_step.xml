@@ -50,6 +50,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/parent_process_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView
@@ -76,6 +77,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/notes_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView

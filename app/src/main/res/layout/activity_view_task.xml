@@ -51,6 +51,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/list_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView
@@ -77,6 +78,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/parent_task_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView
@@ -98,6 +100,7 @@
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="@dimen/create_align_label_margin"
                 android:text="@string/subTask_underline"
+                android:textColor="@color/colorLabel"
                 android:textSize="@dimen/create_label" />
 
             <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -132,6 +135,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/due_date_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView
@@ -159,6 +163,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/priority_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView
@@ -184,6 +189,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/notes_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView
@@ -192,9 +198,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
+                    android:layout_marginLeft="@dimen/text_margin"
                     android:text="These are some notes!"
-                    android:textSize="@dimen/create_label"
-                    android:layout_marginLeft="@dimen/text_margin" />
+                    android:textSize="@dimen/create_label" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

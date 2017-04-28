@@ -50,6 +50,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/list_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <EditText

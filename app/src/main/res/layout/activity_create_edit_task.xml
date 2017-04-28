@@ -50,6 +50,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/task_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <EditText
@@ -58,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_task_name"
                     android:inputType="text"
-                    android:maxLines="1"/>
+                    android:maxLines="1" />
             </LinearLayout>
 
             <!--section for List name-->
@@ -75,6 +76,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/list_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView
@@ -102,6 +104,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/parent_task_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <TextView
@@ -122,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/create_align_label_margin"
                 android:text="@string/subTask_underline"
+                android:textColor="@color/colorLabel"
                 android:textSize="@dimen/create_label" />
 
             <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -159,9 +163,9 @@
                     android:id="@+id/subTask_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/prompt_step_name"
                     android:inputType="text"
-                    android:maxLines="1"
-                    android:hint="@string/prompt_step_name" />
+                    android:maxLines="1" />
             </LinearLayout>
 
             <!--section for Due Date-->
@@ -178,15 +182,16 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/due_date_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <EditText
                     android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="datetime"
                     android:focusable="false"
-                    android:hint="@string/prompt_due_date"/>
+                    android:hint="@string/prompt_due_date"
+                    android:inputType="datetime" />
 
             </LinearLayout>
 
@@ -204,14 +209,15 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/priority_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <Spinner
                     android:id="@+id/priority"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:prompt="@string/priority_caps"
-                    android:entries="@array/priority_type_list" />
+                    android:entries="@array/priority_type_list"
+                    android:prompt="@string/priority_caps" />
             </LinearLayout>
 
             <!--section for Notes-->
@@ -228,6 +234,7 @@
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="@dimen/create_align_label_margin"
                     android:text="@string/notes_underline"
+                    android:textColor="@color/colorLabel"
                     android:textSize="@dimen/create_label" />
 
                 <EditText
@@ -235,9 +242,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/text_margin"
-                    android:inputType="textMultiLine"
                     android:hint="@string/prompt_notes"
-                    android:maxLines="10"/>
+                    android:inputType="textMultiLine"
+                    android:maxLines="10" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
