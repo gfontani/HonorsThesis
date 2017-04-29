@@ -92,17 +92,27 @@ public class ViewProcessActivity extends AppCompatActivity implements ListProces
         return true;
     }
 
+    private void onBackOrUpPressed(){
+        if (wasEdited) {
+            Intent mainActivity = new Intent(this, MainActivity.class);
+            mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mainActivity.putExtra("process", parentList);
+            startActivity(mainActivity);
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        onBackOrUpPressed();
+        super.onBackPressed();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
-                if (wasEdited) {
-                    Intent mainActivity = new Intent(this, MainActivity.class);
-                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mainActivity.putExtra("process", parentList);
-                    startActivity(mainActivity);
-                }
+                onBackOrUpPressed();
                 this.finish();
                 return true;
             case R.id.action_edit:

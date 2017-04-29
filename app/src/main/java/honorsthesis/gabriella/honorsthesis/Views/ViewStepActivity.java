@@ -53,18 +53,22 @@ public class ViewStepActivity extends AppCompatActivity {
         return true;
     }
 
+    private void onBackOrUpPressed(){
+        if (wasEdited) {
+            Intent wasEditedIntent = getIntent();
+            wasEditedIntent.putExtra("wasEdited", true);
+            setResult(RESULT_OK, wasEditedIntent);
+        } else {
+            setResult(Activity.RESULT_CANCELED, null);
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
-                if (wasEdited) {
-                    Intent wasEditedIntent = getIntent();
-                    wasEditedIntent.putExtra("wasEdited", true);
-                    setResult(RESULT_OK, wasEditedIntent);
-                } else {
-                    setResult(Activity.RESULT_CANCELED, null);
-                }
+                onBackOrUpPressed();
                 this.finish();
                 return true;
             case R.id.action_edit:
@@ -79,7 +83,7 @@ public class ViewStepActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
+        onBackOrUpPressed();
         super.onBackPressed();
     }
 

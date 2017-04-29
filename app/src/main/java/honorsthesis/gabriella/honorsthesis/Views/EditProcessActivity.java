@@ -117,12 +117,22 @@ public class EditProcessActivity extends AppCompatActivity implements ListProces
         return true;
     }
 
+    private void onBackOrUpPressed(){
+        setResult(RESULT_CANCELED, null);
+    }
+
+    @Override
+    public void onBackPressed(){
+        onBackOrUpPressed();
+        super.onBackPressed();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
-                setResult(RESULT_CANCELED, null);
+                onBackOrUpPressed();
                 this.finish();
                 return true;
             case R.id.action_save:
