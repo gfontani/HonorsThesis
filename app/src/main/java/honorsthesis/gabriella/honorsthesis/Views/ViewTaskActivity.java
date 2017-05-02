@@ -65,7 +65,7 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
                     mRecyclerView = (RecyclerView) recView;
                     mLayoutManager = new LinearLayoutManager(this);
                     mRecyclerView.setLayoutManager(mLayoutManager);
-                    mAdapter = new TaskRecyclerViewAdapter(this, task.getChildren(), task.getParentList(), mListener);
+                    mAdapter = new TaskRecyclerViewAdapter(this, task.getChildren(), task.getParentList(), mListener, true);
                     mRecyclerView.setAdapter(mAdapter);
                 }
             }
@@ -188,10 +188,15 @@ public class ViewTaskActivity extends AppCompatActivity implements ListTaskFragm
     }
 
     @Override
-    public void onListFragmentTaskCheck(Task task, String listName) {
+    public void onListFragmentTaskCheck(Task item, String listName) {
         DataRepo dataRepo = new DataRepo(this);
-        dataRepo.removeTask(task);
-        task.removeChild(task);
+        dataRepo.removeTask(item);
+        task.removeChild(item);
         mAdapter.notifyDataSetChanged();
+        if(task.getChildren().size() == 0){
+            (findViewById(R.id.subTask_list)).setVisibility(View.GONE);
+            (findViewById(R.id.subTask_title)).setVisibility(View.GONE);
+        }
+        wasEdited = true;
     }
 }

@@ -82,7 +82,7 @@ public class CreateTaskActivity extends AppCompatActivity implements DatePickerD
             mRecyclerView = (RecyclerView) recView;
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mAdapter = new TaskRecyclerViewAdapter(this, subTasks, listName, mListener);
+            mAdapter = new TaskRecyclerViewAdapter(this, subTasks, listName, mListener, false);
             mRecyclerView.setAdapter(mAdapter);
         }
 

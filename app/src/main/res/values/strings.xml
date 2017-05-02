@@ -42,6 +42,7 @@
     <!-- Strings related to entr text prompts -->
     <string name="prompt_task_name">Enter Task Name</string>
     <string name="prompt_step_name">Enter Step Name</string>
+    <string name="prompt_subtask_name">Enter Subtask Name</string>
     <string name="prompt_due_date">Select Due Date</string>
     <string name="prompt_notes">Enter Notes</string>
     <string name="prompt_list_name">Enter List Name</string>

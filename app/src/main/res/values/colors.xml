@@ -5,4 +5,5 @@
     <color name="colorAccent">#FFDF00</color>
     <color name="colorLabel">#000000</color>
     <color name="colorFAB">#FFDF00</color>
+    <color name="colorBorder">#000000</color>
 </resources>

@@ -97,7 +97,7 @@ public class ListTaskFragment extends Fragment {
                 mRecyclerView = (RecyclerView) recView;
                 mLayoutManager = new LinearLayoutManager(context);
                 mRecyclerView.setLayoutManager(mLayoutManager);
-                mAdapter = new TaskRecyclerViewAdapter(context, list.getTasks(), list.getName(), mListener);
+                mAdapter = new TaskRecyclerViewAdapter(context, list.getTasks(), list.getName(), mListener, true);
                 mRecyclerView.setAdapter(mAdapter);
             }
         } else {

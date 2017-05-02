@@ -51,7 +51,7 @@ public class EditListActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
-            getSupportActionBar().setTitle(getString(R.string.title_activity_create_list));
+            getSupportActionBar().setTitle(getString(R.string.title_activity_edit_list));
         } catch (Exception e) {
             throw e;
         }

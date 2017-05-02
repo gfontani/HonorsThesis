@@ -38,7 +38,7 @@ public class ViewStepActivity extends AppCompatActivity {
 
     private void setUpContent() {
         ((TextView) findViewById(R.id.step_parent_process_text)).setText(step.getParentProcess());
-        if (null != step.getNotes() || step.getNotes().isEmpty()) {
+        if (null == step.getNotes() || step.getNotes().isEmpty()) {
             (findViewById(R.id.step_notes_title)).setVisibility(View.GONE);
             (findViewById(R.id.step_notes)).setVisibility(View.GONE);
         } else {
@@ -90,7 +90,7 @@ public class ViewStepActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 2) {
-            if (resultCode == RESULT_OK) {
+            // (resultCode == RESULT_OK) {
                 //dataSet was changed refresh the view
                 Step step = data.getParcelableExtra("newStep");
                 wasEdited = true;
@@ -99,7 +99,7 @@ public class ViewStepActivity extends AppCompatActivity {
                 refresh.putExtra("wasEdited", true);
                 startActivity(refresh);
                 this.finish();
-            }
+            //}
         }
     }
 }

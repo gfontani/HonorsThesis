@@ -89,7 +89,7 @@ public class EditTaskActivity extends AppCompatActivity implements ListTaskFragm
             mRecyclerView = (RecyclerView) recView;
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
-            mAdapter = new TaskRecyclerViewAdapter(this, task.getChildren(), task.getParentList(), mListener);
+            mAdapter = new TaskRecyclerViewAdapter(this, task.getChildren(), task.getParentList(), mListener, false);
             mRecyclerView.setAdapter(mAdapter);
         }
 

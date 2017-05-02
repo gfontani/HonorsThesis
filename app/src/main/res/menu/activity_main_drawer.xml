@@ -8,18 +8,17 @@
         <menu>
             <item
                 android:id="@+id/nav_all_lists"
-                android:title="All Lists"
-                android:icon="@drawable/ic_transparent"
-                />
+                android:title="All Lists" />
             <item
                 android:id="@+id/nav_list"
                 android:title="List"
-                android:visible="false"
-                android:icon="@drawable/ic_transparent"/>
+                android:visible="false"/>
+
             <item
                 android:id="@+id/nav_create_list"
                 android:icon="@drawable/ic_add_circle_outline_24dp"
-                android:title="Create List" />
+                android:title="Create List" >
+            </item>
         </menu>
     </item>
 
@@ -35,8 +34,7 @@
             <item
                 android:id="@+id/nav_process"
                 android:title="Process"
-                android:visible="false"
-                android:icon="@drawable/ic_transparent"/>
+                android:visible="false"/>
         </menu>
     </item>
 

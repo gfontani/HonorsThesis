@@ -25,20 +25,27 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     private final String mParentListName;
     private final ListTaskFragment.OnListFragmentTaskInteractionListener mListener;
     private Context mContext;
+    private boolean mHasCheckbox;
 
-
-    public TaskRecyclerViewAdapter(Context context, List<Task> items, String listName, ListTaskFragment.OnListFragmentTaskInteractionListener listener) {
+    public TaskRecyclerViewAdapter(Context context, List<Task> items, String listName, ListTaskFragment.OnListFragmentTaskInteractionListener listener, boolean hasCheckbox) {
         mContext = context;
         mValues = items;
         mParentListName = listName;
         mListener = listener;
+        mHasCheckbox = hasCheckbox;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item_with_checkbox, parent, false);
-        return new ViewHolder(view);
+        View view;
+        if(mHasCheckbox) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.fragment_item_with_checkbox, parent, false);
+        } else{
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.fragment_item, parent, false);
+        }
+        return new ViewHolder(view, mHasCheckbox);
     }
 
     @Override
@@ -47,20 +54,20 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         //holder.mIdView.setText(mValues.get(position).id);
         holder.mContentView.setText(mValues.get(position).getName());
 
-        //handle checkbox
-        holder.mCheckBox.setOnCheckedChangeListener(null);
+        if(mHasCheckbox) {
+            //handle checkbox
+            holder.mCheckBox.setOnCheckedChangeListener(null);
 
-        //holder.mCheckBox.setChecked(holder.mItem.isSelected());
-
-        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //delete task
-                if(null != mListener){
-                    mListener.onListFragmentTaskCheck(holder.mItem, mParentListName);
+            holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    //delete task
+                    if (null != mListener) {
+                        mListener.onListFragmentTaskCheck(holder.mItem, mParentListName);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,11 +92,15 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         public final CheckBox mCheckBox;
         public Task mItem;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, boolean hasCheckbox) {
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.content);
-            mCheckBox = (CheckBox) view.findViewById(R.id.task_check_box);
+            if(hasCheckbox){
+                mCheckBox = (CheckBox) view.findViewById(R.id.task_check_box);
+            } else{
+                mCheckBox = null;
+            }
         }
 
         @Override
